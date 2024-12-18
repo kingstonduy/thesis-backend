@@ -1,7 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-### Deploy
-deploy/
-resources/
 
 ### Java template
 *.class
