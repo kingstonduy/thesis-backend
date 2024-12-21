@@ -3,7 +3,6 @@ package configuration
 import (
 	"context"
 	"sync"
-	"time"
 
 	"github.com/kingstonduy/go-core/config"
 	"github.com/kingstonduy/go-core/config/viper"
@@ -43,61 +42,31 @@ func GetConfigurationInstance() *Configuration {
 }
 
 type Configuration struct {
-	ServerConfig               ServerConfig               `config:",squash"`
-	BrokerConfig               KafkaBrokerConfig          `config:",squash"`
-	HealthCheckConfig          HealthcCheckConfig         `config:",squash"`
-	LoggerConfig               LoggerConfig               `config:",squash"`
-	TraceConfig                TracerConfig               `config:",squash"`
-	KafKaTopic                 KafKaTopic                 `config:",squash"`
-	HttpConfig                 HttpConfig                 `config:",squash"`
-	OracleUatsanConfig         OracleUatsanConfig         `config:",squash"`
-	YugabyteMcsAssetMgmtConfig YugabyteMcsAssetMgmtConfig `config:",squash"`
-	OracleOsbr20Cofig          OracleOsbr20Cofig          `config:",squash"`
+	BrokerConfig KafkaBrokerConfig `config:",squash"`
+
+	ServerConfig      ServerConfig      `config:",squash"`
+	HealthCheckConfig HealthCheckConfig `config:",squash"`
+	LoggerConfig      LoggerConfig      `config:",squash"`
+	TraceConfig       TracerConfig      `config:",squash"`
+	HttpConfig        HttpConfig        `config:",squash"`
+	PostgresConfig    PostgresConfig    `config:",squash"`
 }
 
-type YugabyteMcsAssetMgmtConfig struct {
-	Host                  string `config:"YUGABYTE_MCS_ASSET_MGMT_HOST"`
-	Port                  int    `config:"YUGABYTE_MCS_ASSET_MGMT_PORT"`
-	Username              string `config:"YUGABYTE_MCS_ASSET_MGMT_USER"`
-	Password              string `config:"YUGABYTE_MCS_ASSET_MGMT_PASSWORD"`
-	Database              string `config:"YUGABYTE_MCS_ASSET_MGMT_DBNAME"`
-	IdleConnection        int    `config:"YUGABYTE_MCS_ASSET_MGMT_POOL_IDLE_CONNECTION"`
-	MaxConnection         int    `config:"YUGABYTE_MCS_ASSET_MGMT_MAX_POOL_SIZE"`
-	MaxLifeIdleConnection int    `config:"YUGABYTE_MCS_ASSET_MGMT_IDLE_TIMEOUT"`  //seconds
-	MaxIdleTimeConnection int    `config:"YUGABYTE_MCS_ASSET_MGMT_MAX_LIFE_TIME"` // seconds
+type PostgresConfig struct {
+	Host                  string `config:"POSTGRES_HOST"`
+	Port                  int    `config:"POSTGRES_PORT"`
+	Username              string `config:"POSTGRES_USER"`
+	Password              string `config:"POSTGRES_PASSWORD"`
+	Database              string `config:"POSTGRES_DBNAME"`
+	IdleConnection        int    `config:"POSTGRES_POOL_IDLE_CONNECTION"`
+	MaxConnection         int    `config:"POSTGRES_MAX_POOL_SIZE"`
+	MaxLifeIdleConnection int    `config:"POSTGRES_IDLE_TIMEOUT"`  //seconds
+	MaxIdleTimeConnection int    `config:"POSTGRES_MAX_LIFE_TIME"` // seconds
 	SslMode               string `config:""`
 }
 
-type OracleOsbr20Cofig struct {
-	Host                  string        `config:"ORACLE_OSBR20_DB_HOST"`
-	Port                  int           `config:"ORACLE_OSBR20_DB_PORT"`
-	Username              string        `config:"ORACLE_OSBR20_DB_USER"`
-	Password              string        `config:"ORACLE_OSBR20_DB_PASSWORD"`
-	Database              string        `config:"ORACLE_OSBR20_DB_DBNAME"`
-	MaxConnection         int           `config:"ORACLE_OSBR20_DB_MAX_POOL_SIZE"`
-	IdleConnection        int           `config:"ORACLE_OSBR20_DB_POOL_IDLE_CONNECTION"`
-	MaxIdleTimeConnection time.Duration `config:"ORACLE_OSBR20_DB_MAX_IDLE_TIME"` //seconds
-	MaxLifeTimeConnection time.Duration `config:"ORACLE_OSBR20_DB_MAX_LIFE_TIME"` // seconds
-}
-
-type KafKaTopic struct {
-}
-
-type OracleUatsanConfig struct {
-	Host                  string        `config:"ORACLE_UATSAN_DB_HOST"`
-	Port                  int           `config:"ORACLE_UATSAN_DB_PORT"`
-	Username              string        `config:"ORACLE_UATSAN_DB_USER"`
-	Password              string        `config:"ORACLE_UATSAN_DB_PASSWORD"`
-	Database              string        `config:"ORACLE_UATSAN_DB_DBNAME"`
-	MaxConnection         int           `config:"ORACLE_UATSAN_DB_MAX_POOL_SIZE"`
-	IdleConnection        int           `config:"ORACLE_UATSAN_DB_POOL_IDLE_CONNECTION"`
-	MaxIdleTimeConnection time.Duration `config:"ORACLE_UATSAN_DB_MAX_IDLE_TIME"` //seconds
-	MaxLifeTimeConnection time.Duration `config:"ORACLE_UATSAN_DB_MAX_LIFE_TIME"` // seconds
-}
-
 type HttpConfig struct {
-	BaseUrl    string `config:"NEW_MCS_URL"`
-	ExecuteUrl string `config:"FUND_TRANSFER_EXECUTE_URL"`
+	BaseUrl string `config:"BASE_URL"`
 }
 
 type ServerConfig struct {
@@ -105,6 +74,18 @@ type ServerConfig struct {
 	AppVersion   string `config:"SERVER_VERSION"`
 	HttpPort     int    `config:"SERVER_HTTP_PORT"`
 	HttpBasePath string `config:"SERVER_HTTP_BASE_PATH"`
+}
+type HealthCheckConfig struct {
+	GrRunningThreshold    int `config:"HEALTH_CHECK_GR_RUNNING_THRESHOLD"`
+	GcMaxPauseThresholdms int `config:"HEALTH_CHECK_GR_RUNNING_THRESHOLD"`
+}
+
+type TracerConfig struct {
+	ExporterEndpoint string `config:"TRACE_ENDPOINT"`
+}
+
+type LoggerConfig struct {
+	LogLevel string `config:"LOG_LEVEL"`
 }
 
 type KafkaBrokerConfig struct {
@@ -124,15 +105,9 @@ type KafkaBrokerConfig struct {
 	HandlerPool                int    `config:"KAFKA_HANDLER_PUBLISHER"`
 }
 
-type HealthcCheckConfig struct {
-	GrRunningThreshold    int `config:"HEALTH_CHECK_GR_RUNNING_THRESHOLD"`
-	GcMaxPauseThresholdms int `config:"HEALTH_CHECK_GR_RUNNING_THRESHOLD"`
-}
-
-type LoggerConfig struct {
-	LogLevel string `config:"LOG_LEVEL"`
-}
-
-type TracerConfig struct {
-	ExporterEndpoint string `config:"TRACE_ENDPOINT"`
+type RedisConfig struct {
+	Address  string `config:"REDIS_ADDRESSES"`
+	Username string `config:"REDIS_USERNAME"`
+	Password string `config:"REDIS_PASSWORD"`
+	Prefix   string `config:"REDIS_SERVER_PREFIX"`
 }

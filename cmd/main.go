@@ -25,9 +25,7 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.NewCircuitBreaker),
 	fx.Provide(configuration.NewRestyClient),
 	fx.Invoke(configuration.ResgisterPipeline),
-	fx.Provide(configuration.GetYugabyteMcsAssetMgmtDataCon),
-	fx.Provide(configuration.GetOracleOsbr20Con),
-	fx.Provide(configuration.GetOracleUatsanCon),
+	fx.Provide(configuration.NewYugabyteCon),
 )
 
 var usecaseModule = fx.Module("usecase")

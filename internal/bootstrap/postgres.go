@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"time"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/database/sqlx"
 	_ "github.com/yugabyte/pgx/v5/stdlib"
 )
 
-type YugabyteMcsAssetMgmtDataCon struct {
+type PostgresCon struct {
 	DB *database.Gdbc
 }
 
-func GetYugabyteMcsAssetMgmtDataCon(cfg *Configuration) *YugabyteMcsAssetMgmtDataCon {
-	c := cfg.YugabyteMcsAssetMgmtConfig
+func NewYugabyteCon(cfg *Configuration) *PostgresCon {
+	c := cfg.PostgresConfig
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
 		c.Username,
@@ -37,7 +38,7 @@ func GetYugabyteMcsAssetMgmtDataCon(cfg *Configuration) *YugabyteMcsAssetMgmtDat
 		panic(err)
 	}
 
-	return &YugabyteMcsAssetMgmtDataCon{
+	return &PostgresCon{
 		DB: db,
 	}
 }
