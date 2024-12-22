@@ -165,6 +165,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/is/v1/product/get-products": {
+            "post": {
+                "description": "list all the products in the inventory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "GetAllProduct",
+                "operationId": "GetAllProduct",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-domain_GetProductsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-domain_GetProductsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/orders": {
             "get": {
                 "description": "Get all purchased products",
@@ -181,27 +215,6 @@ const docTemplate = `{
                         "description": "ok",
                         "schema": {
                             "$ref": "#/definitions/transport.Response-array_domain_PurchasedProduct"
-                        }
-                    }
-                }
-            }
-        },
-        "/products": {
-            "get": {
-                "description": "Get all products",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
-                "summary": "ListProducts",
-                "operationId": "ListProducts",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_Product"
                         }
                     }
                 }
@@ -426,6 +439,20 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.GetProductsRequest": {
+            "type": "object"
+        },
+        "domain.GetProductsResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Product"
+                    }
+                }
+            }
+        },
         "domain.LoginRequest": {
             "type": "object",
             "properties": {
@@ -451,13 +478,13 @@ const docTemplate = `{
         "domain.Product": {
             "type": "object",
             "properties": {
-                "average_rating": {
+                "averageRating": {
                     "type": "number"
                 },
                 "id": {
                     "type": "string"
                 },
-                "image_url": {
+                "imageUrl": {
                     "type": "string"
                 },
                 "name": {
@@ -632,6 +659,20 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Request-domain_GetProductsRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/domain.GetProductsRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Request-domain_LoginRequest": {
             "type": "object",
             "required": [
@@ -722,23 +763,6 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-array_domain_Product": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Product"
-                    }
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
         "transport.Response-array_domain_PurchasedProduct": {
             "type": "object",
             "properties": {
@@ -775,6 +799,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.CheckoutResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-domain_GetProductsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/domain.GetProductsResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

@@ -6,34 +6,40 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/thesis-backend/internal/bootstrap"
+	"github.com/kingstonduy/thesis-backend/internal/infra/postgres"
+	get_products_uc "github.com/kingstonduy/thesis-backend/internal/usecase/get-all-product"
 
 	http_server "github.com/kingstonduy/thesis-backend/internal/presentation/http"
 	"go.uber.org/fx"
 )
 
 var configModule = fx.Module("config",
-	fx.Provide(configuration.GetLogger),
-	fx.Provide(configuration.GetConfigure),
-	fx.Provide(configuration.GetConfigurationInstance),
-	fx.Provide(configuration.GetValidator),
-	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetKafkaBroker),
-	fx.Provide(configuration.NewHealthChecker),
-	fx.Provide(configuration.GetMetrics),
-	fx.Invoke(configuration.SetDefaults),
-	fx.Provide(configuration.GetMapper),
 	fx.Provide(configuration.NewCircuitBreaker),
-	fx.Provide(configuration.NewRestyClient),
+	fx.Provide(configuration.GetConfigurationInstance),
+	fx.Invoke(configuration.SetDefaults),
+	fx.Provide(configuration.NewHealthChecker),
+	fx.Provide(configuration.GetLogger),
+	fx.Provide(configuration.GetMapper),
+	fx.Provide(configuration.GetMetrics),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
+	fx.Provide(configuration.NewRestyClient),
+	fx.Provide(configuration.GetTracer),
+	fx.Provide(configuration.GetValidator),
 )
 
-var usecaseModule = fx.Module("usecase")
+var usecaseModule = fx.Module("usecase",
+	fx.Provide(get_products_uc.NewGetProductsHandler),
+)
+
 var serverModule = fx.Module("server",
 	fx.Provide(http_server.NewHttpServer),
 )
 
-var infraModule = fx.Module("infras")
+var infraModule = fx.Module("infras",
+	fx.Provide(postgres.NewProductRepoImpl),
+)
 
 func main() {
 	fx.New(
@@ -62,7 +68,6 @@ func run(
 					shutdowner.Shutdown()
 				}),
 				server.WithServer("httpServer", HttpServer),
-				// server.WithServer("cronjobServer", cronjobServer),
 			)
 
 			return serverWrapper.Start(gCtx)

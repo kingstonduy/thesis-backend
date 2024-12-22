@@ -1,13 +1,12 @@
 package configuration
 
 import (
-	"fmt"
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/database/sqlx"
-	_ "github.com/yugabyte/pgx/v5/stdlib"
+	// _ "github.com/yugabyte/pgx/v5/stdlib"
 )
 
 type PostgresCon struct {
@@ -17,13 +16,15 @@ type PostgresCon struct {
 func NewYugabyteCon(cfg *Configuration) *PostgresCon {
 	c := cfg.PostgresConfig
 
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
-		c.Username,
-		c.Password,
-		c.Host,
-		c.Port,
-		c.Database,
-	)
+	// dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
+	// 	c.Username,
+	// 	c.Password,
+	// 	c.Host,
+	// 	c.Port,
+	// 	c.Database,
+	// )
+
+	dsn := `postgres://postgres:changeme@localhost:5432/product`
 
 	db, err := sqlx.NewSqlxGdbc("pgx", dsn,
 		database.WithMaxIdleCount(10),

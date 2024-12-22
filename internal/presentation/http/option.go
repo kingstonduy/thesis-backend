@@ -11,20 +11,22 @@ import (
 
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
-
+		s.App.Post("/get-products", s.ListProducts)
 		return nil
 	}
 }
 
-// @Tags           product
-// @Summary        ListProducts
-// @Description    Get all products
-// @ID             ListProducts
-// @Produce        json
-// @Success        200 {object} transport.Response[[]domain.Product] "ok"
-// @Router         /products [get]
+//	 	@Tags 			product
+//		@Summary		GetAllProduct
+//		@Description	list all the products in the inventory
+//		@ID				GetAllProduct
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.GetProductsRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetProductsResponse]			"ok"
+//		@Router			/is/v1/product/get-products [post]
 func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[any, []domain.Product](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductsRequest, *domain.GetProductsResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 // @Tags           product

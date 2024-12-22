@@ -44,6 +44,15 @@ definitions:
       username:
         type: string
     type: object
+  domain.GetProductsRequest:
+    type: object
+  domain.GetProductsResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/domain.Product'
+        type: array
+    type: object
   domain.LoginRequest:
     properties:
       email:
@@ -60,11 +69,11 @@ definitions:
     type: object
   domain.Product:
     properties:
-      average_rating:
+      averageRating:
         type: number
       id:
         type: string
-      image_url:
+      imageUrl:
         type: string
       name:
         type: string
@@ -177,6 +186,15 @@ definitions:
     required:
     - trace
     type: object
+  transport.Request-domain_GetProductsRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetProductsRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
   transport.Request-domain_LoginRequest:
     properties:
       data:
@@ -235,17 +253,6 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-array_domain_Product:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/domain.Product'
-        type: array
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
   transport.Response-array_domain_PurchasedProduct:
     properties:
       data:
@@ -270,6 +277,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/domain.CheckoutResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_GetProductsResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetProductsResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -471,6 +487,28 @@ paths:
       summary: Checkout
       tags:
       - cart
+  /is/v1/product/get-products:
+    post:
+      consumes:
+      - application/json
+      description: list all the products in the inventory
+      operationId: GetAllProduct
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_GetProductsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_GetProductsResponse'
+      summary: GetAllProduct
+      tags:
+      - product
   /orders:
     get:
       description: Get all purchased products
@@ -485,20 +523,6 @@ paths:
       summary: ListPurchasedProducts
       tags:
       - order
-  /products:
-    get:
-      description: Get all products
-      operationId: ListProducts
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-array_domain_Product'
-      summary: ListProducts
-      tags:
-      - product
   /products/{productId}:
     get:
       description: Get product details by ID
