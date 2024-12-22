@@ -36,13 +36,33 @@ definitions:
       content:
         type: string
       rating:
-        type: integer
+        type: number
       timestamp:
         type: string
-      user_image:
+      userImage:
         type: string
-      username:
+      userName:
         type: string
+    type: object
+  domain.GetProductDetailRequest:
+    properties:
+      productId:
+        type: string
+    type: object
+  domain.GetProductDetailResponse:
+    properties:
+      productCatergory:
+        type: string
+      productDescription:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productPrice:
+        type: number
     type: object
   domain.GetProductsRequest:
     type: object
@@ -79,21 +99,6 @@ definitions:
         type: string
       price:
         type: number
-    type: object
-  domain.ProductDetails:
-    properties:
-      category:
-        type: string
-      description:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      size:
-        items:
-          type: string
-        type: array
     type: object
   domain.PurchasedProduct:
     properties:
@@ -181,6 +186,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/domain.AddCommentRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_GetProductDetailRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetProductDetailRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -282,6 +296,15 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
+  transport.Response-domain_GetProductDetailResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetProductDetailResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
   transport.Response-domain_GetProductsResponse:
     properties:
       data:
@@ -295,15 +318,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/domain.LoginResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_ProductDetails:
-    properties:
-      data:
-        $ref: '#/definitions/domain.ProductDetails'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -487,6 +501,28 @@ paths:
       summary: Checkout
       tags:
       - cart
+  /is/v1/product/get-product-detail:
+    post:
+      consumes:
+      - application/json
+      description: Get the detail of a product
+      operationId: GetProductDetail
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_GetProductDetailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_GetProductDetailResponse'
+      summary: GetProductDetail
+      tags:
+      - product
   /is/v1/product/get-products:
     post:
       consumes:
@@ -523,26 +559,6 @@ paths:
       summary: ListPurchasedProducts
       tags:
       - order
-  /products/{productId}:
-    get:
-      description: Get product details by ID
-      operationId: GetProductDetails
-      parameters:
-      - description: Product ID
-        in: path
-        name: productId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_ProductDetails'
-      summary: GetProductDetails
-      tags:
-      - product
   /products/{productId}/comments:
     get:
       description: Get comments for a product

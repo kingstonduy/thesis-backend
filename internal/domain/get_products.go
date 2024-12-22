@@ -1,6 +1,10 @@
 package domain
 
-import "context"
+import (
+	"context"
+
+	"github.com/shopspring/decimal"
+)
 
 type GetProductsRequest struct {
 }
@@ -10,11 +14,11 @@ type GetProductsResponse struct {
 }
 
 type Product struct {
-	ID            string  `json:"id"`
-	Name          string  `json:"name"`
-	ImageURL      string  `json:"imageUrl"`
-	Price         float64 `json:"price"`
-	AverageRating float64 `json:"averageRating"`
+	ID            string          `json:"id"`
+	Name          string          `json:"name"`
+	ImageURL      string          `json:"imageUrl"`
+	Price         decimal.Decimal `json:"price"`
+	AverageRating decimal.Decimal `json:"averageRating"`
 }
 
 type IGetProductsHandler interface {

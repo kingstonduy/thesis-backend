@@ -7,6 +7,9 @@ import (
 
 func ResgisterPipeline(
 	IGetProductsHandler domain.IGetProductsHandler,
+	IGetProductDetailHandler domain.IGetProductDetailHandler,
 ) {
 	pipeline.RegisterRequestHandler(IGetProductsHandler)
+	pipeline.RegisterRequestHandler(IGetProductDetailHandler)
+
 }

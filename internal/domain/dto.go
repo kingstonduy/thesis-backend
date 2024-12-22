@@ -1,21 +1,5 @@
 package domain
 
-type ProductDetails struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	Category    string   `json:"category"`
-	Size        []string `json:"size"`
-	Description string   `json:"description"`
-}
-
-type Comment struct {
-	UserImage string `json:"user_image"`
-	Username  string `json:"username"`
-	Timestamp string `json:"timestamp"`
-	Content   string `json:"content"`
-	Rating    int    `json:"rating"`
-}
-
 type AddCommentRequest struct {
 	Content string `json:"content"`
 	Rating  int    `json:"rating"`

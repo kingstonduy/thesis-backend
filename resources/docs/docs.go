@@ -165,6 +165,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/is/v1/product/get-product-detail": {
+            "post": {
+                "description": "Get the detail of a product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "GetProductDetail",
+                "operationId": "GetProductDetail",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-domain_GetProductDetailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-domain_GetProductDetailResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/is/v1/product/get-products": {
             "post": {
                 "description": "list all the products in the inventory",
@@ -215,36 +249,6 @@ const docTemplate = `{
                         "description": "ok",
                         "schema": {
                             "$ref": "#/definitions/transport.Response-array_domain_PurchasedProduct"
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{productId}": {
-            "get": {
-                "description": "Get product details by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
-                "summary": "GetProductDetails",
-                "operationId": "GetProductDetails",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "productId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_ProductDetails"
                         }
                     }
                 }
@@ -426,16 +430,47 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rating": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "timestamp": {
                     "type": "string"
                 },
-                "user_image": {
+                "userImage": {
                     "type": "string"
                 },
-                "username": {
+                "userName": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.GetProductDetailRequest": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.GetProductDetailResponse": {
+            "type": "object",
+            "properties": {
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productDescription": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productPrice": {
+                    "type": "number"
                 }
             }
         },
@@ -492,29 +527,6 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
-                }
-            }
-        },
-        "domain.ProductDetails": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "size": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 }
             }
         },
@@ -653,6 +665,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.AddCommentRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-domain_GetProductDetailRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/domain.GetProductDetailRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -808,6 +834,20 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Response-domain_GetProductDetailResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/domain.GetProductDetailResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Response-domain_GetProductsResponse": {
             "type": "object",
             "properties": {
@@ -827,20 +867,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.LoginResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_ProductDetails": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.ProductDetails"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

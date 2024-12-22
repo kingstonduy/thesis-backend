@@ -7,7 +7,9 @@ import (
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/thesis-backend/internal/bootstrap"
 	"github.com/kingstonduy/thesis-backend/internal/infra/postgres"
+	"github.com/kingstonduy/thesis-backend/internal/infra/postgres/outbound"
 	get_products_uc "github.com/kingstonduy/thesis-backend/internal/usecase/get-all-product"
+	get_product_detail_uc "github.com/kingstonduy/thesis-backend/internal/usecase/get-product-detail"
 
 	http_server "github.com/kingstonduy/thesis-backend/internal/presentation/http"
 	"go.uber.org/fx"
@@ -31,6 +33,7 @@ var configModule = fx.Module("config",
 
 var usecaseModule = fx.Module("usecase",
 	fx.Provide(get_products_uc.NewGetProductsHandler),
+	fx.Provide(get_product_detail_uc.NewGetProductDetailHandler),
 )
 
 var serverModule = fx.Module("server",
@@ -39,6 +42,7 @@ var serverModule = fx.Module("server",
 
 var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewProductRepoImpl),
+	fx.Provide(outbound.NewCommentOutbound),
 )
 
 func main() {

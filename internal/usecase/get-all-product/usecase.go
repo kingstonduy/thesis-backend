@@ -6,18 +6,23 @@ import (
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
+	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/thesis-backend/internal/domain"
+	"github.com/kingstonduy/thesis-backend/internal/pkg/utils"
 )
 
 type handler struct {
-	repo domain.IProductRepo
+	repo            domain.IProductRepo
+	commentOutbound domain.ICommentOutbound
 }
 
 func NewGetProductsHandler(
 	repo domain.IProductRepo,
+	commentOutbound domain.ICommentOutbound,
 ) domain.IGetProductsHandler {
 	return &handler{
-		repo: repo,
+		repo:            repo,
+		commentOutbound: commentOutbound,
 	}
 }
 
@@ -33,6 +38,8 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (r
 		}
 	}()
 
+	trace := transport.GetTraceByCtx(ctx)
+
 	entities, err := h.repo.GetAllProduct(ctx)
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
@@ -44,11 +51,20 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (r
 
 	products := []domain.Product{}
 	for _, entity := range entities {
+
+		commentRes, err := h.commentOutbound.GetAvgerageRatingByProductID(ctx, domain.GetAvgerageRatingByProductIDRequest{ProductID: entity.ProductID}, utils.GenRequestTrace(trace, "comment-service", ""))
+		if err != nil {
+			errx := errorx.OutboundErrorWithDetails(err.Error(), "")
+			logger.Error(ctx, errx.Error())
+			return nil, errx
+		}
+
 		product := domain.Product{
-			ID:       entity.ProductID,
-			Name:     entity.ProductName,
-			ImageURL: entity.ProductImage,
-			Price:    entity.ProductPrice,
+			ID:            entity.ProductID,
+			Name:          entity.ProductName,
+			ImageURL:      entity.ProductImage,
+			Price:         entity.ProductPrice,
+			AverageRating: commentRes.Rating,
 		}
 		products = append(products, product)
 	}

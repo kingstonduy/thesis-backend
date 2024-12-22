@@ -12,6 +12,7 @@ import (
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
 		s.App.Post("/get-products", s.ListProducts)
+		s.App.Post("/get-product-detail", s.GetProductDetails)
 		return nil
 	}
 }
@@ -29,16 +30,17 @@ func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductsRequest, *domain.GetProductsResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
-// @Tags           product
-// @Summary        GetProductDetails
-// @Description    Get product details by ID
-// @ID             GetProductDetails
-// @Produce        json
-// @Param          productId path string true "Product ID"
-// @Success        200 {object} transport.Response[domain.ProductDetails] "ok"
-// @Router         /products/{productId} [get]
+//	 	@Tags 			product
+//		@Summary		GetProductDetail
+//		@Description	Get the detail of a product
+//		@ID				GetProductDetail
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.GetProductDetailRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetProductDetailResponse]			"ok"
+//		@Router			/is/v1/product/get-product-detail [post]
 func (s *HttpServer) GetProductDetails(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[any, domain.ProductDetails](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductDetailRequest, *domain.GetProductDetailResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 // @Tags           comment

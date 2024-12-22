@@ -71,7 +71,7 @@ func (repo *productRepoImlp) GetProductByID(ctx context.Context, productID strin
         select * from "PRODUCT" where "PRODUCT_ID"=$1;
     `
 
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery); err != nil {
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
 		return entity, err
 	}
 
