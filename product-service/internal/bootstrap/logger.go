@@ -7,7 +7,7 @@ import (
 	"github.com/kingstonduy/go-core/logger/logrus"
 	rotateLog "github.com/kingstonduy/go-core/logger/logrus/hooks/rotate_log"
 	"github.com/kingstonduy/go-core/trace"
-	custom_logger "github.com/kingstonduy/thesis-backend/internal/pkg/logger"
+	custom_logger "github.com/kingstonduy/product-service/internal/pkg/logger"
 )
 
 func GetLogger(cfg *Configuration, tracer trace.Tracer) logger.Logger {

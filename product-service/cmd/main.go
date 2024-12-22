@@ -5,13 +5,13 @@ import (
 
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
-	configuration "github.com/kingstonduy/thesis-backend/internal/bootstrap"
-	"github.com/kingstonduy/thesis-backend/internal/infra/postgres"
-	"github.com/kingstonduy/thesis-backend/internal/infra/postgres/outbound"
-	get_products_uc "github.com/kingstonduy/thesis-backend/internal/usecase/get-all-product"
-	get_product_detail_uc "github.com/kingstonduy/thesis-backend/internal/usecase/get-product-detail"
+	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
+	"github.com/kingstonduy/product-service/internal/infra/postgres"
+	"github.com/kingstonduy/product-service/internal/infra/postgres/outbound"
+	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
+	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
 
-	http_server "github.com/kingstonduy/thesis-backend/internal/presentation/http"
+	http_server "github.com/kingstonduy/product-service/internal/presentation/http"
 	"go.uber.org/fx"
 )
 

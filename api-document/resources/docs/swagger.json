@@ -1,0 +1,1165 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/is/v1/cart/get-items": {
+            "post": {
+                "description": "Get all items on user's cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CART SERVICE"
+                ],
+                "summary": "GetCart",
+                "operationId": "GetCart",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetCartRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetCartResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/cart/update": {
+            "post": {
+                "description": "Update the quantity of an item in the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CART SERVICE"
+                ],
+                "summary": "UpdateCartItem",
+                "operationId": "UpdateCartItem",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_UpdateCartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_UpdateCartItemResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/comment/add-comment": {
+            "post": {
+                "description": "Add comment description",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "COMMENT SERVICE"
+                ],
+                "summary": "AddComment",
+                "operationId": "AddComment",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_AddCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_AddCommentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/comment/get-product-detail": {
+            "post": {
+                "description": "Get all the comments related to a product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "COMMENT SERVICE"
+                ],
+                "summary": "GetCommentsByProductID",
+                "operationId": "GetCommentsByProductID",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetCommentsByProductIDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetCommentsByProductIDResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/order/checkout": {
+            "post": {
+                "description": "Checkout the cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ORDER SERVICE"
+                ],
+                "summary": "Checkout",
+                "operationId": "Checkout",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_CheckoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_CheckoutResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/order/get-history": {
+            "post": {
+                "description": "Get all the purchased products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ORDER SERVICE"
+                ],
+                "summary": "GetPurchasedProducts",
+                "operationId": "GetPurchasedProducts",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetPurchasedProductsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetPurchasedProductsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/product/get-product-detail": {
+            "post": {
+                "description": "Get the detail of a product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT SERVICE"
+                ],
+                "summary": "GetProductDetail",
+                "operationId": "GetProductDetail",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetProductDetailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetProductDetailResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/product/get-products": {
+            "post": {
+                "description": "list all the products in the inventory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT SERVICE"
+                ],
+                "summary": "GetAllProduct",
+                "operationId": "GetAllProduct",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_ListProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_ListProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/user/get-product-detail": {
+            "post": {
+                "description": "Update the user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "USER SERVICE"
+                ],
+                "summary": "UpdateUserInformation",
+                "operationId": "UpdateUserInformation",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_UpdateUserInformationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_UpdateUserInformationResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/user/get-user-information": {
+            "post": {
+                "description": "Get the user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "USER SERVICE"
+                ],
+                "summary": "GetUserInformation",
+                "operationId": "GetUserInformation",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetUserInformationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetUserInformationResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/user/login": {
+            "post": {
+                "description": "login for a new session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "USER SERVICE"
+                ],
+                "summary": "Login",
+                "operationId": "Login",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_LoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/user/register": {
+            "post": {
+                "description": "Register a new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "USER SERVICE"
+                ],
+                "summary": "RegisterUser",
+                "operationId": "RegisterUser",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_RegisterUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_RegisterUserResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.AddCommentRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.AddCommentResponse": {
+            "type": "object"
+        },
+        "handlers.CartItem": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                },
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.CheckoutItem": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.CheckoutRequest": {
+            "type": "object",
+            "properties": {
+                "checkoutItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.CheckoutItem"
+                    }
+                }
+            }
+        },
+        "handlers.CheckoutResponse": {
+            "type": "object"
+        },
+        "handlers.Comment": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "userImage": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetCartRequest": {
+            "type": "object"
+        },
+        "handlers.GetCartResponse": {
+            "type": "object",
+            "properties": {
+                "cartItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.CartItem"
+                    }
+                }
+            }
+        },
+        "handlers.GetCommentsByProductIDRequest": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetCommentsByProductIDResponse": {
+            "type": "object",
+            "properties": {
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.Comment"
+                    }
+                }
+            }
+        },
+        "handlers.GetProductDetailRequest": {
+            "type": "object",
+            "properties": {
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetProductDetailResponse": {
+            "type": "object",
+            "properties": {
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productDescription": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productPrice": {
+                    "type": "number"
+                }
+            }
+        },
+        "handlers.GetPurchasedProductsRequest": {
+            "type": "object"
+        },
+        "handlers.GetPurchasedProductsResponse": {
+            "type": "object",
+            "properties": {
+                "deliveryStatus": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetUserInformationRequest": {
+            "type": "object"
+        },
+        "handlers.GetUserInformationResponse": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.ListProductRequest": {
+            "type": "object"
+        },
+        "handlers.ListProductResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.Product"
+                    }
+                }
+            }
+        },
+        "handlers.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.LoginResponse": {
+            "type": "object"
+        },
+        "handlers.Product": {
+            "type": "object",
+            "properties": {
+                "averageRating": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
+        "handlers.RegisterUserRequest": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.RegisterUserResponse": {
+            "type": "object"
+        },
+        "handlers.UpdateCartItemRequest": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                },
+                "cartItemQuantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.UpdateCartItemResponse": {
+            "type": "object"
+        },
+        "handlers.UpdateUserInformationRequest": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.UpdateUserInformationResponse": {
+            "type": "object"
+        },
+        "transport.Request-handlers_AddCommentRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.AddCommentRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_CheckoutRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.CheckoutRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetCartRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCartRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetCommentsByProductIDRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCommentsByProductIDRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetProductDetailRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetProductDetailRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetPurchasedProductsRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetPurchasedProductsRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetUserInformationRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetUserInformationRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_ListProductRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.ListProductRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_LoginRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.LoginRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_RegisterUserRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.RegisterUserRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_UpdateCartItemRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.UpdateCartItemRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_UpdateUserInformationRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.UpdateUserInformationRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_AddCommentResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.AddCommentResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_CheckoutResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.CheckoutResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetCartResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCartResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetCommentsByProductIDResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCommentsByProductIDResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetProductDetailResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetProductDetailResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetPurchasedProductsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetPurchasedProductsResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetUserInformationResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetUserInformationResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_ListProductResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.ListProductResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_LoginResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.LoginResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_RegisterUserResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.RegisterUserResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_UpdateCartItemResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.UpdateCartItemResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_UpdateUserInformationResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.UpdateUserInformationResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Result": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "type": "integer"
+                }
+            }
+        },
+        "transport.Trace": {
+            "type": "object",
+            "required": [
+                "cid",
+                "cts"
+            ],
+            "properties": {
+                "cid": {
+                    "type": "string"
+                },
+                "clientId": {
+                    "type": "string"
+                },
+                "cts": {
+                    "type": "integer"
+                },
+                "dur": {
+                    "type": "integer"
+                },
+                "frm": {
+                    "type": "string"
+                },
+                "replyTo": {
+                    "type": "string"
+                },
+                "sid": {
+                    "type": "string"
+                },
+                "sts": {
+                    "type": "integer"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "transactionTimeout": {
+                    "type": "integer",
+                    "maximum": 120000
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

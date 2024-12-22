@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/kingstonduy/go-core/transport"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
+	"github.com/kingstonduy/product-service/internal/domain"
 	"github.com/shopspring/decimal"
 )
 

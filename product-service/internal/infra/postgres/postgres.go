@@ -6,8 +6,8 @@ import (
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
-	configuration "github.com/kingstonduy/thesis-backend/internal/bootstrap"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
+	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
+	"github.com/kingstonduy/product-service/internal/domain"
 )
 
 type productRepoImlp struct {

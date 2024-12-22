@@ -1,4 +1,4 @@
-module github.com/kingstonduy/thesis-backend
+module github.com/kingstonduy/product-service
 
 go 1.21.6
 

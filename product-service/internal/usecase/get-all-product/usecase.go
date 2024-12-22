@@ -7,8 +7,8 @@ import (
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/transport"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
-	"github.com/kingstonduy/thesis-backend/internal/pkg/utils"
+	"github.com/kingstonduy/product-service/internal/domain"
+	"github.com/kingstonduy/product-service/internal/pkg/utils"
 )
 
 type handler struct {

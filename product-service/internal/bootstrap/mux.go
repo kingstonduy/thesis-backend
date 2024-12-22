@@ -2,7 +2,7 @@ package configuration
 
 import (
 	"github.com/kingstonduy/go-core/pipeline"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
+	"github.com/kingstonduy/product-service/internal/domain"
 )
 
 func ResgisterPipeline(

@@ -6,7 +6,7 @@ import (
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
+	"github.com/kingstonduy/product-service/internal/domain"
 )
 
 type handler struct {

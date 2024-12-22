@@ -9,7 +9,7 @@ import (
 	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
 	"github.com/kingstonduy/go-core/validation"
-	configuration "github.com/kingstonduy/thesis-backend/internal/bootstrap"
+	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/pkg/errors"
 )
 

@@ -5,8 +5,8 @@ import (
 	"github.com/kingstonduy/go-core/errorx"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
-	"github.com/kingstonduy/thesis-backend/internal/domain"
-	_ "github.com/kingstonduy/thesis-backend/resources/docs"
+	"github.com/kingstonduy/product-service/internal/domain"
+	_ "github.com/kingstonduy/product-service/resources/docs"
 )
 
 func (s *HttpServer) WithRoutingOption() option {
