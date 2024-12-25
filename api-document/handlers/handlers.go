@@ -31,7 +31,7 @@ type Product struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[ListProductRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[ListProductResponse]			"ok"
-//		@Router			/is/v1/product/get-products [post]
+//		@Router			/is/v1/product-service/get-products [post]
 func ListProducts(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*ListProductRequest, *ListProductResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -56,7 +56,7 @@ type GetProductDetailResponse struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[GetProductDetailRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[GetProductDetailResponse]			"ok"
-//		@Router			/is/v1/product/get-product-detail [post]
+//		@Router			/is/v1/product-service/get-product-detail [post]
 func GetProductDetails(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*GetProductDetailRequest, GetProductDetailResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -83,7 +83,7 @@ type Comment struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[GetCommentsByProductIDRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[GetCommentsByProductIDResponse]			"ok"
-//		@Router			/is/v1/comment/get-product-detail [post]
+//		@Router			/is/v1/comment-service/product-id [post]
 func GetCommentsByProductID(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*GetCommentsByProductIDRequest, *GetCommentsByProductIDResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -104,7 +104,7 @@ type AddCommentResponse struct{}
 //		@Produce		json
 //		@Param			request	body		transport.Request[AddCommentRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[AddCommentResponse]			"ok"
-//		@Router			/is/v1/comment/add-comment [post]
+//		@Router			/is/v1/comment-service/add-comment [post]
 func AddComment(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*AddCommentRequest, *AddCommentResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -130,7 +130,7 @@ type CartItem struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[GetCartRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[GetCartResponse]			"ok"
-//		@Router			/is/v1/cart/get-items [post]
+//		@Router			/is/v1/cart-service/get-items [post]
 func GetCart(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*GetCartRequest, *GetCartResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -151,9 +151,32 @@ type UpdateCartItemResponse struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[UpdateCartItemRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[UpdateCartItemResponse]			"ok"
-//		@Router			/is/v1/cart/update [post]
+//		@Router			/is/v1/cart-service/update [post]
 func UpdateCartItem(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*UpdateCartItemRequest, *UpdateCartItemResponse](ctx, errorx.ErrorCodeTimeout)
+}
+
+type DeleteCartItemRequest struct {
+	CartItems []DeleteCartItemDetail `json:"cartItems"`
+}
+
+type DeleteCartItemDetail struct {
+	CartItemID string `json:"cartItemId"`
+}
+
+type DeleteCartItemResposne struct{}
+
+//	 	@Tags 			CART SERVICE
+//		@Summary		DeleteCartItem
+//		@Description	Delete the cartItem from user's cart
+//		@ID				DeleteCartItem
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[DeleteCartItemRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[DeleteCartItemResposne]			"ok"
+//		@Router			/is/v1/cart-service/delte-cart-item [post]
+func DeleteCartItem(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*DeleteCartItemRequest, *DeleteCartItemResposne](ctx, errorx.ErrorCodeTimeout)
 }
 
 type CheckoutRequest struct {
@@ -173,7 +196,7 @@ type CheckoutItem struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[CheckoutRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[CheckoutResponse]			"ok"
-//		@Router			/is/v1/order/checkout [post]
+//		@Router			/is/v1/order-service/checkout [post]
 func Checkout(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*CheckoutRequest, *CheckoutResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -196,12 +219,14 @@ type GetPurchasedProductsResponse struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[GetPurchasedProductsRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[GetPurchasedProductsResponse]			"ok"
-//		@Router			/is/v1/order/get-history [post]
+//		@Router			/is/v1/order-service/get-history [post]
 func GetPurchasedProducts(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*GetPurchasedProductsRequest, *GetPurchasedProductsResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
-type GetUserInformationRequest struct{}
+type GetUserInformationRequest struct {
+	UserID string `json:"userId"`
+}
 type GetUserInformationResponse struct {
 	UserID      string `json:"userId"`
 	UserName    string `json:"userName"`
@@ -223,22 +248,26 @@ type GetUserInformationResponse struct {
 //		@Produce		json
 //		@Param			request	body		transport.Request[GetUserInformationRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[GetUserInformationResponse]			"ok"
-//		@Router			/is/v1/user/get-user-information [post]
+//		@Router			/is/v1/user-service/get-user-information [post]
 func GetUserInformation(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*GetUserInformationRequest, *GetUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 type UpdateUserInformationRequest struct {
-	UserID      string `json:"userId"`
-	UserName    string `json:"userName"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
-	Gender      string `json:"gender"`
-	DateOfBirth string `json:"dateOfBirth"`
-	Street      string `json:"street"`
-	City        string `json:"city"`
-	District    string `json:"district"`
-	Ward        string `json:"ward"`
+	UserID       string `json:"userId"`
+	UserName     string `json:"userName"`
+	Password     string `json:"password"`
+	Email        string `json:"email"`
+	PhoneNumber  string `json:"phoneNumber"`
+	Gender       string `json:"gender"`
+	DateOfBirth  string `json:"dateOfBirth"`
+	Street       string `json:"street"`
+	City         string `json:"city"`
+	CityCode     string `json:"cityCode"`
+	District     string `json:"district"`
+	DistrictCode string `json:"districtCode"`
+	Ward         string `json:"ward"`
+	WardCode     string `json:"wardCode"`
 }
 type UpdateUserInformationResponse struct{}
 
@@ -250,22 +279,25 @@ type UpdateUserInformationResponse struct{}
 //		@Produce		json
 //		@Param			request	body		transport.Request[UpdateUserInformationRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[UpdateUserInformationResponse]			"ok"
-//		@Router			/is/v1/user/get-product-detail [post]
+//		@Router			/is/v1/user-service/update [post]
 func UpdateUserInformation(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*UpdateUserInformationRequest, *UpdateUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 type RegisterUserRequest struct {
-	UserID      string `json:"userId"`
-	UserName    string `json:"userName"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
-	Gender      string `json:"gender"`
-	DateOfBirth string `json:"dateOfBirth"`
-	Street      string `json:"street"`
-	City        string `json:"city"`
-	District    string `json:"district"`
-	Ward        string `json:"ward"`
+	UserName     string `json:"userName"`
+	Password     string `json:"password"`
+	Email        string `json:"email"`
+	PhoneNumber  string `json:"phoneNumber"`
+	Gender       string `json:"gender"`
+	DateOfBirth  string `json:"dateOfBirth"`
+	Street       string `json:"street"`
+	City         string `json:"city"`
+	CityCode     string `json:"cityCode"`
+	District     string `json:"district"`
+	DistrictCode string `json:"districtCode"`
+	Ward         string `json:"ward"`
+	WardCode     string `json:"wardCode"`
 }
 type RegisterUserResponse struct{}
 
@@ -277,7 +309,7 @@ type RegisterUserResponse struct{}
 //		@Produce		json
 //		@Param			request	body		transport.Request[RegisterUserRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[RegisterUserResponse]			"ok"
-//		@Router			/is/v1/user/register [post]
+//		@Router			/is/v1/user-service/register [post]
 func RegisterUser(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*RegisterUserRequest, *RegisterUserResponse](ctx, errorx.ErrorCodeTimeout)
 }
@@ -296,7 +328,7 @@ type LoginResponse struct{}
 //		@Produce		json
 //		@Param			request	body		transport.Request[LoginRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[LoginResponse]			"ok"
-//		@Router			/is/v1/user/login [post]
+//		@Router			/is/v1/user-service/login [post]
 func Login(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*LoginRequest, *LoginResponse](ctx, errorx.ErrorCodeTimeout)
 }

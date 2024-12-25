@@ -1,0 +1,310 @@
+definitions:
+  github_com_kingstonduy_user-service_internal_domain.GetUserInformationRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.GetUserInformationResponse:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userId:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.LoginResponse:
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.RegisterRequest:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.RegisterResponse:
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.UpdateUserInformationRequest:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userId:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_user-service_internal_domain.UpdateUserInformationResponse:
+    type: object
+  transport.Request-github_com_kingstonduy_user-service_internal_domain_GetUserInformationRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.GetUserInformationRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_user-service_internal_domain_LoginRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.LoginRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_user-service_internal_domain_RegisterRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.RegisterRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_user-service_internal_domain_UpdateUserInformationRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.UpdateUserInformationRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Response-github_com_kingstonduy_user-service_internal_domain_GetUserInformationResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.GetUserInformationResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_user-service_internal_domain_LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.LoginResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_user-service_internal_domain_RegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.RegisterResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_user-service_internal_domain_UpdateUserInformationResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_user-service_internal_domain.UpdateUserInformationResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Result:
+    properties:
+      code:
+        type: string
+      details:
+        type: object
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  transport.Trace:
+    properties:
+      cid:
+        type: string
+      clientId:
+        type: string
+      cts:
+        type: integer
+      dur:
+        type: integer
+      frm:
+        type: string
+      replyTo:
+        type: string
+      sid:
+        type: string
+      sts:
+        type: integer
+      to:
+        type: string
+      transactionTimeout:
+        maximum: 120000
+        type: integer
+      userName:
+        type: string
+    required:
+    - cid
+    - cts
+    type: object
+info:
+  contact: {}
+paths:
+  /is/v1/user-service/get-product-detail:
+    post:
+      consumes:
+      - application/json
+      description: Update the user information
+      operationId: UpdateUserInformation
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_user-service_internal_domain_UpdateUserInformationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_user-service_internal_domain_UpdateUserInformationResponse'
+      summary: UpdateUserInformation
+      tags:
+      - USER SERVICE
+  /is/v1/user-service/login:
+    post:
+      consumes:
+      - application/json
+      description: login for a new session
+      operationId: Login
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_user-service_internal_domain_LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_user-service_internal_domain_LoginResponse'
+      summary: Login
+      tags:
+      - USER SERVICE
+  /is/v1/user-service/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      operationId: RegisterUser
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_user-service_internal_domain_RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_user-service_internal_domain_RegisterResponse'
+      summary: RegisterUser
+      tags:
+      - USER SERVICE
+  /is/v1/user-service/update:
+    post:
+      consumes:
+      - application/json
+      description: Get the user information
+      operationId: GetUserInformation
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_user-service_internal_domain_GetUserInformationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_user-service_internal_domain_GetUserInformationResponse'
+      summary: GetUserInformation
+      tags:
+      - USER SERVICE
+swagger: "2.0"

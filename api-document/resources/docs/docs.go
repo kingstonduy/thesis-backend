@@ -15,7 +15,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/is/v1/cart/get-items": {
+        "/is/v1/cart-service/delte-cart-item": {
+            "post": {
+                "description": "Delete the cartItem from user's cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CART SERVICE"
+                ],
+                "summary": "DeleteCartItem",
+                "operationId": "DeleteCartItem",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_DeleteCartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_DeleteCartItemResposne"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/cart-service/get-items": {
             "post": {
                 "description": "Get all items on user's cart",
                 "consumes": [
@@ -49,7 +83,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/cart/update": {
+        "/is/v1/cart-service/update": {
             "post": {
                 "description": "Update the quantity of an item in the cart",
                 "consumes": [
@@ -83,7 +117,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/comment/add-comment": {
+        "/is/v1/comment-service/add-comment": {
             "post": {
                 "description": "Add comment description",
                 "consumes": [
@@ -117,7 +151,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/comment/get-product-detail": {
+        "/is/v1/comment-service/product-id": {
             "post": {
                 "description": "Get all the comments related to a product",
                 "consumes": [
@@ -151,7 +185,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/order/checkout": {
+        "/is/v1/order-service/checkout": {
             "post": {
                 "description": "Checkout the cart",
                 "consumes": [
@@ -185,7 +219,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/order/get-history": {
+        "/is/v1/order-service/get-history": {
             "post": {
                 "description": "Get all the purchased products",
                 "consumes": [
@@ -219,7 +253,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/product/get-product-detail": {
+        "/is/v1/product-service/get-product-detail": {
             "post": {
                 "description": "Get the detail of a product",
                 "consumes": [
@@ -253,7 +287,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/product/get-products": {
+        "/is/v1/product-service/get-products": {
             "post": {
                 "description": "list all the products in the inventory",
                 "consumes": [
@@ -287,41 +321,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/user/get-product-detail": {
-            "post": {
-                "description": "Update the user information",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "USER SERVICE"
-                ],
-                "summary": "UpdateUserInformation",
-                "operationId": "UpdateUserInformation",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_UpdateUserInformationRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_UpdateUserInformationResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/is/v1/user/get-user-information": {
+        "/is/v1/user-service/get-user-information": {
             "post": {
                 "description": "Get the user information",
                 "consumes": [
@@ -355,7 +355,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/user/login": {
+        "/is/v1/user-service/login": {
             "post": {
                 "description": "login for a new session",
                 "consumes": [
@@ -389,7 +389,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/user/register": {
+        "/is/v1/user-service/register": {
             "post": {
                 "description": "Register a new user",
                 "consumes": [
@@ -418,6 +418,40 @@ const docTemplate = `{
                         "description": "ok",
                         "schema": {
                             "$ref": "#/definitions/transport.Response-handlers_RegisterUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/user-service/update": {
+            "post": {
+                "description": "Update the user information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "USER SERVICE"
+                ],
+                "summary": "UpdateUserInformation",
+                "operationId": "UpdateUserInformation",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_UpdateUserInformationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_UpdateUserInformationResponse"
                         }
                     }
                 }
@@ -510,6 +544,28 @@ const docTemplate = `{
                 }
             }
         },
+        "handlers.DeleteCartItemDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.DeleteCartItemRequest": {
+            "type": "object",
+            "properties": {
+                "cartItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.DeleteCartItemDetail"
+                    }
+                }
+            }
+        },
+        "handlers.DeleteCartItemResposne": {
+            "type": "object"
+        },
         "handlers.GetCartRequest": {
             "type": "object"
         },
@@ -601,7 +657,12 @@ const docTemplate = `{
             }
         },
         "handlers.GetUserInformationRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                }
+            }
         },
         "handlers.GetUserInformationResponse": {
             "type": "object",
@@ -692,10 +753,16 @@ const docTemplate = `{
                 "city": {
                     "type": "string"
                 },
+                "cityCode": {
+                    "type": "string"
+                },
                 "dateOfBirth": {
                     "type": "string"
                 },
                 "district": {
+                    "type": "string"
+                },
+                "districtCode": {
                     "type": "string"
                 },
                 "email": {
@@ -710,13 +777,13 @@ const docTemplate = `{
                 "street": {
                     "type": "string"
                 },
-                "userId": {
-                    "type": "string"
-                },
                 "userName": {
                     "type": "string"
                 },
                 "ward": {
+                    "type": "string"
+                },
+                "wardCode": {
                     "type": "string"
                 }
             }
@@ -744,10 +811,16 @@ const docTemplate = `{
                 "city": {
                     "type": "string"
                 },
+                "cityCode": {
+                    "type": "string"
+                },
                 "dateOfBirth": {
                     "type": "string"
                 },
                 "district": {
+                    "type": "string"
+                },
+                "districtCode": {
                     "type": "string"
                 },
                 "email": {
@@ -769,6 +842,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "ward": {
+                    "type": "string"
+                },
+                "wardCode": {
                     "type": "string"
                 }
             }
@@ -798,6 +874,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.CheckoutRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_DeleteCartItemRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.DeleteCartItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -963,6 +1053,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.CheckoutResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_DeleteCartItemResposne": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.DeleteCartItemResposne"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

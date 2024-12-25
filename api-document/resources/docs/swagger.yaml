@@ -54,6 +54,20 @@ definitions:
       userName:
         type: string
     type: object
+  handlers.DeleteCartItemDetail:
+    properties:
+      cartItemId:
+        type: string
+    type: object
+  handlers.DeleteCartItemRequest:
+    properties:
+      cartItems:
+        items:
+          $ref: '#/definitions/handlers.DeleteCartItemDetail'
+        type: array
+    type: object
+  handlers.DeleteCartItemResposne:
+    type: object
   handlers.GetCartRequest:
     type: object
   handlers.GetCartResponse:
@@ -113,6 +127,9 @@ definitions:
         type: string
     type: object
   handlers.GetUserInformationRequest:
+    properties:
+      userId:
+        type: string
     type: object
   handlers.GetUserInformationResponse:
     properties:
@@ -172,9 +189,13 @@ definitions:
     properties:
       city:
         type: string
+      cityCode:
+        type: string
       dateOfBirth:
         type: string
       district:
+        type: string
+      districtCode:
         type: string
       email:
         type: string
@@ -184,11 +205,11 @@ definitions:
         type: string
       street:
         type: string
-      userId:
-        type: string
       userName:
         type: string
       ward:
+        type: string
+      wardCode:
         type: string
     type: object
   handlers.RegisterUserResponse:
@@ -206,9 +227,13 @@ definitions:
     properties:
       city:
         type: string
+      cityCode:
+        type: string
       dateOfBirth:
         type: string
       district:
+        type: string
+      districtCode:
         type: string
       email:
         type: string
@@ -223,6 +248,8 @@ definitions:
       userName:
         type: string
       ward:
+        type: string
+      wardCode:
         type: string
     type: object
   handlers.UpdateUserInformationResponse:
@@ -240,6 +267,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.CheckoutRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-handlers_DeleteCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.DeleteCartItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -348,6 +384,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.CheckoutResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-handlers_DeleteCartItemResposne:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.DeleteCartItemResposne'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -486,7 +531,29 @@ definitions:
 info:
   contact: {}
 paths:
-  /is/v1/cart/get-items:
+  /is/v1/cart-service/delte-cart-item:
+    post:
+      consumes:
+      - application/json
+      description: Delete the cartItem from user's cart
+      operationId: DeleteCartItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-handlers_DeleteCartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-handlers_DeleteCartItemResposne'
+      summary: DeleteCartItem
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/get-items:
     post:
       consumes:
       - application/json
@@ -508,7 +575,7 @@ paths:
       summary: GetCart
       tags:
       - CART SERVICE
-  /is/v1/cart/update:
+  /is/v1/cart-service/update:
     post:
       consumes:
       - application/json
@@ -530,7 +597,7 @@ paths:
       summary: UpdateCartItem
       tags:
       - CART SERVICE
-  /is/v1/comment/add-comment:
+  /is/v1/comment-service/add-comment:
     post:
       consumes:
       - application/json
@@ -552,7 +619,7 @@ paths:
       summary: AddComment
       tags:
       - COMMENT SERVICE
-  /is/v1/comment/get-product-detail:
+  /is/v1/comment-service/product-id:
     post:
       consumes:
       - application/json
@@ -574,7 +641,7 @@ paths:
       summary: GetCommentsByProductID
       tags:
       - COMMENT SERVICE
-  /is/v1/order/checkout:
+  /is/v1/order-service/checkout:
     post:
       consumes:
       - application/json
@@ -596,7 +663,7 @@ paths:
       summary: Checkout
       tags:
       - ORDER SERVICE
-  /is/v1/order/get-history:
+  /is/v1/order-service/get-history:
     post:
       consumes:
       - application/json
@@ -618,7 +685,7 @@ paths:
       summary: GetPurchasedProducts
       tags:
       - ORDER SERVICE
-  /is/v1/product/get-product-detail:
+  /is/v1/product-service/get-product-detail:
     post:
       consumes:
       - application/json
@@ -640,7 +707,7 @@ paths:
       summary: GetProductDetail
       tags:
       - PRODUCT SERVICE
-  /is/v1/product/get-products:
+  /is/v1/product-service/get-products:
     post:
       consumes:
       - application/json
@@ -662,29 +729,7 @@ paths:
       summary: GetAllProduct
       tags:
       - PRODUCT SERVICE
-  /is/v1/user/get-product-detail:
-    post:
-      consumes:
-      - application/json
-      description: Update the user information
-      operationId: UpdateUserInformation
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        schema:
-          $ref: '#/definitions/transport.Request-handlers_UpdateUserInformationRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-handlers_UpdateUserInformationResponse'
-      summary: UpdateUserInformation
-      tags:
-      - USER SERVICE
-  /is/v1/user/get-user-information:
+  /is/v1/user-service/get-user-information:
     post:
       consumes:
       - application/json
@@ -706,7 +751,7 @@ paths:
       summary: GetUserInformation
       tags:
       - USER SERVICE
-  /is/v1/user/login:
+  /is/v1/user-service/login:
     post:
       consumes:
       - application/json
@@ -728,7 +773,7 @@ paths:
       summary: Login
       tags:
       - USER SERVICE
-  /is/v1/user/register:
+  /is/v1/user-service/register:
     post:
       consumes:
       - application/json
@@ -748,6 +793,28 @@ paths:
           schema:
             $ref: '#/definitions/transport.Response-handlers_RegisterUserResponse'
       summary: RegisterUser
+      tags:
+      - USER SERVICE
+  /is/v1/user-service/update:
+    post:
+      consumes:
+      - application/json
+      description: Update the user information
+      operationId: UpdateUserInformation
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-handlers_UpdateUserInformationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-handlers_UpdateUserInformationResponse'
+      summary: UpdateUserInformation
       tags:
       - USER SERVICE
 swagger: "2.0"

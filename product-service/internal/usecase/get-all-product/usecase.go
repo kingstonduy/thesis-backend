@@ -6,9 +6,7 @@ import (
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
-	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/product-service/internal/domain"
-	"github.com/kingstonduy/product-service/internal/pkg/utils"
 )
 
 type handler struct {
@@ -38,8 +36,6 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (r
 		}
 	}()
 
-	trace := transport.GetTraceByCtx(ctx)
-
 	entities, err := h.repo.GetAllProduct(ctx)
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
@@ -47,24 +43,14 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (r
 		return nil, errx
 	}
 
-	// TODO call rest to get avg rating
-
 	products := []domain.Product{}
 	for _, entity := range entities {
-
-		commentRes, err := h.commentOutbound.GetAvgerageRatingByProductID(ctx, domain.GetAvgerageRatingByProductIDRequest{ProductID: entity.ProductID}, utils.GenRequestTrace(trace, "comment-service", ""))
-		if err != nil {
-			errx := errorx.OutboundErrorWithDetails(err.Error(), "")
-			logger.Error(ctx, errx.Error())
-			return nil, errx
-		}
-
 		product := domain.Product{
 			ID:            entity.ProductID,
 			Name:          entity.ProductName,
 			ImageURL:      entity.ProductImage,
 			Price:         entity.ProductPrice,
-			AverageRating: commentRes.Rating,
+			AverageRating: entity.AvgRating,
 		}
 		products = append(products, product)
 	}

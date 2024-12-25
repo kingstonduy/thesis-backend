@@ -26,7 +26,11 @@ func (repo *productRepoImlp) GetAllProduct(ctx context.Context) (products []doma
 	defer logger.Info(ctx, "GetAllProduct end")
 
 	sqlQuery := `
-        select * from "PRODUCT";
+        SELECT 
+        "PRODUCT_ID", "PRODUCT_NAME", "PRODUCT_DESCRIPTION", "PRODUCT_IMAGE", 
+        "PRODUCT_QUANTITY", "PRODUCT_PRICE", "CREATED_AT", "UPDATED_AT", 
+        "PRODUCT_CATEGORY", "GENDER", "AVERAGE_RATING"
+        FROM public."PRODUCT";
     `
 	rows, err := repo.db.DB.Query(ctx, sqlQuery)
 	if err != nil {
@@ -47,6 +51,7 @@ func (repo *productRepoImlp) GetAllProduct(ctx context.Context) (products []doma
 			&product.UpdatedAt,
 			&product.ProductCategory,
 			&product.Gender,
+			&product.AvgRating,
 		)
 		if err != nil {
 			return nil, err

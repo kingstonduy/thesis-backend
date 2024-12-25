@@ -18,6 +18,7 @@ type ProductEntity struct {
 	UpdatedAt          time.Time       `json:"updated_at" db:"UPDATED_AT"`
 	ProductCategory    string          `json:"product_category" db:"PRODUCT_CATEGORY"`
 	Gender             string          `json:"gender" db:"GENDER"`
+	AvgRating          decimal.Decimal `json:"average_rating" db:"AVERAGE_RATING"`
 }
 
 type IProductRepo interface {

@@ -1,0 +1,20 @@
+CREATE TABLE public."CUSTOMER" (
+	"USER_ID" uuid NOT NULL DEFAULT gen_random_uuid(),
+	"USER_NAME" varchar(255) NOT NULL,
+	"USER_PASSWORD" varchar(255) NOT NULL,
+	"USER_IMAGE" text NOT NULL,
+	"FIRST_NAME" varchar(50) NOT NULL,
+	"LAST_NAME" varchar(50) NOT NULL,
+	"GENDER" varchar(20) NOT NULL,
+	"EMAIL" varchar(100) NOT NULL,
+	"STREET" text NOT NULL,
+	"CITY" varchar(50) NOT NULL,
+    "CITY_CODE" varchar(20) NOT NULL,
+	"DISTRICT" varchar(50) NOT NULL,
+    "DISTRICT_CODE" varchar(20) NOT NULL,
+	"WARD" varchar(50) NOT NULL,
+    "WARD_CODE" varchar(20) NOT NULL,
+	"CREATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	"UPDATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT "CUSTOMER_pkey" PRIMARY KEY ("USER_ID")
+);
