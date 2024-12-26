@@ -771,6 +771,9 @@ const docTemplate = `{
                 "gender": {
                     "type": "string"
                 },
+                "password": {
+                    "type": "string"
+                },
                 "phoneNumber": {
                     "type": "string"
                 },
@@ -827,6 +830,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "gender": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 },
                 "phoneNumber": {

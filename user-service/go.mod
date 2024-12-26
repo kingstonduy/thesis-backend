@@ -6,10 +6,10 @@ require (
 	github.com/gammazero/workerpool v1.1.3
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/kingstonduy/go-core v0.0.3
 	github.com/pkg/errors v0.9.1
-	github.com/shopspring/decimal v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/sony/gobreaker v1.0.0
 	github.com/swaggo/swag v1.16.3
@@ -50,7 +50,6 @@ require (
 	github.com/gofiber/swagger v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
@@ -132,4 +131,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core
+// replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core

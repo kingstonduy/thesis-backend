@@ -760,6 +760,9 @@
                 "gender": {
                     "type": "string"
                 },
+                "password": {
+                    "type": "string"
+                },
                 "phoneNumber": {
                     "type": "string"
                 },
@@ -816,6 +819,9 @@
                     "type": "string"
                 },
                 "gender": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 },
                 "phoneNumber": {

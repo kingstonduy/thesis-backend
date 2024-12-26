@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/user-service/internal/domain"
@@ -39,7 +38,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.UpdateUserInformationR
 	now := time.Now()
 
 	entity := domain.UserEntity{
-		UserID:       sql_util.SetString(uuid.New().String()),
+		UserID:       sql_util.SetString(req.UserID),
 		UserName:     sql_util.SetString(req.UserName),
 		Gender:       sql_util.SetString(req.Gender),
 		Email:        sql_util.SetString(req.Email),
