@@ -15,7 +15,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/is/v1/cart-service/delte-cart-item": {
+        "/is/v1/cart-service/add": {
+            "post": {
+                "description": "Add selected product to cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CART SERVICE"
+                ],
+                "summary": "AddCartItem",
+                "operationId": "AddCartItem",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_AddCartItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_AddCartItemResposne"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/cart-service/delete": {
             "post": {
                 "description": "Delete the cartItem from user's cart",
                 "consumes": [
@@ -459,6 +493,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handlers.AddCartItemDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                },
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.AddCartItemRequest": {
+            "type": "object",
+            "properties": {
+                "cartItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.AddCartItemDetail"
+                    }
+                }
+            }
+        },
+        "handlers.AddCartItemResposne": {
+            "type": "object"
+        },
         "handlers.AddCommentRequest": {
             "type": "object",
             "properties": {
@@ -858,6 +929,20 @@ const docTemplate = `{
         "handlers.UpdateUserInformationResponse": {
             "type": "object"
         },
+        "transport.Request-handlers_AddCartItemRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.AddCartItemRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Request-handlers_AddCommentRequest": {
             "type": "object",
             "required": [
@@ -1034,6 +1119,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.UpdateUserInformationRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_AddCartItemResposne": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.AddCartItemResposne"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"

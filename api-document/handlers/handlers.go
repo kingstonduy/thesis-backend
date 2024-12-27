@@ -174,9 +174,37 @@ type DeleteCartItemResposne struct{}
 //		@Produce		json
 //		@Param			request	body		transport.Request[DeleteCartItemRequest]			false	"Request"
 //		@Success		200		{object}	transport.Response[DeleteCartItemResposne]			"ok"
-//		@Router			/is/v1/cart-service/delte-cart-item [post]
+//		@Router			/is/v1/cart-service/delete [post]
 func DeleteCartItem(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*DeleteCartItemRequest, *DeleteCartItemResposne](ctx, errorx.ErrorCodeTimeout)
+}
+
+type AddCartItemRequest struct {
+	CartItems []AddCartItemDetail `json:"cartItems"`
+}
+
+type AddCartItemDetail struct {
+	CartItemID       string `json:"cartItemId"`
+	ProductID        string `json:"productId"`
+	ProductName      string `json:"productName"`
+	ProductImage     string `json:"productImage"`
+	ProductCatergory string `json:"productCatergory"`
+	CartItemQuantity int    `json:"cartItemQuantity"`
+}
+type AddCartItemResposne struct {
+}
+
+//	 	@Tags 			CART SERVICE
+//		@Summary		AddCartItem
+//		@Description	Add selected product to cart
+//		@ID				AddCartItem
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[AddCartItemRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[AddCartItemResposne]			"ok"
+//		@Router			/is/v1/cart-service/add [post]
+func AddCartItem(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*AddCartItemRequest, *AddCartItemResposne](ctx, errorx.ErrorCodeTimeout)
 }
 
 type CheckoutRequest struct {

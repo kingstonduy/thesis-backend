@@ -1,4 +1,28 @@
 definitions:
+  handlers.AddCartItemDetail:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+      productCatergory:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+    type: object
+  handlers.AddCartItemRequest:
+    properties:
+      cartItems:
+        items:
+          $ref: '#/definitions/handlers.AddCartItemDetail'
+        type: array
+    type: object
+  handlers.AddCartItemResposne:
+    type: object
   handlers.AddCommentRequest:
     properties:
       content:
@@ -258,6 +282,15 @@ definitions:
     type: object
   handlers.UpdateUserInformationResponse:
     type: object
+  transport.Request-handlers_AddCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.AddCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
   transport.Request-handlers_AddCommentRequest:
     properties:
       data:
@@ -374,6 +407,15 @@ definitions:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
+    type: object
+  transport.Response-handlers_AddCartItemResposne:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.AddCartItemResposne'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
     type: object
   transport.Response-handlers_AddCommentResponse:
     properties:
@@ -535,7 +577,29 @@ definitions:
 info:
   contact: {}
 paths:
-  /is/v1/cart-service/delte-cart-item:
+  /is/v1/cart-service/add:
+    post:
+      consumes:
+      - application/json
+      description: Add selected product to cart
+      operationId: AddCartItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-handlers_AddCartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-handlers_AddCartItemResposne'
+      summary: AddCartItem
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/delete:
     post:
       consumes:
       - application/json
