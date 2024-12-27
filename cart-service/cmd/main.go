@@ -5,9 +5,10 @@ import (
 
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/infra/postgres"
-	"github.com/kingstonduy/cart-service/internal/infra/postgres/outbound"
-	get_products_uc "github.com/kingstonduy/cart-service/internal/usecase/get-all-product"
-	get_product_detail_uc "github.com/kingstonduy/cart-service/internal/usecase/get-product-detail"
+	add_cart_handler_uc "github.com/kingstonduy/cart-service/internal/usecase/add-cart-item"
+	delete_cart_item_uc "github.com/kingstonduy/cart-service/internal/usecase/delete-cart"
+	get_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/get-cart"
+	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 
@@ -32,8 +33,10 @@ var configModule = fx.Module("config",
 )
 
 var usecaseModule = fx.Module("usecase",
-	fx.Provide(get_products_uc.NewGetProductsHandler),
-	fx.Provide(get_product_detail_uc.NewGetProductDetailHandler),
+	fx.Provide(add_cart_handler_uc.NewAddCartItemHandler),
+	fx.Provide(delete_cart_item_uc.NewDeleteCartItemHandler),
+	fx.Provide(get_cart_uc.NewGetCartHandler),
+	fx.Provide(update_cart_uc.NewUpdateCartHandler),
 )
 
 var serverModule = fx.Module("server",
@@ -41,8 +44,7 @@ var serverModule = fx.Module("server",
 )
 
 var infraModule = fx.Module("infras",
-	fx.Provide(postgres.NewProductRepoImpl),
-	fx.Provide(outbound.NewCommentOutbound),
+	fx.Provide(postgres.NewCartRepo),
 )
 
 func main() {

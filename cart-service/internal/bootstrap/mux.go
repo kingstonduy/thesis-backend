@@ -6,10 +6,13 @@ import (
 )
 
 func ResgisterPipeline(
-	IGetProductsHandler domain.IGetProductsHandler,
-	IGetProductDetailHandler domain.IGetProductDetailHandler,
+	AddCartItemHandler domain.AddCartItemHandler,
+	DeleteCartItemHandler domain.DeleteCartItemHandler,
+	GetCartHandler domain.GetCartHandler,
+	UpdateCartItemHandler domain.UpdateCartItemHandler,
 ) {
-	pipeline.RegisterRequestHandler(IGetProductsHandler)
-	pipeline.RegisterRequestHandler(IGetProductDetailHandler)
-
+	pipeline.RegisterRequestHandler(AddCartItemHandler)
+	pipeline.RegisterRequestHandler(DeleteCartItemHandler)
+	pipeline.RegisterRequestHandler(GetCartHandler)
+	pipeline.RegisterRequestHandler(UpdateCartItemHandler)
 }
