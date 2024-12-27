@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/is/v1/cart-service/add": {
             "post": {
-                "description": "Add selected product to cart",
+                "description": "Insert into cart values ...",
                 "consumes": [
                     "application/json"
                 ],
@@ -51,7 +51,7 @@ const docTemplate = `{
         },
         "/is/v1/cart-service/delete": {
             "post": {
-                "description": "Delete the cartItem from user's cart",
+                "description": "DELETE FROM cart WHERE userID = ?;",
                 "consumes": [
                     "application/json"
                 ],
@@ -85,7 +85,7 @@ const docTemplate = `{
         },
         "/is/v1/cart-service/get-items": {
             "post": {
-                "description": "Get all items on user's cart",
+                "description": "select * from cart where userID = :1",
                 "consumes": [
                     "application/json"
                 ],
@@ -119,7 +119,7 @@ const docTemplate = `{
         },
         "/is/v1/cart-service/update": {
             "post": {
-                "description": "Update the quantity of an item in the cart",
+                "description": "Update the quantity of an item in the cart. front end receives ok returns then update StateQuantity",
                 "consumes": [
                     "application/json"
                 ],
@@ -151,9 +151,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/comment-service/add-comment": {
+        "/is/v1/comment-service/add": {
             "post": {
-                "description": "Add comment description",
+                "description": "insert into table comment",
                 "consumes": [
                     "application/json"
                 ],
@@ -185,9 +185,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/comment-service/product-id": {
+        "/is/v1/comment-service/get-comment": {
             "post": {
-                "description": "Get all the comments related to a product",
+                "description": "select * from table comment where productID = :1",
                 "consumes": [
                     "application/json"
                 ],
@@ -221,7 +221,7 @@ const docTemplate = `{
         },
         "/is/v1/order-service/checkout": {
             "post": {
-                "description": "Checkout the cart",
+                "description": "Delete all items on cart -\u003e minus quantity of product in cart service",
                 "consumes": [
                     "application/json"
                 ],
@@ -253,9 +253,43 @@ const docTemplate = `{
                 }
             }
         },
+        "/is/v1/order-service/get-checkout-item": {
+            "post": {
+                "description": "Get the checkout item (cdc from cart table)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ORDER SERVICE"
+                ],
+                "summary": "GetCheckoutItem",
+                "operationId": "GetCheckoutItem",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-handlers_GetCheckoutItemRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-handlers_GetCheckoutItemResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/is/v1/order-service/get-history": {
             "post": {
-                "description": "Get all the purchased products",
+                "description": "Show a history of purchased products from a user",
                 "consumes": [
                     "application/json"
                 ],
@@ -573,22 +607,28 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.CheckoutItem": {
+        "handlers.CheckoutDetail": {
             "type": "object",
             "properties": {
-                "cartItemId": {
+                "productId": {
                     "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
                 }
             }
         },
         "handlers.CheckoutRequest": {
             "type": "object",
             "properties": {
-                "checkoutItems": {
+                "checkoutDetails": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/handlers.CheckoutItem"
+                        "$ref": "#/definitions/handlers.CheckoutDetail"
                     }
+                },
+                "userID": {
+                    "type": "string"
                 }
             }
         },
@@ -618,7 +658,7 @@ const docTemplate = `{
         "handlers.DeleteCartItemDetail": {
             "type": "object",
             "properties": {
-                "cartItemId": {
+                "userID": {
                     "type": "string"
                 }
             }
@@ -638,7 +678,12 @@ const docTemplate = `{
             "type": "object"
         },
         "handlers.GetCartRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                }
+            }
         },
         "handlers.GetCartResponse": {
             "type": "object",
@@ -647,6 +692,48 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/handlers.CartItem"
+                    }
+                }
+            }
+        },
+        "handlers.GetCheckoutItemDetail": {
+            "type": "object",
+            "properties": {
+                "pricePerUnit": {
+                    "type": "number"
+                },
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productQuantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "handlers.GetCheckoutItemRequest": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.GetCheckoutItemResponse": {
+            "type": "object",
+            "properties": {
+                "checkoutItemDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.GetCheckoutItemDetail"
                     }
                 }
             }
@@ -702,28 +789,21 @@ const docTemplate = `{
             }
         },
         "handlers.GetPurchasedProductsRequest": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
         },
         "handlers.GetPurchasedProductsResponse": {
             "type": "object",
             "properties": {
-                "deliveryStatus": {
-                    "type": "string"
-                },
-                "orderId": {
-                    "type": "string"
-                },
-                "paymentStatus": {
-                    "type": "string"
-                },
-                "productId": {
-                    "type": "string"
-                },
-                "productImage": {
-                    "type": "string"
-                },
-                "productName": {
-                    "type": "string"
+                "purchasedProducts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.PurchasedProductDetail"
+                    }
                 }
             }
         },
@@ -815,6 +895,29 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                }
+            }
+        },
+        "handlers.PurchasedProductDetail": {
+            "type": "object",
+            "properties": {
+                "deliveryStatus": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
                 }
             }
         },
@@ -993,6 +1096,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.GetCartRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-handlers_GetCheckoutItemRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCheckoutItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -1186,6 +1303,20 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.GetCartResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-handlers_GetCheckoutItemResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handlers.GetCheckoutItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

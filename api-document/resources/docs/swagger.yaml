@@ -51,17 +51,21 @@ definitions:
       productName:
         type: string
     type: object
-  handlers.CheckoutItem:
+  handlers.CheckoutDetail:
     properties:
-      cartItemId:
+      productId:
         type: string
+      quantity:
+        type: integer
     type: object
   handlers.CheckoutRequest:
     properties:
-      checkoutItems:
+      checkoutDetails:
         items:
-          $ref: '#/definitions/handlers.CheckoutItem'
+          $ref: '#/definitions/handlers.CheckoutDetail'
         type: array
+      userID:
+        type: string
     type: object
   handlers.CheckoutResponse:
     type: object
@@ -80,7 +84,7 @@ definitions:
     type: object
   handlers.DeleteCartItemDetail:
     properties:
-      cartItemId:
+      userID:
         type: string
     type: object
   handlers.DeleteCartItemRequest:
@@ -93,12 +97,42 @@ definitions:
   handlers.DeleteCartItemResposne:
     type: object
   handlers.GetCartRequest:
+    properties:
+      userId:
+        type: string
     type: object
   handlers.GetCartResponse:
     properties:
       cartItems:
         items:
           $ref: '#/definitions/handlers.CartItem'
+        type: array
+    type: object
+  handlers.GetCheckoutItemDetail:
+    properties:
+      pricePerUnit:
+        type: number
+      productCatergory:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productQuantity:
+        type: integer
+    type: object
+  handlers.GetCheckoutItemRequest:
+    properties:
+      userID:
+        type: string
+    type: object
+  handlers.GetCheckoutItemResponse:
+    properties:
+      checkoutItemDetails:
+        items:
+          $ref: '#/definitions/handlers.GetCheckoutItemDetail'
         type: array
     type: object
   handlers.GetCommentsByProductIDRequest:
@@ -134,21 +168,16 @@ definitions:
         type: number
     type: object
   handlers.GetPurchasedProductsRequest:
+    properties:
+      userID:
+        type: string
     type: object
   handlers.GetPurchasedProductsResponse:
     properties:
-      deliveryStatus:
-        type: string
-      orderId:
-        type: string
-      paymentStatus:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
+      purchasedProducts:
+        items:
+          $ref: '#/definitions/handlers.PurchasedProductDetail'
+        type: array
     type: object
   handlers.GetUserInformationRequest:
     properties:
@@ -208,6 +237,21 @@ definitions:
         type: string
       price:
         type: number
+    type: object
+  handlers.PurchasedProductDetail:
+    properties:
+      deliveryStatus:
+        type: string
+      orderId:
+        type: string
+      paymentStatus:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
     type: object
   handlers.RegisterUserRequest:
     properties:
@@ -322,6 +366,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.GetCartRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-handlers_GetCheckoutItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.GetCheckoutItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -448,6 +501,15 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.GetCartResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-handlers_GetCheckoutItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/handlers.GetCheckoutItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -581,7 +643,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Add selected product to cart
+      description: Insert into cart values ...
       operationId: AddCartItem
       parameters:
       - description: Request
@@ -603,7 +665,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Delete the cartItem from user's cart
+      description: DELETE FROM cart WHERE userID = ?;
       operationId: DeleteCartItem
       parameters:
       - description: Request
@@ -625,7 +687,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Get all items on user's cart
+      description: select * from cart where userID = :1
       operationId: GetCart
       parameters:
       - description: Request
@@ -647,7 +709,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Update the quantity of an item in the cart
+      description: Update the quantity of an item in the cart. front end receives
+        ok returns then update StateQuantity
       operationId: UpdateCartItem
       parameters:
       - description: Request
@@ -665,11 +728,11 @@ paths:
       summary: UpdateCartItem
       tags:
       - CART SERVICE
-  /is/v1/comment-service/add-comment:
+  /is/v1/comment-service/add:
     post:
       consumes:
       - application/json
-      description: Add comment description
+      description: insert into table comment
       operationId: AddComment
       parameters:
       - description: Request
@@ -687,11 +750,11 @@ paths:
       summary: AddComment
       tags:
       - COMMENT SERVICE
-  /is/v1/comment-service/product-id:
+  /is/v1/comment-service/get-comment:
     post:
       consumes:
       - application/json
-      description: Get all the comments related to a product
+      description: select * from table comment where productID = :1
       operationId: GetCommentsByProductID
       parameters:
       - description: Request
@@ -713,7 +776,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Checkout the cart
+      description: Delete all items on cart -> minus quantity of product in cart service
       operationId: Checkout
       parameters:
       - description: Request
@@ -731,11 +794,33 @@ paths:
       summary: Checkout
       tags:
       - ORDER SERVICE
+  /is/v1/order-service/get-checkout-item:
+    post:
+      consumes:
+      - application/json
+      description: Get the checkout item (cdc from cart table)
+      operationId: GetCheckoutItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-handlers_GetCheckoutItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-handlers_GetCheckoutItemResponse'
+      summary: GetCheckoutItem
+      tags:
+      - ORDER SERVICE
   /is/v1/order-service/get-history:
     post:
       consumes:
       - application/json
-      description: Get all the purchased products
+      description: Show a history of purchased products from a user
       operationId: GetPurchasedProducts
       parameters:
       - description: Request

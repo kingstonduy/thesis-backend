@@ -1,6 +1,10 @@
 ## gen swagger
 gen-swagger:
-	swag init -g ./handlers/handlers.go -o resources/docs --parseDependency true
+	swag init -g ./handlers/cart.go -o resources/docs --parseDependency true
+	swag init -g ./handlers/product.go -o resources/docs --parseDependency true
+	swag init -g ./handlers/user.go -o resources/docs --parseDependency true
+	swag init -g ./handlers/order.go -o resources/docs --parseDependency true
+	swag init -g ./handlers/comment.go -o resources/docs --parseDependency true
 
 ## go mod tidy
 go-mod-tidy:
