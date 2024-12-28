@@ -10,17 +10,14 @@ import (
 )
 
 type handler struct {
-	repo            domain.IProductRepo
-	commentOutbound domain.ICommentOutbound
+	repo domain.IProductRepo
 }
 
 func NewGetProductsHandler(
 	repo domain.IProductRepo,
-	commentOutbound domain.ICommentOutbound,
 ) domain.IGetProductsHandler {
 	return &handler{
-		repo:            repo,
-		commentOutbound: commentOutbound,
+		repo: repo,
 	}
 }
 
