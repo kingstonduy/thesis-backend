@@ -1,3 +1,28 @@
+CREATE TABLE public."CART_ITEM" (
+	"CART_ITEM_ID" uuid NOT NULL DEFAULT gen_random_uuid(),
+	"USER_ID" uuid NOT NULL,
+	"PRODUCT_ID" uuid NOT NULL,
+	"CART_ITEM_QUANTITY" numeric NOT NULL,
+	"CREATED_AT" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"UPDATED_AT" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT "CART_ITEM_pkey" PRIMARY KEY ("CART_ITEM_ID")
+);
+
+CREATE TABLE public."PRODUCT" (
+	"PRODUCT_ID" uuid NOT NULL DEFAULT gen_random_uuid(),
+	"PRODUCT_NAME" varchar(500) NOT NULL,
+	"PRODUCT_DESCRIPTION" json NOT NULL,
+	"PRODUCT_IMAGE" text NOT NULL,
+	"PRODUCT_QUANTITY" int4 NOT NULL,
+	"PRODUCT_PRICE" numeric(10, 2) NOT NULL,
+	"CREATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	"UPDATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	"PRODUCT_CATEGORY" varchar(50) NOT NULL,
+	"GENDER" varchar(10) NOT NULL,
+	"AVERAGE_RATING" numeric(3, 2) NULL,
+	CONSTRAINT "PRODUCT_pkey" PRIMARY KEY ("PRODUCT_ID")
+);
+
 INSERT INTO public."PRODUCT" ("PRODUCT_ID","PRODUCT_NAME","PRODUCT_DESCRIPTION","PRODUCT_IMAGE","PRODUCT_QUANTITY","PRODUCT_PRICE","CREATED_AT","UPDATED_AT","PRODUCT_CATEGORY","GENDER") VALUES
 	 ('1a1050a4-6ede-4f2c-b4b6-a7a33bed2a3e','Sabrina 2 By You','{"title": "", "benefits": null, "description": "", "current_price": "", "reason_to_buy": "", "product_details": null}','https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/ba3749ef-1f98-418d-a31d-9fe4e44e892d/SABRINA+2+NBY.png',68,440.28,'2024-12-22 15:29:13.13151','2024-12-22 15:29:13.13151','basketball','women'),
 	 ('dd956690-13ee-4cc6-88ba-8e01c9beb20a','Nike Offcourt','{"title": "", "benefits": ["Colour Shown: Anthracite/Black/Black", "Style: BQ4639-003", "Country/Region of Origin: Vietnam"], "description": "These slides are designed to help you relax and recharge. Innovative dual-layered foam underfoot pairs with a plush strap to bring the comfort, while the iconic AF-1 pivot circle pattern on the outsole and block-letter branding casually nod to heritage hoops. What are you waiting for? Get lounging.", "current_price": "1,019,000₫1,019,000₫1,019,000₫", "reason_to_buy": "", "product_details": ["Colour Shown: Anthracite/Black/Black", "Style: BQ4639-003", "Country/Region of Origin: Vietnam"]}','https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/fb4990f8-a0fe-4043-ad5b-7eaac878505d/NIKE+OFFCOURT+SLIDE.png',90,249.90,'2024-12-22 15:27:57.362788','2024-12-22 15:27:57.362788','lifestyle','men'),
