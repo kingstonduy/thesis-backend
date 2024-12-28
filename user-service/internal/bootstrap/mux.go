@@ -5,7 +5,7 @@ import (
 	"github.com/kingstonduy/user-service/internal/domain"
 )
 
-func ResgisterPipeline(
+func RegisterPipeline(
 	IGetUserInformationHandler domain.IGetUserInformationHandler,
 	IRLoginHandler domain.IRLoginHandler,
 	IRegisterHandler domain.IRegisterHandler,

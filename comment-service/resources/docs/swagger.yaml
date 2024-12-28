@@ -1,0 +1,188 @@
+definitions:
+  domain.AddCommentRequest:
+    properties:
+      content:
+        type: string
+      productId:
+        type: string
+      rating:
+        type: integer
+      userId:
+        type: string
+    required:
+    - content
+    - productId
+    - rating
+    - userId
+    type: object
+  domain.AddCommentResponse:
+    type: object
+  domain.GetCommentRequest:
+    properties:
+      filter:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        type: integer
+      productId:
+        type: string
+      sort:
+        type: string
+    required:
+    - productId
+    type: object
+  domain.GetCommentResponse:
+    properties:
+      comments:
+        items:
+          $ref: '#/definitions/domain.GetCommentResponseDetail'
+        type: array
+    required:
+    - comments
+    type: object
+  domain.GetCommentResponseDetail:
+    properties:
+      content:
+        type: string
+      rating:
+        type: integer
+      timestamp:
+        type: string
+      userImage:
+        type: string
+      username:
+        type: string
+    required:
+    - content
+    - rating
+    - timestamp
+    - userImage
+    - username
+    type: object
+  transport.Request-domain_AddCommentRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.AddCommentRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_GetCommentRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetCommentRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Response-domain_AddCommentResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.AddCommentResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_GetCommentResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetCommentResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Result:
+    properties:
+      code:
+        type: string
+      details:
+        type: object
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  transport.Trace:
+    properties:
+      cid:
+        type: string
+      clientId:
+        type: string
+      cts:
+        type: integer
+      dur:
+        type: integer
+      frm:
+        type: string
+      replyTo:
+        type: string
+      sid:
+        type: string
+      sts:
+        type: integer
+      to:
+        type: string
+      transactionTimeout:
+        maximum: 120000
+        type: integer
+      userName:
+        type: string
+    required:
+    - cid
+    - cts
+    type: object
+info:
+  contact: {}
+paths:
+  /is/v1/comment-service/add:
+    post:
+      consumes:
+      - application/json
+      description: insert into table comment
+      operationId: AddComment
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_AddCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_AddCommentResponse'
+      summary: AddComment
+      tags:
+      - COMMENT SERVICE
+  /is/v1/comment-service/get-comment:
+    post:
+      consumes:
+      - application/json
+      description: select * from table comment where productID = :1
+      operationId: GetComment
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_GetCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_GetCommentResponse'
+      summary: GetComment
+      tags:
+      - COMMENT SERVICE
+swagger: "2.0"

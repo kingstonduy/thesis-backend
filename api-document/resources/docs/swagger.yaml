@@ -1,5 +1,37 @@
 definitions:
-  handlers.AddCartItemDetail:
+  github_com_kingstonduy_api-document_domain_cart.AddCartItemDetail:
+    properties:
+      cartItemQuantity:
+        type: integer
+      productId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.AddCartItemRequest:
+    properties:
+      cartItems:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.AddCartItemDetail'
+        type: array
+      userId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.AddCartItemResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest:
+    properties:
+      cartItemID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.GetCartItemDetail:
     properties:
       cartItemId:
         type: string
@@ -13,15 +45,176 @@ definitions:
         type: string
       productName:
         type: string
+      productPrice:
+        type: number
     type: object
-  handlers.AddCartItemRequest:
+  github_com_kingstonduy_api-document_domain_cart.GetCartRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.GetCartResponse:
     properties:
       cartItems:
         items:
-          $ref: '#/definitions/handlers.AddCartItemDetail'
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.GetCartItemDetail'
         type: array
     type: object
-  handlers.AddCartItemResposne:
+  github_com_kingstonduy_api-document_domain_cart.UpdateCartItemRequest:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.UpdateCartItemResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetAllProductRequest:
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetAllProductResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.Product'
+        type: array
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductDetailRequest:
+    properties:
+      productId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse:
+    properties:
+      productCatergory:
+        type: string
+      productDescription:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productPrice:
+        type: number
+    type: object
+  github_com_kingstonduy_api-document_domain_product.Product:
+    properties:
+      averageRating:
+        type: number
+      id:
+        type: string
+      imageUrl:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  github_com_kingstonduy_api-document_domain_user.GetUserInformationRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_user.GetUserInformationResponse:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userId:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_user.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_user.LoginResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_user.RegisterRequest:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_user.RegisterResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_user.UpdateUserInformationRequest:
+    properties:
+      city:
+        type: string
+      cityCode:
+        type: string
+      dateOfBirth:
+        type: string
+      district:
+        type: string
+      districtCode:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      phoneNumber:
+        type: string
+      street:
+        type: string
+      userId:
+        type: string
+      userName:
+        type: string
+      ward:
+        type: string
+      wardCode:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse:
     type: object
   handlers.AddCommentRequest:
     properties:
@@ -35,21 +228,6 @@ definitions:
         type: string
     type: object
   handlers.AddCommentResponse:
-    type: object
-  handlers.CartItem:
-    properties:
-      cartItemId:
-        type: string
-      cartItemQuantity:
-        type: integer
-      productCatergory:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
     type: object
   handlers.CheckoutDetail:
     properties:
@@ -81,32 +259,6 @@ definitions:
         type: string
       userName:
         type: string
-    type: object
-  handlers.DeleteCartItemDetail:
-    properties:
-      userID:
-        type: string
-    type: object
-  handlers.DeleteCartItemRequest:
-    properties:
-      cartItems:
-        items:
-          $ref: '#/definitions/handlers.DeleteCartItemDetail'
-        type: array
-    type: object
-  handlers.DeleteCartItemResposne:
-    type: object
-  handlers.GetCartRequest:
-    properties:
-      userId:
-        type: string
-    type: object
-  handlers.GetCartResponse:
-    properties:
-      cartItems:
-        items:
-          $ref: '#/definitions/handlers.CartItem'
-        type: array
     type: object
   handlers.GetCheckoutItemDetail:
     properties:
@@ -147,26 +299,6 @@ definitions:
           $ref: '#/definitions/handlers.Comment'
         type: array
     type: object
-  handlers.GetProductDetailRequest:
-    properties:
-      productId:
-        type: string
-    type: object
-  handlers.GetProductDetailResponse:
-    properties:
-      productCatergory:
-        type: string
-      productDescription:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
-      productPrice:
-        type: number
-    type: object
   handlers.GetPurchasedProductsRequest:
     properties:
       userID:
@@ -178,65 +310,6 @@ definitions:
         items:
           $ref: '#/definitions/handlers.PurchasedProductDetail'
         type: array
-    type: object
-  handlers.GetUserInformationRequest:
-    properties:
-      userId:
-        type: string
-    type: object
-  handlers.GetUserInformationResponse:
-    properties:
-      city:
-        type: string
-      dateOfBirth:
-        type: string
-      district:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      phoneNumber:
-        type: string
-      street:
-        type: string
-      userId:
-        type: string
-      userName:
-        type: string
-      ward:
-        type: string
-    type: object
-  handlers.ListProductRequest:
-    type: object
-  handlers.ListProductResponse:
-    properties:
-      products:
-        items:
-          $ref: '#/definitions/handlers.Product'
-        type: array
-    type: object
-  handlers.LoginRequest:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    type: object
-  handlers.LoginResponse:
-    type: object
-  handlers.Product:
-    properties:
-      averageRating:
-        type: number
-      id:
-        type: string
-      imageUrl:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
     type: object
   handlers.PurchasedProductDetail:
     properties:
@@ -253,83 +326,100 @@ definitions:
       productName:
         type: string
     type: object
-  handlers.RegisterUserRequest:
-    properties:
-      city:
-        type: string
-      cityCode:
-        type: string
-      dateOfBirth:
-        type: string
-      district:
-        type: string
-      districtCode:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      password:
-        type: string
-      phoneNumber:
-        type: string
-      street:
-        type: string
-      userName:
-        type: string
-      ward:
-        type: string
-      wardCode:
-        type: string
-    type: object
-  handlers.RegisterUserResponse:
-    type: object
-  handlers.UpdateCartItemRequest:
-    properties:
-      cartItemId:
-        type: string
-      cartItemQuantity:
-        type: integer
-    type: object
-  handlers.UpdateCartItemResponse:
-    type: object
-  handlers.UpdateUserInformationRequest:
-    properties:
-      city:
-        type: string
-      cityCode:
-        type: string
-      dateOfBirth:
-        type: string
-      district:
-        type: string
-      districtCode:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      password:
-        type: string
-      phoneNumber:
-        type: string
-      street:
-        type: string
-      userId:
-        type: string
-      userName:
-        type: string
-      ward:
-        type: string
-      wardCode:
-        type: string
-    type: object
-  handlers.UpdateUserInformationResponse:
-    type: object
-  transport.Request-handlers_AddCartItemRequest:
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_AddCartItemRequest:
     properties:
       data:
-        $ref: '#/definitions/handlers.AddCartItemRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.AddCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_GetCartRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.GetCartRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_UpdateCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.UpdateCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetAllProductRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductDetailRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_user_GetUserInformationRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.GetUserInformationRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_user_LoginRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.LoginRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_user_RegisterRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.RegisterRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_user_UpdateUserInformationRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -353,24 +443,6 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-handlers_DeleteCartItemRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.DeleteCartItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-handlers_GetCartRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCartRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
   transport.Request-handlers_GetCheckoutItemRequest:
     properties:
       data:
@@ -389,15 +461,6 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-handlers_GetProductDetailRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetProductDetailRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
   transport.Request-handlers_GetPurchasedProductsRequest:
     properties:
       data:
@@ -407,64 +470,100 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-handlers_GetUserInformationRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_AddCartItemResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.GetUserInformationRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.AddCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Request-handlers_ListProductRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.ListProductRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Request-handlers_LoginRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.LoginRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Request-handlers_RegisterUserRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_GetCartResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.RegisterUserRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.GetCartResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Request-handlers_UpdateCartItemRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_UpdateCartItemResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.UpdateCartItemRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.UpdateCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Request-handlers_UpdateUserInformationRequest:
+  transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.UpdateUserInformationRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetAllProductResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
     type: object
-  transport.Response-handlers_AddCartItemResposne:
+  transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductDetailResponse:
     properties:
       data:
-        $ref: '#/definitions/handlers.AddCartItemResposne'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_user_GetUserInformationResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.GetUserInformationResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_user_LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.LoginResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_user_RegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.RegisterResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_user_UpdateUserInformationResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -488,24 +587,6 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-handlers_DeleteCartItemResposne:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.DeleteCartItemResposne'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_GetCartResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCartResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
   transport.Response-handlers_GetCheckoutItemResponse:
     properties:
       data:
@@ -524,73 +605,10 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-handlers_GetProductDetailResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetProductDetailResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
   transport.Response-handlers_GetPurchasedProductsResponse:
     properties:
       data:
         $ref: '#/definitions/handlers.GetPurchasedProductsResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_GetUserInformationResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetUserInformationResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_ListProductResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.ListProductResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_LoginResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.LoginResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_RegisterUserResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.RegisterUserResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_UpdateCartItemResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.UpdateCartItemResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_UpdateUserInformationResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.UpdateUserInformationResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -650,37 +668,59 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_AddCartItemRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_AddCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_AddCartItemResposne'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_AddCartItemResponse'
       summary: AddCartItem
       tags:
       - CART SERVICE
-  /is/v1/cart-service/delete:
+  /is/v1/cart-service/delete-cart-item:
     post:
       consumes:
       - application/json
-      description: DELETE FROM cart WHERE userID = ?;
+      description: giving the cartITemID delete the cartItem
       operationId: DeleteCartItem
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_DeleteCartItemRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_DeleteCartItemResposne'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse'
       summary: DeleteCartItem
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/delete-user-cart:
+    post:
+      consumes:
+      - application/json
+      description: delete all the record in table cart with corresponding userID
+      operationId: DeleteUserCart
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse'
+      summary: DeleteUserCart
       tags:
       - CART SERVICE
   /is/v1/cart-service/get-items:
@@ -694,14 +734,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetCartRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_GetCartRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetCartResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_GetCartResponse'
       summary: GetCart
       tags:
       - CART SERVICE
@@ -717,14 +757,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_UpdateCartItemRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_UpdateCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_UpdateCartItemResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_UpdateCartItemResponse'
       summary: UpdateCartItem
       tags:
       - CART SERVICE
@@ -849,17 +889,17 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetProductDetailRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductDetailRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetProductDetailResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductDetailResponse'
       summary: GetProductDetail
       tags:
-      - PRODUCT SERVICE
+      - product
   /is/v1/product-service/get-products:
     post:
       consumes:
@@ -871,37 +911,37 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_ListProductRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_ListProductResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse'
       summary: GetAllProduct
       tags:
-      - PRODUCT SERVICE
-  /is/v1/user-service/get-user-information:
+      - product
+  /is/v1/user-service/get-product-detail:
     post:
       consumes:
       - application/json
-      description: Get the user information
-      operationId: GetUserInformation
+      description: Update the user information
+      operationId: UpdateUserInformation
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetUserInformationRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_user_UpdateUserInformationRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetUserInformationResponse'
-      summary: GetUserInformation
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_user_UpdateUserInformationResponse'
+      summary: UpdateUserInformation
       tags:
       - USER SERVICE
   /is/v1/user-service/login:
@@ -915,14 +955,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_LoginRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_user_LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_LoginResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_user_LoginResponse'
       summary: Login
       tags:
       - USER SERVICE
@@ -937,14 +977,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_RegisterUserRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_user_RegisterRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_RegisterUserResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_user_RegisterResponse'
       summary: RegisterUser
       tags:
       - USER SERVICE
@@ -952,22 +992,22 @@ paths:
     post:
       consumes:
       - application/json
-      description: Update the user information
-      operationId: UpdateUserInformation
+      description: Get the user information
+      operationId: GetUserInformation
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_UpdateUserInformationRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_user_GetUserInformationRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_UpdateUserInformationResponse'
-      summary: UpdateUserInformation
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_user_GetUserInformationResponse'
+      summary: GetUserInformation
       tags:
       - USER SERVICE
 swagger: "2.0"

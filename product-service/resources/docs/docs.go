@@ -219,7 +219,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetProductsRequest"
+                            "$ref": "#/definitions/transport.Request-domain_GetAllProductRequest"
                         }
                     }
                 ],
@@ -227,7 +227,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetProductsResponse"
+                            "$ref": "#/definitions/transport.Response-domain_GetAllProductResponse"
                         }
                     }
                 }
@@ -474,10 +474,10 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.GetProductsRequest": {
+        "domain.GetAllProductRequest": {
             "type": "object"
         },
-        "domain.GetProductsResponse": {
+        "domain.GetAllProductResponse": {
             "type": "object",
             "properties": {
                 "products": {
@@ -685,14 +685,14 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Request-domain_GetProductsRequest": {
+        "transport.Request-domain_GetAllProductRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductsRequest"
+                    "$ref": "#/definitions/domain.GetAllProductRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -848,11 +848,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-domain_GetProductsResponse": {
+        "transport.Response-domain_GetAllProductResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductsResponse"
+                    "$ref": "#/definitions/domain.GetAllProductResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

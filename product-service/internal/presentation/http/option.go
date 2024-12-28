@@ -23,11 +23,11 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@ID				GetAllProduct
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[domain.GetProductsRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.GetProductsResponse]			"ok"
+//		@Param			request	body		transport.Request[domain.GetAllProductRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetAllProductResponse]			"ok"
 //		@Router			/is/v1/product-service/get-products [post]
 func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductsRequest, *domain.GetProductsResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 //	 	@Tags 			product

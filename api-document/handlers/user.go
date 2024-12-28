@@ -2,27 +2,12 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	domain "github.com/kingstonduy/api-document/domain/user"
 	_ "github.com/kingstonduy/api-document/resources/docs"
 	"github.com/kingstonduy/go-core/errorx"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
 )
-
-type GetUserInformationRequest struct {
-	UserID string `json:"userId"`
-}
-type GetUserInformationResponse struct {
-	UserID      string `json:"userId"`
-	UserName    string `json:"userName"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
-	Gender      string `json:"gender"`
-	DateOfBirth string `json:"dateOfBirth"`
-	Street      string `json:"street"`
-	City        string `json:"city"`
-	District    string `json:"district"`
-	Ward        string `json:"ward"`
-}
 
 //	 	@Tags 			USER SERVICE
 //		@Summary		GetUserInformation
@@ -30,30 +15,12 @@ type GetUserInformationResponse struct {
 //		@ID				GetUserInformation
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[GetUserInformationRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[GetUserInformationResponse]			"ok"
-//		@Router			/is/v1/user-service/get-user-information [post]
+//		@Param			request	body		transport.Request[domain.GetUserInformationRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetUserInformationResponse]			"ok"
+//		@Router			/is/v1/user-service/update [post]
 func GetUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*GetUserInformationRequest, *GetUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
 }
-
-type UpdateUserInformationRequest struct {
-	UserID       string `json:"userId"`
-	UserName     string `json:"userName"`
-	Password     string `json:"password"`
-	Email        string `json:"email"`
-	PhoneNumber  string `json:"phoneNumber"`
-	Gender       string `json:"gender"`
-	DateOfBirth  string `json:"dateOfBirth"`
-	Street       string `json:"street"`
-	City         string `json:"city"`
-	CityCode     string `json:"cityCode"`
-	District     string `json:"district"`
-	DistrictCode string `json:"districtCode"`
-	Ward         string `json:"ward"`
-	WardCode     string `json:"wardCode"`
-}
-type UpdateUserInformationResponse struct{}
 
 //	 	@Tags 			USER SERVICE
 //		@Summary		UpdateUserInformation
@@ -61,29 +28,12 @@ type UpdateUserInformationResponse struct{}
 //		@ID				UpdateUserInformation
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[UpdateUserInformationRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[UpdateUserInformationResponse]			"ok"
-//		@Router			/is/v1/user-service/update [post]
+//		@Param			request	body		transport.Request[domain.UpdateUserInformationRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.UpdateUserInformationResponse]			"ok"
+//		@Router			/is/v1/user-service/get-product-detail [post]
 func UpdateUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*UpdateUserInformationRequest, *UpdateUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
 }
-
-type RegisterUserRequest struct {
-	UserName     string `json:"userName"`
-	Password     string `json:"password"`
-	Email        string `json:"email"`
-	PhoneNumber  string `json:"phoneNumber"`
-	Gender       string `json:"gender"`
-	DateOfBirth  string `json:"dateOfBirth"`
-	Street       string `json:"street"`
-	City         string `json:"city"`
-	CityCode     string `json:"cityCode"`
-	District     string `json:"district"`
-	DistrictCode string `json:"districtCode"`
-	Ward         string `json:"ward"`
-	WardCode     string `json:"wardCode"`
-}
-type RegisterUserResponse struct{}
 
 //	 	@Tags 			USER SERVICE
 //		@Summary		RegisterUser
@@ -91,18 +41,12 @@ type RegisterUserResponse struct{}
 //		@ID				RegisterUser
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[RegisterUserRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[RegisterUserResponse]			"ok"
+//		@Param			request	body		transport.Request[domain.RegisterRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.RegisterResponse]			"ok"
 //		@Router			/is/v1/user-service/register [post]
-func RegisterUser(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*RegisterUserRequest, *RegisterUserResponse](ctx, errorx.ErrorCodeTimeout)
+func Register(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.RegisterRequest, *domain.RegisterResponse](ctx, errorx.ErrorCodeTimeout)
 }
-
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-type LoginResponse struct{}
 
 //	 	@Tags 			USER SERVICE
 //		@Summary		Login
@@ -110,9 +54,9 @@ type LoginResponse struct{}
 //		@ID				Login
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[LoginRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[LoginResponse]			"ok"
+//		@Param			request	body		transport.Request[domain.LoginRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.LoginResponse]			"ok"
 //		@Router			/is/v1/user-service/login [post]
 func Login(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*LoginRequest, *LoginResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.LoginRequest, *domain.LoginResponse](ctx, errorx.ErrorCodeTimeout)
 }

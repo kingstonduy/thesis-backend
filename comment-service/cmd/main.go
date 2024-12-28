@@ -3,16 +3,14 @@ package main
 import (
 	"context"
 
+	configuration "github.com/kingstonduy/comment-service/internal/bootstrap"
+	"github.com/kingstonduy/comment-service/internal/postgres"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
-	configuration "github.com/kingstonduy/user-service/internal/bootstrap"
-	"github.com/kingstonduy/user-service/internal/infra/postgres"
-	get_user_info_uc "github.com/kingstonduy/user-service/internal/usecase/get-user-information"
-	login_uc "github.com/kingstonduy/user-service/internal/usecase/login"
-	register_uc "github.com/kingstonduy/user-service/internal/usecase/register"
-	update_user_uc "github.com/kingstonduy/user-service/internal/usecase/update-user-information"
 
-	http_server "github.com/kingstonduy/user-service/internal/presentation/http"
+	http_server "github.com/kingstonduy/comment-service/internal/presentation/http"
+	add_comment_uc "github.com/kingstonduy/comment-service/internal/usecase/add-comment"
+	get_comment_uc "github.com/kingstonduy/comment-service/internal/usecase/get-comment"
 	"go.uber.org/fx"
 )
 
@@ -33,10 +31,8 @@ var configModule = fx.Module("config",
 )
 
 var usecaseModule = fx.Module("usecase",
-	fx.Provide(get_user_info_uc.NewGetUserInformationhandler),
-	fx.Provide(login_uc.NewLoginHandler),
-	fx.Provide(register_uc.NewRegisterHandler),
-	fx.Provide(update_user_uc.NewUpdateHandler),
+	fx.Provide(add_comment_uc.NewAddCommentHandler),
+	fx.Provide(get_comment_uc.NewGetCommentHandler),
 )
 
 var serverModule = fx.Module("server",

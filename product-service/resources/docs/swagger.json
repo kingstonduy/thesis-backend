@@ -7,15 +7,9 @@
         "/auth/login": {
             "post": {
                 "description": "Authenticate user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["auth"],
                 "summary": "Login",
                 "operationId": "Login",
                 "parameters": [
@@ -42,15 +36,9 @@
         "/auth/validate": {
             "post": {
                 "description": "Validate JWT token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["auth"],
                 "summary": "ValidateJWT",
                 "operationId": "ValidateJWT",
                 "parameters": [
@@ -77,12 +65,8 @@
         "/cart": {
             "get": {
                 "description": "Get all items in the cart",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cart"
-                ],
+                "produces": ["application/json"],
+                "tags": ["cart"],
                 "summary": "ListCartItems",
                 "operationId": "ListCartItems",
                 "responses": {
@@ -98,15 +82,9 @@
         "/cart/checkout": {
             "post": {
                 "description": "Checkout cart items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cart"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["cart"],
                 "summary": "Checkout",
                 "operationId": "Checkout",
                 "responses": {
@@ -122,15 +100,9 @@
         "/cart/{productId}": {
             "put": {
                 "description": "Update quantity of a product in the cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cart"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["cart"],
                 "summary": "UpdateCartItemQuantity",
                 "operationId": "UpdateCartItemQuantity",
                 "parameters": [
@@ -157,15 +129,9 @@
         "/is/v1/product/get-product-detail": {
             "post": {
                 "description": "Get the detail of a product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["product"],
                 "summary": "GetProductDetail",
                 "operationId": "GetProductDetail",
                 "parameters": [
@@ -191,15 +157,9 @@
         "/is/v1/product/get-products": {
             "post": {
                 "description": "list all the products in the inventory",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["product"],
                 "summary": "GetAllProduct",
                 "operationId": "GetAllProduct",
                 "parameters": [
@@ -208,7 +168,7 @@
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetProductsRequest"
+                            "$ref": "#/definitions/transport.Request-domain_GetAllProductRequest"
                         }
                     }
                 ],
@@ -216,7 +176,7 @@
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetProductsResponse"
+                            "$ref": "#/definitions/transport.Response-domain_GetAllProductResponse"
                         }
                     }
                 }
@@ -225,12 +185,8 @@
         "/orders": {
             "get": {
                 "description": "Get all purchased products",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
+                "produces": ["application/json"],
+                "tags": ["order"],
                 "summary": "ListPurchasedProducts",
                 "operationId": "ListPurchasedProducts",
                 "responses": {
@@ -246,12 +202,8 @@
         "/products/{productId}/comments": {
             "get": {
                 "description": "Get comments for a product",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "comment"
-                ],
+                "produces": ["application/json"],
+                "tags": ["comment"],
                 "summary": "GetComments",
                 "operationId": "GetComments",
                 "parameters": [
@@ -274,15 +226,9 @@
             },
             "post": {
                 "description": "Add a comment to a product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "comment"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["comment"],
                 "summary": "AddComment",
                 "operationId": "AddComment",
                 "parameters": [
@@ -309,12 +255,8 @@
         "/users/{userId}": {
             "get": {
                 "description": "Get user details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
+                "produces": ["application/json"],
+                "tags": ["user"],
                 "summary": "GetUserInformation",
                 "operationId": "GetUserInformation",
                 "responses": {
@@ -328,15 +270,9 @@
             },
             "put": {
                 "description": "Update user details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["user"],
                 "summary": "UpdateUserInformation",
                 "operationId": "UpdateUserInformation",
                 "parameters": [
@@ -463,10 +399,10 @@
                 }
             }
         },
-        "domain.GetProductsRequest": {
+        "domain.GetAllProductRequest": {
             "type": "object"
         },
-        "domain.GetProductsResponse": {
+        "domain.GetAllProductResponse": {
             "type": "object",
             "properties": {
                 "products": {
@@ -648,9 +584,7 @@
         },
         "transport.Request-domain_AddCommentRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.AddCommentRequest"
@@ -662,9 +596,7 @@
         },
         "transport.Request-domain_GetProductDetailRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.GetProductDetailRequest"
@@ -674,14 +606,12 @@
                 }
             }
         },
-        "transport.Request-domain_GetProductsRequest": {
+        "transport.Request-domain_GetAllProductRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductsRequest"
+                    "$ref": "#/definitions/domain.GetAllProductRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -690,9 +620,7 @@
         },
         "transport.Request-domain_LoginRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.LoginRequest"
@@ -704,9 +632,7 @@
         },
         "transport.Request-domain_UpdateCartRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.UpdateCartRequest"
@@ -718,9 +644,7 @@
         },
         "transport.Request-domain_UpdateUserRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.UpdateUserRequest"
@@ -732,9 +656,7 @@
         },
         "transport.Request-domain_ValidateTokenRequest": {
             "type": "object",
-            "required": [
-                "trace"
-            ],
+            "required": ["trace"],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.ValidateTokenRequest"
@@ -837,11 +759,11 @@
                 }
             }
         },
-        "transport.Response-domain_GetProductsResponse": {
+        "transport.Response-domain_GetAllProductResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductsResponse"
+                    "$ref": "#/definitions/domain.GetAllProductResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -940,10 +862,7 @@
         },
         "transport.Trace": {
             "type": "object",
-            "required": [
-                "cid",
-                "cts"
-            ],
+            "required": ["cid", "cts"],
             "properties": {
                 "cid": {
                     "type": "string"

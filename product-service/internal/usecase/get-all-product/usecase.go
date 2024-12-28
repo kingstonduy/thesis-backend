@@ -25,7 +25,7 @@ func NewGetProductsHandler(
 }
 
 // Handle implements domain.IGetProductsHandler.
-func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (res *domain.GetProductsResponse, err error) {
+func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) (res *domain.GetAllProductResponse, err error) {
 	logger.Info(ctx, "Get products handler start")
 	defer logger.Info(ctx, "Get products handler end")
 
@@ -55,7 +55,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsRequest) (r
 		products = append(products, product)
 	}
 
-	res = &domain.GetProductsResponse{
+	res = &domain.GetAllProductResponse{
 		Products: products,
 	}
 
