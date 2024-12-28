@@ -1,0 +1,314 @@
+definitions:
+  domain.AddCartItemDetail:
+    properties:
+      cartItemQuantity:
+        type: integer
+      productId:
+        type: string
+    type: object
+  domain.AddCartItemRequest:
+    properties:
+      cartItems:
+        items:
+          $ref: '#/definitions/domain.AddCartItemDetail'
+        type: array
+      userId:
+        type: string
+    type: object
+  domain.AddCartItemResponse:
+    type: object
+  domain.DeleteCartItemRequest:
+    properties:
+      cartItemID:
+        type: string
+    type: object
+  domain.DeleteCartItemResponse:
+    type: object
+  domain.DeleteUserCartRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  domain.DeleteUserCartResponse:
+    type: object
+  domain.GetCartItemDetail:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+      productCatergory:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+    type: object
+  domain.GetCartRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  domain.GetCartResponse:
+    properties:
+      cartItems:
+        items:
+          $ref: '#/definitions/domain.GetCartItemDetail'
+        type: array
+    type: object
+  domain.UpdateCartItemRequest:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+    type: object
+  domain.UpdateCartItemResponse:
+    type: object
+  transport.Request-domain_AddCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.AddCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_DeleteCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.DeleteCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_DeleteUserCartRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.DeleteUserCartRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_GetCartRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetCartRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-domain_UpdateCartItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/domain.UpdateCartItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Response-domain_AddCartItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.AddCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_DeleteCartItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.DeleteCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_DeleteUserCartResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.DeleteUserCartResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_GetCartResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetCartResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-domain_UpdateCartItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.UpdateCartItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Result:
+    properties:
+      code:
+        type: string
+      details:
+        type: object
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  transport.Trace:
+    properties:
+      cid:
+        type: string
+      clientId:
+        type: string
+      cts:
+        type: integer
+      dur:
+        type: integer
+      frm:
+        type: string
+      replyTo:
+        type: string
+      sid:
+        type: string
+      sts:
+        type: integer
+      to:
+        type: string
+      transactionTimeout:
+        maximum: 120000
+        type: integer
+      userName:
+        type: string
+    required:
+    - cid
+    - cts
+    type: object
+info:
+  contact: {}
+paths:
+  /is/v1/cart-service/add:
+    post:
+      consumes:
+      - application/json
+      description: Insert into cart values ...
+      operationId: AddCartItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_AddCartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_AddCartItemResponse'
+      summary: AddCartItem
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/delete-cart-item:
+    post:
+      consumes:
+      - application/json
+      description: giving the cartITemID delete the cartItem
+      operationId: DeleteCartItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_DeleteCartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_DeleteCartItemResponse'
+      summary: DeleteCartItem
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/delete-user-cart:
+    post:
+      consumes:
+      - application/json
+      description: delete all the record in table cart with corresponding userID
+      operationId: DeleteUserCart
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_DeleteUserCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_DeleteUserCartResponse'
+      summary: DeleteUserCart
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/get-items:
+    post:
+      consumes:
+      - application/json
+      description: select * from cart where userID = :1
+      operationId: GetCart
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_GetCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_GetCartResponse'
+      summary: GetCart
+      tags:
+      - CART SERVICE
+  /is/v1/cart-service/update:
+    post:
+      consumes:
+      - application/json
+      description: Update the quantity of an item in the cart. front end receives
+        ok returns then update StateQuantity
+      operationId: UpdateCartItem
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_UpdateCartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-domain_UpdateCartItemResponse'
+      summary: UpdateCartItem
+      tags:
+      - CART SERVICE
+swagger: "2.0"
