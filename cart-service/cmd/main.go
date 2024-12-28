@@ -7,6 +7,7 @@ import (
 	"github.com/kingstonduy/cart-service/internal/infra/postgres"
 	add_cart_handler_uc "github.com/kingstonduy/cart-service/internal/usecase/add-cart-item"
 	delete_cart_item_uc "github.com/kingstonduy/cart-service/internal/usecase/delete-cart"
+	delete_user_cart "github.com/kingstonduy/cart-service/internal/usecase/delete-user-cart"
 	get_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/get-cart"
 	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart"
 	"github.com/kingstonduy/go-core/logger"
@@ -37,6 +38,7 @@ var usecaseModule = fx.Module("usecase",
 	fx.Provide(delete_cart_item_uc.NewDeleteCartItemHandler),
 	fx.Provide(get_cart_uc.NewGetCartHandler),
 	fx.Provide(update_cart_uc.NewUpdateCartHandler),
+	fx.Provide(delete_user_cart.NewDeleteUserCartHandler),
 )
 
 var serverModule = fx.Module("server",

@@ -7,11 +7,7 @@ import "context"
 // )
 
 type DeleteCartItemRequest struct {
-	CartItems []DeleteCartItemDetail `json:"cartItems"`
-}
-
-type DeleteCartItemDetail struct {
-	UserID string `json:"userID"`
+	CartItemID string `json:"cartItemID"`
 }
 
 type DeleteCartItemResponse struct{}

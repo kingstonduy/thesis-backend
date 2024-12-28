@@ -13,27 +13,27 @@ type handler struct {
 	repo domain.ICartRepo
 }
 
-func NewDeleteCartItemHandler(
+func NewDeleteUserCartHandler(
 	repo domain.ICartRepo,
-) domain.DeleteCartItemHandler {
+) domain.DeleteUserCartHandler {
 	return &handler{
 		repo: repo,
 	}
 }
 
-// Handle implements domain.DeleteCartItemHandler.
-func (h *handler) Handle(ctx context.Context, req *domain.DeleteCartItemRequest) (res *domain.DeleteCartItemResponse, err error) {
-	logger.Info(ctx, "DeleteCartItemHandler start")
-	defer logger.Info(ctx, "DeleteCartItemHandler end")
+// Handle implements domain.DeleteUserCartHandler.
+func (h *handler) Handle(ctx context.Context, req *domain.DeleteUserCartRequest) (res *domain.DeleteUserCartResponse, err error) {
+	logger.Info(ctx, "DeleteUserCartHandler start")
+	defer logger.Info(ctx, "DeleteUserCartHandler end")
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("PANIC DeleteCartItemHandler %v", r)
+			err = fmt.Errorf("PANIC DeleteUserCartHandler %v", r)
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
 
-	err = h.repo.DeleteCartItem(ctx, domain.DeleteCartItemParams{CartItemID: req.CartItemID})
+	err = h.repo.DeleteUserCart(ctx, domain.DeleteUserCartParams{UserID: req.UserID})
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())

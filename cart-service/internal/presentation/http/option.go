@@ -11,10 +11,12 @@ import (
 
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
+		s.App.Post("/add", s.AddCartItem)
 		s.App.Post("/get-items", s.GetCart)
 		s.App.Post("/update", s.UpdateCartItem)
-		s.App.Post("/delete", s.DeleteCartItem)
-		s.App.Post("/add", s.AddCartItem)
+		s.App.Post("/delete-cart-item", s.DeleteCartItem)
+		s.App.Post("/delete-user-cart", s.DeleteUserCart)
+
 		return nil
 	}
 }
@@ -47,15 +49,28 @@ func (s *HttpServer) UpdateCartItem(ctx *fiber.Ctx) error {
 
 //	 	@Tags 			CART SERVICE
 //		@Summary		DeleteCartItem
-//		@Description	DELETE FROM cart WHERE userID = ?;
+//		@Description	giving the cartITemID delete the cartItem
 //		@ID				DeleteCartItem
 //		@Accept			json
 //		@Produce		json
 //		@Param			request	body		transport.Request[domain.DeleteCartItemRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.DeleteCartItemResposne]			"ok"
-//		@Router			/is/v1/cart-service/delete [post]
+//		@Success		200		{object}	transport.Response[domain.DeleteCartItemResponse]			"ok"
+//		@Router			/is/v1/cart-service/delete-cart-item [post]
 func (s *HttpServer) DeleteCartItem(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemRequest, *domain.DeleteCartItemResponse](ctx, errorx.ErrorCodeTimeout)
+}
+
+//	 	@Tags 			CART SERVICE
+//		@Summary		DeleteUserCart
+//		@Description	delete all the record in table cart with corresponding userID
+//		@ID				DeleteUserCart
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.DeleteUserCartRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.DeleteUserCartResponse]			"ok"
+//		@Router			/is/v1/cart-service/delete-user-cart [post]
+func (s *HttpServer) DeleteUserCart(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteUserCartRequest, *domain.DeleteUserCartResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 //	 	@Tags 			CART SERVICE
@@ -65,7 +80,7 @@ func (s *HttpServer) DeleteCartItem(ctx *fiber.Ctx) error {
 //		@Accept			json
 //		@Produce		json
 //		@Param			request	body		transport.Request[domain.AddCartItemRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.AddCartItemResposne]			"ok"
+//		@Success		200		{object}	transport.Response[domain.AddCartItemResponse]			"ok"
 //		@Router			/is/v1/cart-service/add [post]
 func (s *HttpServer) AddCartItem(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.AddCartItemRequest, *domain.AddCartItemResponse](ctx, errorx.ErrorCodeTimeout)

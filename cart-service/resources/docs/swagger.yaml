@@ -1,59 +1,43 @@
 definitions:
-  domain.AddCommentRequest:
+  domain.AddCartItemDetail:
     properties:
-      content:
-        type: string
-      rating:
+      cartItemQuantity:
         type: integer
-    type: object
-  domain.AddCommentResponse:
-    properties:
-      success:
-        type: boolean
-    type: object
-  domain.CartItem:
-    properties:
-      image_url:
-        type: string
-      price:
-        type: number
-      product_id:
-        type: string
-      product_name:
-        type: string
-      quantity:
-        type: integer
-    type: object
-  domain.CheckoutResponse:
-    properties:
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
-  domain.Comment:
-    properties:
-      content:
-        type: string
-      rating:
-        type: number
-      timestamp:
-        type: string
-      userImage:
-        type: string
-      userName:
-        type: string
-    type: object
-  domain.GetProductDetailRequest:
-    properties:
       productId:
         type: string
     type: object
-  domain.GetProductDetailResponse:
+  domain.AddCartItemRequest:
     properties:
-      productCatergory:
+      cartItems:
+        items:
+          $ref: '#/definitions/domain.AddCartItemDetail'
+        type: array
+      userId:
         type: string
-      productDescription:
+    type: object
+  domain.AddCartItemResponse:
+    type: object
+  domain.DeleteCartItemRequest:
+    properties:
+      cartItemID:
+        type: string
+    type: object
+  domain.DeleteCartItemResponse:
+    type: object
+  domain.DeleteUserCartRequest:
+    properties:
+      userId:
+        type: string
+    type: object
+  domain.DeleteUserCartResponse:
+    type: object
+  domain.GetCartItemDetail:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+      productCatergory:
         type: string
       productId:
         type: string
@@ -61,299 +45,113 @@ definitions:
         type: string
       productName:
         type: string
-      productPrice:
-        type: number
     type: object
-  domain.GetProductsRequest:
-    type: object
-  domain.GetProductsResponse:
+  domain.GetCartRequest:
     properties:
-      products:
+      userId:
+        type: string
+    type: object
+  domain.GetCartResponse:
+    properties:
+      cartItems:
         items:
-          $ref: '#/definitions/domain.Product'
+          $ref: '#/definitions/domain.GetCartItemDetail'
         type: array
     type: object
-  domain.LoginRequest:
+  domain.UpdateCartItemRequest:
     properties:
-      email:
+      cartItemId:
         type: string
-      password:
-        type: string
-    type: object
-  domain.LoginResponse:
-    properties:
-      expires:
-        type: string
-      token:
-        type: string
-    type: object
-  domain.Product:
-    properties:
-      averageRating:
-        type: number
-      id:
-        type: string
-      imageUrl:
-        type: string
-      name:
-        type: string
-      price:
-        type: number
-    type: object
-  domain.PurchasedProduct:
-    properties:
-      delivery_status:
-        type: string
-      image_url:
-        type: string
-      order_id:
-        type: string
-      payment_status:
-        type: string
-      product_name:
-        type: string
-    type: object
-  domain.UpdateCartRequest:
-    properties:
-      product_id:
-        type: string
-      quantity:
+      cartItemQuantity:
         type: integer
     type: object
-  domain.UpdateCartResponse:
-    properties:
-      success:
-        type: boolean
+  domain.UpdateCartItemResponse:
     type: object
-  domain.UpdateUserRequest:
-    properties:
-      city:
-        type: string
-      date_of_birth:
-        type: string
-      district:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      phone_number:
-        type: string
-      street:
-        type: string
-      username:
-        type: string
-      ward:
-        type: string
-    type: object
-  domain.UpdateUserResponse:
-    properties:
-      success:
-        type: boolean
-    type: object
-  domain.UserInformation:
-    properties:
-      city:
-        type: string
-      date_of_birth:
-        type: string
-      district:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      phone_number:
-        type: string
-      street:
-        type: string
-      username:
-        type: string
-      ward:
-        type: string
-    type: object
-  domain.ValidateTokenRequest:
-    properties:
-      token:
-        type: string
-    type: object
-  domain.ValidateTokenResponse:
-    properties:
-      is_valid:
-        type: boolean
-    type: object
-  transport.Request-domain_AddCommentRequest:
+  transport.Request-domain_AddCartItemRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.AddCommentRequest'
+        $ref: '#/definitions/domain.AddCartItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_GetProductDetailRequest:
+  transport.Request-domain_DeleteCartItemRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.GetProductDetailRequest'
+        $ref: '#/definitions/domain.DeleteCartItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_GetProductsRequest:
+  transport.Request-domain_DeleteUserCartRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.GetProductsRequest'
+        $ref: '#/definitions/domain.DeleteUserCartRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_LoginRequest:
+  transport.Request-domain_GetCartRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.LoginRequest'
+        $ref: '#/definitions/domain.GetCartRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_UpdateCartRequest:
+  transport.Request-domain_UpdateCartItemRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.UpdateCartRequest'
+        $ref: '#/definitions/domain.UpdateCartItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_UpdateUserRequest:
+  transport.Response-domain_AddCartItemResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.UpdateUserRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-domain_ValidateTokenRequest:
-    properties:
-      data:
-        $ref: '#/definitions/domain.ValidateTokenRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Response-array_domain_CartItem:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/domain.CartItem'
-        type: array
+        $ref: '#/definitions/domain.AddCartItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-array_domain_Comment:
+  transport.Response-domain_DeleteCartItemResponse:
     properties:
       data:
-        items:
-          $ref: '#/definitions/domain.Comment'
-        type: array
+        $ref: '#/definitions/domain.DeleteCartItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-array_domain_PurchasedProduct:
+  transport.Response-domain_DeleteUserCartResponse:
     properties:
       data:
-        items:
-          $ref: '#/definitions/domain.PurchasedProduct'
-        type: array
+        $ref: '#/definitions/domain.DeleteUserCartResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-domain_AddCommentResponse:
+  transport.Response-domain_GetCartResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.AddCommentResponse'
+        $ref: '#/definitions/domain.GetCartResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-domain_CheckoutResponse:
+  transport.Response-domain_UpdateCartItemResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.CheckoutResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_GetProductDetailResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.GetProductDetailResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_GetProductsResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.GetProductsResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_LoginResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.LoginResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_UpdateCartResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.UpdateCartResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_UpdateUserResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.UpdateUserResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_UserInformation:
-    properties:
-      data:
-        $ref: '#/definitions/domain.UserInformation'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_ValidateTokenResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.ValidateTokenResponse'
+        $ref: '#/definitions/domain.UpdateCartItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -402,239 +200,115 @@ definitions:
 info:
   contact: {}
 paths:
-  /auth/login:
+  /is/v1/cart-service/add:
     post:
       consumes:
       - application/json
-      description: Authenticate user
-      operationId: Login
+      description: Insert into cart values ...
+      operationId: AddCartItem
       parameters:
       - description: Request
         in: body
         name: request
-        required: true
         schema:
-          $ref: '#/definitions/transport.Request-domain_LoginRequest'
+          $ref: '#/definitions/transport.Request-domain_AddCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_LoginResponse'
-      summary: Login
+            $ref: '#/definitions/transport.Response-domain_AddCartItemResponse'
+      summary: AddCartItem
       tags:
-      - auth
-  /auth/validate:
+      - CART SERVICE
+  /is/v1/cart-service/delete-cart-item:
     post:
       consumes:
       - application/json
-      description: Validate JWT token
-      operationId: ValidateJWT
+      description: giving the cartITemID delete the cartItem
+      operationId: DeleteCartItem
       parameters:
       - description: Request
         in: body
         name: request
-        required: true
         schema:
-          $ref: '#/definitions/transport.Request-domain_ValidateTokenRequest'
+          $ref: '#/definitions/transport.Request-domain_DeleteCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_ValidateTokenResponse'
-      summary: ValidateJWT
+            $ref: '#/definitions/transport.Response-domain_DeleteCartItemResponse'
+      summary: DeleteCartItem
       tags:
-      - auth
-  /cart:
-    get:
-      description: Get all items in the cart
-      operationId: ListCartItems
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-array_domain_CartItem'
-      summary: ListCartItems
-      tags:
-      - cart
-  /cart/{productId}:
-    put:
-      consumes:
-      - application/json
-      description: Update quantity of a product in the cart
-      operationId: UpdateCartItemQuantity
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/transport.Request-domain_UpdateCartRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_UpdateCartResponse'
-      summary: UpdateCartItemQuantity
-      tags:
-      - cart
-  /cart/checkout:
+      - CART SERVICE
+  /is/v1/cart-service/delete-user-cart:
     post:
       consumes:
       - application/json
-      description: Checkout cart items
-      operationId: Checkout
+      description: delete all the record in table cart with corresponding userID
+      operationId: DeleteUserCart
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-domain_DeleteUserCartRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_CheckoutResponse'
-      summary: Checkout
+            $ref: '#/definitions/transport.Response-domain_DeleteUserCartResponse'
+      summary: DeleteUserCart
       tags:
-      - cart
-  /is/v1/product/get-product-detail:
+      - CART SERVICE
+  /is/v1/cart-service/get-items:
     post:
       consumes:
       - application/json
-      description: Get the detail of a product
-      operationId: GetProductDetail
+      description: select * from cart where userID = :1
+      operationId: GetCart
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-domain_GetProductDetailRequest'
+          $ref: '#/definitions/transport.Request-domain_GetCartRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_GetProductDetailResponse'
-      summary: GetProductDetail
+            $ref: '#/definitions/transport.Response-domain_GetCartResponse'
+      summary: GetCart
       tags:
-      - product
-  /is/v1/product/get-products:
+      - CART SERVICE
+  /is/v1/cart-service/update:
     post:
       consumes:
       - application/json
-      description: list all the products in the inventory
-      operationId: GetAllProduct
+      description: Update the quantity of an item in the cart. front end receives
+        ok returns then update StateQuantity
+      operationId: UpdateCartItem
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-domain_GetProductsRequest'
+          $ref: '#/definitions/transport.Request-domain_UpdateCartItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_GetProductsResponse'
-      summary: GetAllProduct
+            $ref: '#/definitions/transport.Response-domain_UpdateCartItemResponse'
+      summary: UpdateCartItem
       tags:
-      - product
-  /orders:
-    get:
-      description: Get all purchased products
-      operationId: ListPurchasedProducts
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-array_domain_PurchasedProduct'
-      summary: ListPurchasedProducts
-      tags:
-      - order
-  /products/{productId}/comments:
-    get:
-      description: Get comments for a product
-      operationId: GetComments
-      parameters:
-      - description: Product ID
-        in: path
-        name: productId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-array_domain_Comment'
-      summary: GetComments
-      tags:
-      - comment
-    post:
-      consumes:
-      - application/json
-      description: Add a comment to a product
-      operationId: AddComment
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/transport.Request-domain_AddCommentRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_AddCommentResponse'
-      summary: AddComment
-      tags:
-      - comment
-  /users/{userId}:
-    get:
-      description: Get user details
-      operationId: GetUserInformation
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_UserInformation'
-      summary: GetUserInformation
-      tags:
-      - user
-    put:
-      consumes:
-      - application/json
-      description: Update user details
-      operationId: UpdateUserInformation
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/transport.Request-domain_UpdateUserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_UpdateUserResponse'
-      summary: UpdateUserInformation
-      tags:
-      - user
+      - CART SERVICE
 swagger: "2.0"

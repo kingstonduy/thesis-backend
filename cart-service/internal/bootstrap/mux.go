@@ -7,12 +7,14 @@ import (
 
 func ResgisterPipeline(
 	AddCartItemHandler domain.AddCartItemHandler,
-	DeleteCartItemHandler domain.DeleteCartItemHandler,
 	GetCartHandler domain.GetCartHandler,
 	UpdateCartItemHandler domain.UpdateCartItemHandler,
+	DeleteCartItemHandler domain.DeleteCartItemHandler,
+	DeleteUserCartHandler domain.DeleteUserCartHandler,
 ) {
 	pipeline.RegisterRequestHandler(AddCartItemHandler)
 	pipeline.RegisterRequestHandler(DeleteCartItemHandler)
 	pipeline.RegisterRequestHandler(GetCartHandler)
 	pipeline.RegisterRequestHandler(UpdateCartItemHandler)
+	pipeline.RegisterRequestHandler(DeleteUserCartHandler)
 }

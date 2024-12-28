@@ -2,18 +2,52 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kingstonduy/cart-service/internal/domain"
+	"github.com/kingstonduy/go-core/errorx"
+	"github.com/kingstonduy/go-core/logger"
 )
 
 type handler struct {
+	repo domain.ICartRepo
 }
 
-func NewGetCartHandler() domain.GetCartHandler {
-	return &handler{}
+func NewGetCartHandler(
+	repo domain.ICartRepo,
+) domain.GetCartHandler {
+	return &handler{
+		repo: repo,
+	}
 }
 
 // Handle implements domain.GetCartHandler.
 func (h *handler) Handle(ctx context.Context, req *domain.GetCartRequest) (res *domain.GetCartResponse, err error) {
-	panic("unimplemented")
+	logger.Info(ctx, "GetCartHandler start")
+	defer logger.Info(ctx, "GetCartHandler end")
+
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("PANIC GetCartHandler %v", r)
+			logger.Errorf(ctx, err.Error())
+		}
+	}()
+
+	params := domain.GetCartParamsIn{
+		UserID: req.UserID,
+	}
+	params.UserID = req.UserID
+
+	cartItems, err := h.repo.GetCart(ctx, params)
+	if err != nil {
+		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
+		logger.Error(ctx, errx.Error())
+		return nil, errx
+	}
+
+	res = &domain.GetCartResponse{
+		CartItems: cartItems.CartItems,
+	}
+
+	return res, nil
 }

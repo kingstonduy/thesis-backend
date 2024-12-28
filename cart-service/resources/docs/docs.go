@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
+        "/is/v1/cart-service/add": {
             "post": {
-                "description": "Authenticate user",
+                "description": "Insert into cart values ...",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,18 +25,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "CART SERVICE"
                 ],
-                "summary": "Login",
-                "operationId": "Login",
+                "summary": "AddCartItem",
+                "operationId": "AddCartItem",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_LoginRequest"
+                            "$ref": "#/definitions/transport.Request-domain_AddCartItemRequest"
                         }
                     }
                 ],
@@ -44,15 +43,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_LoginResponse"
+                            "$ref": "#/definitions/transport.Response-domain_AddCartItemResponse"
                         }
                     }
                 }
             }
         },
-        "/auth/validate": {
+        "/is/v1/cart-service/delete-cart-item": {
             "post": {
-                "description": "Validate JWT token",
+                "description": "giving the cartITemID delete the cartItem",
                 "consumes": [
                     "application/json"
                 ],
@@ -60,18 +59,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "CART SERVICE"
                 ],
-                "summary": "ValidateJWT",
-                "operationId": "ValidateJWT",
+                "summary": "DeleteCartItem",
+                "operationId": "DeleteCartItem",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_ValidateTokenRequest"
+                            "$ref": "#/definitions/transport.Request-domain_DeleteCartItemRequest"
                         }
                     }
                 ],
@@ -79,36 +77,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_ValidateTokenResponse"
+                            "$ref": "#/definitions/transport.Response-domain_DeleteCartItemResponse"
                         }
                     }
                 }
             }
         },
-        "/cart": {
-            "get": {
-                "description": "Get all items in the cart",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cart"
-                ],
-                "summary": "ListCartItems",
-                "operationId": "ListCartItems",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_CartItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/checkout": {
+        "/is/v1/cart-service/delete-user-cart": {
             "post": {
-                "description": "Checkout cart items",
+                "description": "delete all the record in table cart with corresponding userID",
                 "consumes": [
                     "application/json"
                 ],
@@ -116,42 +93,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "cart"
+                    "CART SERVICE"
                 ],
-                "summary": "Checkout",
-                "operationId": "Checkout",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_CheckoutResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/{productId}": {
-            "put": {
-                "description": "Update quantity of a product in the cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "cart"
-                ],
-                "summary": "UpdateCartItemQuantity",
-                "operationId": "UpdateCartItemQuantity",
+                "summary": "DeleteUserCart",
+                "operationId": "DeleteUserCart",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_UpdateCartRequest"
+                            "$ref": "#/definitions/transport.Request-domain_DeleteUserCartRequest"
                         }
                     }
                 ],
@@ -159,15 +111,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UpdateCartResponse"
+                            "$ref": "#/definitions/transport.Response-domain_DeleteUserCartResponse"
                         }
                     }
                 }
             }
         },
-        "/is/v1/product/get-product-detail": {
+        "/is/v1/cart-service/get-items": {
             "post": {
-                "description": "Get the detail of a product",
+                "description": "select * from cart where userID = :1",
                 "consumes": [
                     "application/json"
                 ],
@@ -175,17 +127,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "product"
+                    "CART SERVICE"
                 ],
-                "summary": "GetProductDetail",
-                "operationId": "GetProductDetail",
+                "summary": "GetCart",
+                "operationId": "GetCart",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetProductDetailRequest"
+                            "$ref": "#/definitions/transport.Request-domain_GetCartRequest"
                         }
                     }
                 ],
@@ -193,15 +145,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetProductDetailResponse"
+                            "$ref": "#/definitions/transport.Response-domain_GetCartResponse"
                         }
                     }
                 }
             }
         },
-        "/is/v1/product/get-products": {
+        "/is/v1/cart-service/update": {
             "post": {
-                "description": "list all the products in the inventory",
+                "description": "Update the quantity of an item in the cart. front end receives ok returns then update StateQuantity",
                 "consumes": [
                     "application/json"
                 ],
@@ -209,17 +161,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "product"
+                    "CART SERVICE"
                 ],
-                "summary": "GetAllProduct",
-                "operationId": "GetAllProduct",
+                "summary": "UpdateCartItem",
+                "operationId": "UpdateCartItem",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetProductsRequest"
+                            "$ref": "#/definitions/transport.Request-domain_UpdateCartItemRequest"
                         }
                     }
                 ],
@@ -227,145 +179,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetProductsResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders": {
-            "get": {
-                "description": "Get all purchased products",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "order"
-                ],
-                "summary": "ListPurchasedProducts",
-                "operationId": "ListPurchasedProducts",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_PurchasedProduct"
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{productId}/comments": {
-            "get": {
-                "description": "Get comments for a product",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "comment"
-                ],
-                "summary": "GetComments",
-                "operationId": "GetComments",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "productId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_Comment"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Add a comment to a product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "comment"
-                ],
-                "summary": "AddComment",
-                "operationId": "AddComment",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_AddCommentRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_AddCommentResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userId}": {
-            "get": {
-                "description": "Get user details",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "GetUserInformation",
-                "operationId": "GetUserInformation",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UserInformation"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update user details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "UpdateUserInformation",
-                "operationId": "UpdateUserInformation",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_UpdateUserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UpdateUserResponse"
+                            "$ref": "#/definitions/transport.Response-domain_UpdateCartItemResponse"
                         }
                     }
                 }
@@ -373,91 +187,66 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.AddCommentRequest": {
+        "domain.AddCartItemDetail": {
             "type": "object",
             "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "rating": {
+                "cartItemQuantity": {
                     "type": "integer"
-                }
-            }
-        },
-        "domain.AddCommentResponse": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.CartItem": {
-            "type": "object",
-            "properties": {
-                "image_url": {
-                    "type": "string"
                 },
-                "price": {
-                    "type": "number"
-                },
-                "product_id": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                },
-                "quantity": {
-                    "type": "integer"
-                }
-            }
-        },
-        "domain.CheckoutResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.Comment": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "timestamp": {
-                    "type": "string"
-                },
-                "userImage": {
-                    "type": "string"
-                },
-                "userName": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.GetProductDetailRequest": {
-            "type": "object",
-            "properties": {
                 "productId": {
                     "type": "string"
                 }
             }
         },
-        "domain.GetProductDetailResponse": {
+        "domain.AddCartItemRequest": {
             "type": "object",
             "properties": {
-                "productCatergory": {
+                "cartItems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.AddCartItemDetail"
+                    }
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.AddCartItemResponse": {
+            "type": "object"
+        },
+        "domain.DeleteCartItemRequest": {
+            "type": "object",
+            "properties": {
+                "cartItemID": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.DeleteCartItemResponse": {
+            "type": "object"
+        },
+        "domain.DeleteUserCartRequest": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.DeleteUserCartResponse": {
+            "type": "object"
+        },
+        "domain.GetCartItemDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
                     "type": "string"
                 },
-                "productDescription": {
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productCatergory": {
                     "type": "string"
                 },
                 "productId": {
@@ -468,301 +257,117 @@ const docTemplate = `{
                 },
                 "productName": {
                     "type": "string"
-                },
-                "productPrice": {
-                    "type": "number"
                 }
             }
         },
-        "domain.GetProductsRequest": {
-            "type": "object"
-        },
-        "domain.GetProductsResponse": {
+        "domain.GetCartRequest": {
             "type": "object",
             "properties": {
-                "products": {
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.GetCartResponse": {
+            "type": "object",
+            "properties": {
+                "cartItems": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Product"
+                        "$ref": "#/definitions/domain.GetCartItemDetail"
                     }
                 }
             }
         },
-        "domain.LoginRequest": {
+        "domain.UpdateCartItemRequest": {
             "type": "object",
             "properties": {
-                "email": {
+                "cartItemId": {
                     "type": "string"
                 },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "expires": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.Product": {
-            "type": "object",
-            "properties": {
-                "averageRating": {
-                    "type": "number"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                }
-            }
-        },
-        "domain.PurchasedProduct": {
-            "type": "object",
-            "properties": {
-                "delivery_status": {
-                    "type": "string"
-                },
-                "image_url": {
-                    "type": "string"
-                },
-                "order_id": {
-                    "type": "string"
-                },
-                "payment_status": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.UpdateCartRequest": {
-            "type": "object",
-            "properties": {
-                "product_id": {
-                    "type": "string"
-                },
-                "quantity": {
+                "cartItemQuantity": {
                     "type": "integer"
                 }
             }
         },
-        "domain.UpdateCartResponse": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
+        "domain.UpdateCartItemResponse": {
+            "type": "object"
         },
-        "domain.UpdateUserRequest": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "date_of_birth": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "ward": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.UpdateUserResponse": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.UserInformation": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "date_of_birth": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "ward": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.ValidateTokenRequest": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.ValidateTokenResponse": {
-            "type": "object",
-            "properties": {
-                "is_valid": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "transport.Request-domain_AddCommentRequest": {
+        "transport.Request-domain_AddCartItemRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.AddCommentRequest"
+                    "$ref": "#/definitions/domain.AddCartItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_GetProductDetailRequest": {
+        "transport.Request-domain_DeleteCartItemRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductDetailRequest"
+                    "$ref": "#/definitions/domain.DeleteCartItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_GetProductsRequest": {
+        "transport.Request-domain_DeleteUserCartRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.GetProductsRequest"
+                    "$ref": "#/definitions/domain.DeleteUserCartRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_LoginRequest": {
+        "transport.Request-domain_GetCartRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.LoginRequest"
+                    "$ref": "#/definitions/domain.GetCartRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_UpdateCartRequest": {
+        "transport.Request-domain_UpdateCartItemRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.UpdateCartRequest"
+                    "$ref": "#/definitions/domain.UpdateCartItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_UpdateUserRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateUserRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-domain_ValidateTokenRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.ValidateTokenRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-array_domain_CartItem": {
+        "transport.Response-domain_AddCartItemResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.CartItem"
-                    }
+                    "$ref": "#/definitions/domain.AddCartItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -772,14 +377,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-array_domain_Comment": {
+        "transport.Response-domain_DeleteCartItemResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Comment"
-                    }
+                    "$ref": "#/definitions/domain.DeleteCartItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -789,14 +391,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-array_domain_PurchasedProduct": {
+        "transport.Response-domain_DeleteUserCartResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.PurchasedProduct"
-                    }
+                    "$ref": "#/definitions/domain.DeleteUserCartResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -806,11 +405,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-domain_AddCommentResponse": {
+        "transport.Response-domain_GetCartResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.AddCommentResponse"
+                    "$ref": "#/definitions/domain.GetCartResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -820,109 +419,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-domain_CheckoutResponse": {
+        "transport.Response-domain_UpdateCartItemResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.CheckoutResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_GetProductDetailResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetProductDetailResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_GetProductsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetProductsResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_LoginResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.LoginResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UpdateCartResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateCartResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UpdateUserResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateUserResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UserInformation": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UserInformation"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_ValidateTokenResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.ValidateTokenResponse"
+                    "$ref": "#/definitions/domain.UpdateCartItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
