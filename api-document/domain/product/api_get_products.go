@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"context"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -17,4 +19,8 @@ type Product struct {
 	ImageURL      string          `json:"imageUrl"`
 	Price         decimal.Decimal `json:"price"`
 	AverageRating decimal.Decimal `json:"averageRating"`
+}
+
+type IGetProductsHandler interface {
+	Handle(ctx context.Context, req *GetAllProductRequest) (res *GetAllProductResponse, err error)
 }

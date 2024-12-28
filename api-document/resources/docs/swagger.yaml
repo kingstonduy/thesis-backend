@@ -69,6 +69,34 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_cart.UpdateCartItemResponse:
     type: object
+  github_com_kingstonduy_api-document_domain_comment.AddCommentRequest:
+    properties:
+      content:
+        type: string
+      productId:
+        type: string
+      rating:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        type: integer
+      userId:
+        type: string
+    required:
+    - content
+    - productId
+    - rating
+    - userId
+    type: object
+  github_com_kingstonduy_api-document_domain_comment.AddCommentResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_comment.GetCommentRequest:
+    type: object
+  github_com_kingstonduy_api-document_domain_comment.GetCommentResponse:
+    type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductRequest:
     type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductResponse:
@@ -216,19 +244,6 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse:
     type: object
-  handlers.AddCommentRequest:
-    properties:
-      content:
-        type: string
-      productId:
-        type: string
-      rating:
-        type: number
-      userId:
-        type: string
-    type: object
-  handlers.AddCommentResponse:
-    type: object
   handlers.CheckoutDetail:
     properties:
       productId:
@@ -246,19 +261,6 @@ definitions:
         type: string
     type: object
   handlers.CheckoutResponse:
-    type: object
-  handlers.Comment:
-    properties:
-      content:
-        type: string
-      rating:
-        type: number
-      timestamp:
-        type: string
-      userImage:
-        type: string
-      userName:
-        type: string
     type: object
   handlers.GetCheckoutItemDetail:
     properties:
@@ -285,18 +287,6 @@ definitions:
       checkoutItemDetails:
         items:
           $ref: '#/definitions/handlers.GetCheckoutItemDetail'
-        type: array
-    type: object
-  handlers.GetCommentsByProductIDRequest:
-    properties:
-      productId:
-        type: string
-    type: object
-  handlers.GetCommentsByProductIDResponse:
-    properties:
-      comments:
-        items:
-          $ref: '#/definitions/handlers.Comment'
         type: array
     type: object
   handlers.GetPurchasedProductsRequest:
@@ -371,6 +361,24 @@ definitions:
     required:
     - trace
     type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_comment_AddCommentRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_comment.AddCommentRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_comment_GetCommentRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_comment.GetCommentRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
   transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest:
     properties:
       data:
@@ -425,15 +433,6 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-handlers_AddCommentRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.AddCommentRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
   transport.Request-handlers_CheckoutRequest:
     properties:
       data:
@@ -447,15 +446,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.GetCheckoutItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-handlers_GetCommentsByProductIDRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCommentsByProductIDRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -515,6 +505,24 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_comment_AddCommentResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_comment.AddCommentResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_comment_GetCommentResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_comment.GetCommentResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
   transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse:
     properties:
       data:
@@ -569,15 +577,6 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-handlers_AddCommentResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.AddCommentResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
   transport.Response-handlers_CheckoutResponse:
     properties:
       data:
@@ -591,15 +590,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/handlers.GetCheckoutItemResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_GetCommentsByProductIDResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCommentsByProductIDResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -779,14 +769,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_AddCommentRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_comment_AddCommentRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_AddCommentResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_comment_AddCommentResponse'
       summary: AddComment
       tags:
       - COMMENT SERVICE
@@ -795,21 +785,21 @@ paths:
       consumes:
       - application/json
       description: select * from table comment where productID = :1
-      operationId: GetCommentsByProductID
+      operationId: GetComment
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetCommentsByProductIDRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_comment_GetCommentRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetCommentsByProductIDResponse'
-      summary: GetCommentsByProductID
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_comment_GetCommentResponse'
+      summary: GetComment
       tags:
       - COMMENT SERVICE
   /is/v1/order-service/checkout:

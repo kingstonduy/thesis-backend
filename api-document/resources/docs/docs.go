@@ -205,7 +205,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_AddCommentRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_comment_AddCommentRequest"
                         }
                     }
                 ],
@@ -213,7 +213,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_AddCommentResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_comment_AddCommentResponse"
                         }
                     }
                 }
@@ -231,15 +231,15 @@ const docTemplate = `{
                 "tags": [
                     "COMMENT SERVICE"
                 ],
-                "summary": "GetCommentsByProductID",
-                "operationId": "GetCommentsByProductID",
+                "summary": "GetComment",
+                "operationId": "GetComment",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_GetCommentsByProductIDRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_comment_GetCommentRequest"
                         }
                     }
                 ],
@@ -247,7 +247,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_GetCommentsByProductIDResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_comment_GetCommentResponse"
                         }
                     }
                 }
@@ -670,6 +670,45 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_cart.UpdateCartItemResponse": {
             "type": "object"
         },
+        "github_com_kingstonduy_api-document_domain_comment.AddCommentRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "productId",
+                "rating",
+                "userId"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_comment.AddCommentResponse": {
+            "type": "object"
+        },
+        "github_com_kingstonduy_api-document_domain_comment.GetCommentRequest": {
+            "type": "object"
+        },
+        "github_com_kingstonduy_api-document_domain_comment.GetCommentResponse": {
+            "type": "object"
+        },
         "github_com_kingstonduy_api-document_domain_product.GetAllProductRequest": {
             "type": "object"
         },
@@ -895,26 +934,6 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse": {
             "type": "object"
         },
-        "handlers.AddCommentRequest": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "productId": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "userId": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.AddCommentResponse": {
-            "type": "object"
-        },
         "handlers.CheckoutDetail": {
             "type": "object",
             "properties": {
@@ -942,26 +961,6 @@ const docTemplate = `{
         },
         "handlers.CheckoutResponse": {
             "type": "object"
-        },
-        "handlers.Comment": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "timestamp": {
-                    "type": "string"
-                },
-                "userImage": {
-                    "type": "string"
-                },
-                "userName": {
-                    "type": "string"
-                }
-            }
         },
         "handlers.GetCheckoutItemDetail": {
             "type": "object",
@@ -1001,25 +1000,6 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/handlers.GetCheckoutItemDetail"
-                    }
-                }
-            }
-        },
-        "handlers.GetCommentsByProductIDRequest": {
-            "type": "object",
-            "properties": {
-                "productId": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.GetCommentsByProductIDResponse": {
-            "type": "object",
-            "properties": {
-                "comments": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/handlers.Comment"
                     }
                 }
             }
@@ -1136,6 +1116,34 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Request-github_com_kingstonduy_api-document_domain_comment_AddCommentRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_comment.AddCommentRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_comment_GetCommentRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_comment.GetCommentRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest": {
             "type": "object",
             "required": [
@@ -1220,20 +1228,6 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Request-handlers_AddCommentRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.AddCommentRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
         "transport.Request-handlers_CheckoutRequest": {
             "type": "object",
             "required": [
@@ -1256,20 +1250,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.GetCheckoutItemRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-handlers_GetCommentsByProductIDRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetCommentsByProductIDRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -1351,6 +1331,34 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.UpdateCartItemResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_comment_AddCommentResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_comment.AddCommentResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_comment_GetCommentResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_comment.GetCommentResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -1444,20 +1452,6 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-handlers_AddCommentResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.AddCommentResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
         "transport.Response-handlers_CheckoutResponse": {
             "type": "object",
             "properties": {
@@ -1477,20 +1471,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/handlers.GetCheckoutItemResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-handlers_GetCommentsByProductIDResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetCommentsByProductIDResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
