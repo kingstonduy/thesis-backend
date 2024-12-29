@@ -253,7 +253,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/order-service/checkout": {
+        "/is/v1/order-service/execute-transaction": {
             "post": {
                 "description": "Delete all items on cart -\u003e minus quantity of product in cart service",
                 "consumes": [
@@ -265,15 +265,15 @@ const docTemplate = `{
                 "tags": [
                     "ORDER SERVICE"
                 ],
-                "summary": "Checkout",
-                "operationId": "Checkout",
+                "summary": "ExecuteTransaction",
+                "operationId": "ExecuteTransaction",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_CheckoutRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionRequest"
                         }
                     }
                 ],
@@ -281,7 +281,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_CheckoutResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionResponse"
                         }
                     }
                 }
@@ -307,7 +307,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_GetCheckoutItemRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemRequest"
                         }
                     }
                 ],
@@ -315,7 +315,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_GetCheckoutItemResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemResponse"
                         }
                     }
                 }
@@ -341,7 +341,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-handlers_GetPurchasedProductsRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_GetHistoryRequest"
                         }
                     }
                 ],
@@ -349,7 +349,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-handlers_GetPurchasedProductsResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_GetHistoryResponse"
                         }
                     }
                 }
@@ -709,6 +709,133 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_comment.GetCommentResponse": {
             "type": "object"
         },
+        "github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequestDetail"
+                    }
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequestDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemId": {
+                    "type": "string"
+                },
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productPrice": {
+                    "type": "number"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.ExecuteTransactionResponse": {
+            "type": "object"
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetCheckoutItemRequest": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponseDetail"
+                    }
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponseDetail": {
+            "type": "object",
+            "properties": {
+                "pricePerUnit": {
+                    "type": "number"
+                },
+                "productCatergory": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productQuantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetHistoryRequest": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryResponseDetail"
+                    }
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_order.GetHistoryResponseDetail": {
+            "type": "object",
+            "properties": {
+                "deliveryStatus": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_kingstonduy_api-document_domain_product.GetAllProductRequest": {
             "type": "object"
         },
@@ -934,118 +1061,6 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse": {
             "type": "object"
         },
-        "handlers.CheckoutDetail": {
-            "type": "object",
-            "properties": {
-                "productId": {
-                    "type": "string"
-                },
-                "quantity": {
-                    "type": "integer"
-                }
-            }
-        },
-        "handlers.CheckoutRequest": {
-            "type": "object",
-            "properties": {
-                "checkoutDetails": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/handlers.CheckoutDetail"
-                    }
-                },
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.CheckoutResponse": {
-            "type": "object"
-        },
-        "handlers.GetCheckoutItemDetail": {
-            "type": "object",
-            "properties": {
-                "pricePerUnit": {
-                    "type": "number"
-                },
-                "productCatergory": {
-                    "type": "string"
-                },
-                "productId": {
-                    "type": "string"
-                },
-                "productImage": {
-                    "type": "string"
-                },
-                "productName": {
-                    "type": "string"
-                },
-                "productQuantity": {
-                    "type": "integer"
-                }
-            }
-        },
-        "handlers.GetCheckoutItemRequest": {
-            "type": "object",
-            "properties": {
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.GetCheckoutItemResponse": {
-            "type": "object",
-            "properties": {
-                "checkoutItemDetails": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/handlers.GetCheckoutItemDetail"
-                    }
-                }
-            }
-        },
-        "handlers.GetPurchasedProductsRequest": {
-            "type": "object",
-            "properties": {
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.GetPurchasedProductsResponse": {
-            "type": "object",
-            "properties": {
-                "purchasedProducts": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/handlers.PurchasedProductDetail"
-                    }
-                }
-            }
-        },
-        "handlers.PurchasedProductDetail": {
-            "type": "object",
-            "properties": {
-                "deliveryStatus": {
-                    "type": "string"
-                },
-                "orderId": {
-                    "type": "string"
-                },
-                "paymentStatus": {
-                    "type": "string"
-                },
-                "productId": {
-                    "type": "string"
-                },
-                "productImage": {
-                    "type": "string"
-                },
-                "productName": {
-                    "type": "string"
-                }
-            }
-        },
         "transport.Request-github_com_kingstonduy_api-document_domain_cart_AddCartItemRequest": {
             "type": "object",
             "required": [
@@ -1144,6 +1159,48 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Request-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_order_GetHistoryRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest": {
             "type": "object",
             "required": [
@@ -1222,48 +1279,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-handlers_CheckoutRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.CheckoutRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-handlers_GetCheckoutItemRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetCheckoutItemRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-handlers_GetPurchasedProductsRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetPurchasedProductsRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -1368,6 +1383,48 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Response-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_order_GetHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse": {
             "type": "object",
             "properties": {
@@ -1443,48 +1500,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-handlers_CheckoutResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.CheckoutResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-handlers_GetCheckoutItemResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetCheckoutItemResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-handlers_GetPurchasedProductsResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handlers.GetPurchasedProductsResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

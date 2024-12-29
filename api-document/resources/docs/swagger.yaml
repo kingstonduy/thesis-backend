@@ -97,6 +97,88 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_comment.GetCommentResponse:
     type: object
+  github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequestDetail'
+        type: array
+      userID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequestDetail:
+    properties:
+      cartItemId:
+        type: string
+      cartItemQuantity:
+        type: integer
+      productCatergory:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productPrice:
+        type: number
+    type: object
+  github_com_kingstonduy_api-document_domain_order.ExecuteTransactionResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetCheckoutItemRequest:
+    properties:
+      userID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponseDetail'
+        type: array
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponseDetail:
+    properties:
+      pricePerUnit:
+        type: number
+      productCatergory:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productQuantity:
+        type: integer
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetHistoryRequest:
+    properties:
+      userID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetHistoryResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryResponseDetail'
+        type: array
+    type: object
+  github_com_kingstonduy_api-document_domain_order.GetHistoryResponseDetail:
+    properties:
+      deliveryStatus:
+        type: string
+      orderId:
+        type: string
+      paymentStatus:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+    type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductRequest:
     type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductResponse:
@@ -244,78 +326,6 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse:
     type: object
-  handlers.CheckoutDetail:
-    properties:
-      productId:
-        type: string
-      quantity:
-        type: integer
-    type: object
-  handlers.CheckoutRequest:
-    properties:
-      checkoutDetails:
-        items:
-          $ref: '#/definitions/handlers.CheckoutDetail'
-        type: array
-      userID:
-        type: string
-    type: object
-  handlers.CheckoutResponse:
-    type: object
-  handlers.GetCheckoutItemDetail:
-    properties:
-      pricePerUnit:
-        type: number
-      productCatergory:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
-      productQuantity:
-        type: integer
-    type: object
-  handlers.GetCheckoutItemRequest:
-    properties:
-      userID:
-        type: string
-    type: object
-  handlers.GetCheckoutItemResponse:
-    properties:
-      checkoutItemDetails:
-        items:
-          $ref: '#/definitions/handlers.GetCheckoutItemDetail'
-        type: array
-    type: object
-  handlers.GetPurchasedProductsRequest:
-    properties:
-      userID:
-        type: string
-    type: object
-  handlers.GetPurchasedProductsResponse:
-    properties:
-      purchasedProducts:
-        items:
-          $ref: '#/definitions/handlers.PurchasedProductDetail'
-        type: array
-    type: object
-  handlers.PurchasedProductDetail:
-    properties:
-      deliveryStatus:
-        type: string
-      orderId:
-        type: string
-      paymentStatus:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
-    type: object
   transport.Request-github_com_kingstonduy_api-document_domain_cart_AddCartItemRequest:
     properties:
       data:
@@ -379,6 +389,33 @@ definitions:
     required:
     - trace
     type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_order_GetHistoryRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
   transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest:
     properties:
       data:
@@ -428,33 +465,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-handlers_CheckoutRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.CheckoutRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-handlers_GetCheckoutItemRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCheckoutItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-handlers_GetPurchasedProductsRequest:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetPurchasedProductsRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -523,6 +533,33 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.ExecuteTransactionResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetCheckoutItemResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_order_GetHistoryResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_order.GetHistoryResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
   transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse:
     properties:
       data:
@@ -572,33 +609,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/github_com_kingstonduy_api-document_domain_user.UpdateUserInformationResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_CheckoutResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.CheckoutResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_GetCheckoutItemResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetCheckoutItemResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-handlers_GetPurchasedProductsResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handlers.GetPurchasedProductsResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -802,26 +812,26 @@ paths:
       summary: GetComment
       tags:
       - COMMENT SERVICE
-  /is/v1/order-service/checkout:
+  /is/v1/order-service/execute-transaction:
     post:
       consumes:
       - application/json
       description: Delete all items on cart -> minus quantity of product in cart service
-      operationId: Checkout
+      operationId: ExecuteTransaction
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_CheckoutRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_CheckoutResponse'
-      summary: Checkout
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_ExecuteTransactionResponse'
+      summary: ExecuteTransaction
       tags:
       - ORDER SERVICE
   /is/v1/order-service/get-checkout-item:
@@ -835,14 +845,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetCheckoutItemRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetCheckoutItemResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_GetCheckoutItemResponse'
       summary: GetCheckoutItem
       tags:
       - ORDER SERVICE
@@ -857,14 +867,14 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-handlers_GetPurchasedProductsRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_order_GetHistoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-handlers_GetPurchasedProductsResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_order_GetHistoryResponse'
       summary: GetPurchasedProducts
       tags:
       - ORDER SERVICE

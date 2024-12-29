@@ -2,28 +2,12 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	domain "github.com/kingstonduy/api-document/domain/order"
 	_ "github.com/kingstonduy/api-document/resources/docs"
 	"github.com/kingstonduy/go-core/errorx"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
-	"github.com/shopspring/decimal"
 )
-
-type GetCheckoutItemRequest struct {
-	UserID string `json:"userID"`
-}
-type GetCheckoutItemResponse struct {
-	CheckoutItemDetails []GetCheckoutItemDetail
-}
-
-type GetCheckoutItemDetail struct {
-	ProductID        string          `json:"productId"`
-	ProductImage     string          `json:"productImage"`
-	ProductName      string          `json:"productName"`
-	ProductCatergory string          `json:"productCatergory"`
-	ProductQuantity  int             `json:"productQuantity"`
-	PricePerUnit     decimal.Decimal `json:"pricePerUnit"`
-}
 
 //	 	@Tags 			ORDER SERVICE
 //		@Summary		GetCheckoutItem
@@ -31,51 +15,24 @@ type GetCheckoutItemDetail struct {
 //		@ID				GetCheckoutItem
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[GetCheckoutItemRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[GetCheckoutItemResponse]			"ok"
+//		@Param			request	body		transport.Request[domain.GetCheckoutItemRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetCheckoutItemResponse]			"ok"
 //		@Router			/is/v1/order-service/get-checkout-item [post]
 func GetCheckoutItem(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*GetCheckoutItemRequest, *GetCheckoutItemResponse](ctx, errorx.ErrorCodeTimeout)
-}
-
-type CheckoutRequest struct {
-	UserID          string           `json:"userID"`
-	CheckoutDetails []CheckoutDetail `json:"checkoutDetails"`
-}
-type CheckoutResponse struct {
-}
-
-type CheckoutDetail struct {
-	ProductID       string `json:"productId"`
-	ProductQuantity int    `json:"quantity"`
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetCheckoutItemRequest, *domain.GetCheckoutItemResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 //	 	@Tags 			ORDER SERVICE
-//		@Summary		Checkout
+//		@Summary		ExecuteTransaction
 //		@Description	Delete all items on cart -> minus quantity of product in cart service
-//		@ID				Checkout
+//		@ID				ExecuteTransaction
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[CheckoutRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[CheckoutResponse]			"ok"
-//		@Router			/is/v1/order-service/checkout [post]
-func Checkout(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*CheckoutRequest, *CheckoutResponse](ctx, errorx.ErrorCodeTimeout)
-}
-
-type GetPurchasedProductsRequest struct {
-	UserID string `json:"userID"`
-}
-type GetPurchasedProductsResponse struct {
-	PurchasedProducts []PurchasedProductDetail `json:"purchasedProducts"`
-}
-type PurchasedProductDetail struct {
-	ProductID      string `json:"productId"`
-	ProductImage   string `json:"productImage"`
-	ProductName    string `json:"productName"`
-	OrderID        string `json:"orderId"`
-	DeliveryStatus string `json:"deliveryStatus"`
-	PaymentStatus  string `json:"paymentStatus"`
+//		@Param			request	body		transport.Request[domain.ExecuteTransactionRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.ExecuteTransactionResponse]			"ok"
+//		@Router			/is/v1/order-service/execute-transaction [post]
+func ExecuteTransaction(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.ExecuteTransactionRequest, *domain.ExecuteTransactionResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 //	 	@Tags 			ORDER SERVICE
@@ -84,9 +41,9 @@ type PurchasedProductDetail struct {
 //		@ID				GetPurchasedProducts
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[GetPurchasedProductsRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[GetPurchasedProductsResponse]			"ok"
+//		@Param			request	body		transport.Request[domain.GetHistoryRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetHistoryResponse]			"ok"
 //		@Router			/is/v1/order-service/get-history [post]
-func GetPurchasedProducts(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*GetPurchasedProductsRequest, *GetPurchasedProductsResponse](ctx, errorx.ErrorCodeTimeout)
+func GetHistory(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetHistoryRequest, *domain.GetHistoryResponse](ctx, errorx.ErrorCodeTimeout)
 }
