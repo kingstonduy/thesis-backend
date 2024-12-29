@@ -6,8 +6,9 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
+	"github.com/kingstonduy/order-service/internal/infra/outbound"
 	"github.com/kingstonduy/order-service/internal/infra/postgres"
-	checkout_uc "github.com/kingstonduy/order-service/internal/usecase/checkout"
+	execute_transaction_uc "github.com/kingstonduy/order-service/internal/usecase/execute-transaction"
 	get_checkout_item_uc "github.com/kingstonduy/order-service/internal/usecase/get-checkout-item"
 	get_history_uc "github.com/kingstonduy/order-service/internal/usecase/get-history"
 
@@ -32,7 +33,7 @@ var configModule = fx.Module("config",
 )
 
 var usecaseModule = fx.Module("usecase",
-	fx.Provide(checkout_uc.NewCheckoutHandler),
+	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
 	fx.Provide(get_checkout_item_uc.NewGetCheckoutItemHandler),
 	fx.Provide(get_history_uc.NewGetHistoryHandler),
 )
@@ -42,7 +43,10 @@ var serverModule = fx.Module("server",
 )
 
 var infraModule = fx.Module("infras",
-	fx.Provide(postgres.NewCartRepo),
+	fx.Provide(postgres.NewOrderRepo),
+	fx.Provide(postgres.NewTransactionRepo),
+	fx.Provide(outbound.NewCartOutbound),
+	fx.Provide(outbound.NewProductOutbound),
 )
 
 func main() {

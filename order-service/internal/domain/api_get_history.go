@@ -3,11 +3,22 @@ package domain
 import "context"
 
 type GetHistoryRequest struct {
+	UserID string `json:"userID"`
 }
 
 type GetHistoryResponse struct {
+	Details []GetHistoryResponseDetail `json:"details`
 }
 
-type GetHistoryHandler interface {
+type GetHistoryResponseDetail struct {
+	ProductID      string `json:"productId"`
+	ProductImage   string `json:"productImage"`
+	ProductName    string `json:"productName"`
+	OrderID        string `json:"orderId"`
+	DeliveryStatus string `json:"deliveryStatus"`
+	PaymentStatus  string `json:"paymentStatus"`
+}
+
+type IGetHistoryHandler interface {
 	Handle(ctx context.Context, req *GetHistoryRequest) (res *GetHistoryResponse, err error)
 }

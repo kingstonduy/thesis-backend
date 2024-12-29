@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/is/v1/cart-service/add": {
+        "/is/v1/order-service/execute-transaction": {
             "post": {
-                "description": "Insert into cart values ...",
+                "description": "Delete all items on cart -\u003e minus quantity of product in cart service",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,17 +25,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "CART SERVICE"
+                    "ORDER SERVICE"
                 ],
-                "summary": "AddCartItem",
-                "operationId": "AddCartItem",
+                "summary": "ExecuteTransaction",
+                "operationId": "ExecuteTransaction",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_AddCartItemRequest"
+                            "$ref": "#/definitions/transport.Request-domain_ExecuteTransactionRequest"
                         }
                     }
                 ],
@@ -43,15 +43,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_AddCartItemResponse"
+                            "$ref": "#/definitions/transport.Response-domain_ExecuteTransactionResponse"
                         }
                     }
                 }
             }
         },
-        "/is/v1/cart-service/delete-cart-item": {
+        "/is/v1/order-service/get-checkout-item": {
             "post": {
-                "description": "giving the cartITemID delete the cartItem",
+                "description": "Get the checkout item (cdc from cart table)",
                 "consumes": [
                     "application/json"
                 ],
@@ -59,17 +59,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "CART SERVICE"
+                    "ORDER SERVICE"
                 ],
-                "summary": "DeleteCartItem",
-                "operationId": "DeleteCartItem",
+                "summary": "GetCheckoutItem",
+                "operationId": "GetCheckoutItem",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_DeleteCartItemRequest"
+                            "$ref": "#/definitions/transport.Request-domain_GetCheckoutItemRequest"
                         }
                     }
                 ],
@@ -77,15 +77,15 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_DeleteCartItemResponse"
+                            "$ref": "#/definitions/transport.Response-domain_GetCheckoutItemResponse"
                         }
                     }
                 }
             }
         },
-        "/is/v1/cart-service/delete-user-cart": {
+        "/is/v1/order-service/get-history": {
             "post": {
-                "description": "delete all the record in table cart with corresponding userID",
+                "description": "Show a history of purchased products from a user",
                 "consumes": [
                     "application/json"
                 ],
@@ -93,17 +93,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "CART SERVICE"
+                    "ORDER SERVICE"
                 ],
-                "summary": "DeleteUserCart",
-                "operationId": "DeleteUserCart",
+                "summary": "GetPurchasedProducts",
+                "operationId": "GetPurchasedProducts",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_DeleteUserCartRequest"
+                            "$ref": "#/definitions/transport.Request-domain_GetHistoryRequest"
                         }
                     }
                 ],
@@ -111,75 +111,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_DeleteUserCartResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/is/v1/cart-service/get-items": {
-            "post": {
-                "description": "select * from cart where userID = :1",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CART SERVICE"
-                ],
-                "summary": "GetCart",
-                "operationId": "GetCart",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetCartRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetCartResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/is/v1/cart-service/update": {
-            "post": {
-                "description": "Update the quantity of an item in the cart. front end receives ok returns then update StateQuantity",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CART SERVICE"
-                ],
-                "summary": "UpdateCartItem",
-                "operationId": "UpdateCartItem",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_UpdateCartItemRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UpdateCartItemResponse"
+                            "$ref": "#/definitions/transport.Response-domain_GetHistoryResponse"
                         }
                     }
                 }
@@ -187,57 +119,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.AddCartItemDetail": {
+        "domain.ExecuteTransactionRequest": {
             "type": "object",
             "properties": {
-                "cartItemQuantity": {
-                    "type": "integer"
-                },
-                "productId": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.AddCartItemRequest": {
-            "type": "object",
-            "properties": {
-                "cartItems": {
+                "details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.AddCartItemDetail"
+                        "$ref": "#/definitions/domain.ExecuteTransactionRequestDetail"
                     }
                 },
-                "userId": {
+                "userID": {
                     "type": "string"
                 }
             }
         },
-        "domain.AddCartItemResponse": {
-            "type": "object"
-        },
-        "domain.DeleteCartItemRequest": {
-            "type": "object",
-            "properties": {
-                "cartItemID": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.DeleteCartItemResponse": {
-            "type": "object"
-        },
-        "domain.DeleteUserCartRequest": {
-            "type": "object",
-            "properties": {
-                "userId": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.DeleteUserCartResponse": {
-            "type": "object"
-        },
-        "domain.GetCartItemDetail": {
+        "domain.ExecuteTransactionRequestDetail": {
             "type": "object",
             "properties": {
                 "cartItemId": {
@@ -257,117 +153,146 @@ const docTemplate = `{
                 },
                 "productName": {
                     "type": "string"
+                },
+                "productPrice": {
+                    "type": "number"
                 }
             }
         },
-        "domain.GetCartRequest": {
+        "domain.ExecuteTransactionResponse": {
+            "type": "object"
+        },
+        "domain.GetCheckoutItemRequest": {
             "type": "object",
             "properties": {
-                "userId": {
+                "userID": {
                     "type": "string"
                 }
             }
         },
-        "domain.GetCartResponse": {
+        "domain.GetCheckoutItemResponse": {
             "type": "object",
             "properties": {
-                "cartItems": {
+                "details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.GetCartItemDetail"
+                        "$ref": "#/definitions/domain.GetCheckoutItemResponseDetail"
                     }
                 }
             }
         },
-        "domain.UpdateCartItemRequest": {
+        "domain.GetCheckoutItemResponseDetail": {
             "type": "object",
             "properties": {
-                "cartItemId": {
+                "pricePerUnit": {
+                    "type": "number"
+                },
+                "productCatergory": {
                     "type": "string"
                 },
-                "cartItemQuantity": {
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productQuantity": {
                     "type": "integer"
                 }
             }
         },
-        "domain.UpdateCartItemResponse": {
-            "type": "object"
+        "domain.GetHistoryRequest": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
         },
-        "transport.Request-domain_AddCartItemRequest": {
+        "domain.GetHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.GetHistoryResponseDetail"
+                    }
+                }
+            }
+        },
+        "domain.GetHistoryResponseDetail": {
+            "type": "object",
+            "properties": {
+                "deliveryStatus": {
+                    "type": "string"
+                },
+                "orderId": {
+                    "type": "string"
+                },
+                "paymentStatus": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                }
+            }
+        },
+        "transport.Request-domain_ExecuteTransactionRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.AddCartItemRequest"
+                    "$ref": "#/definitions/domain.ExecuteTransactionRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_DeleteCartItemRequest": {
+        "transport.Request-domain_GetCheckoutItemRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.DeleteCartItemRequest"
+                    "$ref": "#/definitions/domain.GetCheckoutItemRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_DeleteUserCartRequest": {
+        "transport.Request-domain_GetHistoryRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.DeleteUserCartRequest"
+                    "$ref": "#/definitions/domain.GetHistoryRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_GetCartRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetCartRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-domain_UpdateCartItemRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateCartItemRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_AddCartItemResponse": {
+        "transport.Response-domain_ExecuteTransactionResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.AddCartItemResponse"
+                    "$ref": "#/definitions/domain.ExecuteTransactionResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -377,11 +302,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-domain_DeleteCartItemResponse": {
+        "transport.Response-domain_GetCheckoutItemResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.DeleteCartItemResponse"
+                    "$ref": "#/definitions/domain.GetCheckoutItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -391,39 +316,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-domain_DeleteUserCartResponse": {
+        "transport.Response-domain_GetHistoryResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.DeleteUserCartResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_GetCartResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetCartResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UpdateCartItemResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateCartItemResponse"
+                    "$ref": "#/definitions/domain.GetHistoryResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

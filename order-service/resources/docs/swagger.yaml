@@ -1,37 +1,14 @@
 definitions:
-  domain.AddCartItemDetail:
+  domain.ExecuteTransactionRequest:
     properties:
-      cartItemQuantity:
-        type: integer
-      productId:
-        type: string
-    type: object
-  domain.AddCartItemRequest:
-    properties:
-      cartItems:
+      details:
         items:
-          $ref: '#/definitions/domain.AddCartItemDetail'
+          $ref: '#/definitions/domain.ExecuteTransactionRequestDetail'
         type: array
-      userId:
+      userID:
         type: string
     type: object
-  domain.AddCartItemResponse:
-    type: object
-  domain.DeleteCartItemRequest:
-    properties:
-      cartItemID:
-        type: string
-    type: object
-  domain.DeleteCartItemResponse:
-    type: object
-  domain.DeleteUserCartRequest:
-    properties:
-      userId:
-        type: string
-    type: object
-  domain.DeleteUserCartResponse:
-    type: object
-  domain.GetCartItemDetail:
+  domain.ExecuteTransactionRequestDetail:
     properties:
       cartItemId:
         type: string
@@ -45,113 +22,114 @@ definitions:
         type: string
       productName:
         type: string
+      productPrice:
+        type: number
     type: object
-  domain.GetCartRequest:
+  domain.ExecuteTransactionResponse:
+    type: object
+  domain.GetCheckoutItemRequest:
     properties:
-      userId:
+      userID:
         type: string
     type: object
-  domain.GetCartResponse:
+  domain.GetCheckoutItemResponse:
     properties:
-      cartItems:
+      details:
         items:
-          $ref: '#/definitions/domain.GetCartItemDetail'
+          $ref: '#/definitions/domain.GetCheckoutItemResponseDetail'
         type: array
     type: object
-  domain.UpdateCartItemRequest:
+  domain.GetCheckoutItemResponseDetail:
     properties:
-      cartItemId:
+      pricePerUnit:
+        type: number
+      productCatergory:
         type: string
-      cartItemQuantity:
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productQuantity:
         type: integer
     type: object
-  domain.UpdateCartItemResponse:
+  domain.GetHistoryRequest:
+    properties:
+      userID:
+        type: string
     type: object
-  transport.Request-domain_AddCartItemRequest:
+  domain.GetHistoryResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/domain.GetHistoryResponseDetail'
+        type: array
+    type: object
+  domain.GetHistoryResponseDetail:
+    properties:
+      deliveryStatus:
+        type: string
+      orderId:
+        type: string
+      paymentStatus:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+    type: object
+  transport.Request-domain_ExecuteTransactionRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.AddCartItemRequest'
+        $ref: '#/definitions/domain.ExecuteTransactionRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_DeleteCartItemRequest:
+  transport.Request-domain_GetCheckoutItemRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.DeleteCartItemRequest'
+        $ref: '#/definitions/domain.GetCheckoutItemRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_DeleteUserCartRequest:
+  transport.Request-domain_GetHistoryRequest:
     properties:
       data:
-        $ref: '#/definitions/domain.DeleteUserCartRequest'
+        $ref: '#/definitions/domain.GetHistoryRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
     - trace
     type: object
-  transport.Request-domain_GetCartRequest:
+  transport.Response-domain_ExecuteTransactionResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.GetCartRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-domain_UpdateCartItemRequest:
-    properties:
-      data:
-        $ref: '#/definitions/domain.UpdateCartItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Response-domain_AddCartItemResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.AddCartItemResponse'
+        $ref: '#/definitions/domain.ExecuteTransactionResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-domain_DeleteCartItemResponse:
+  transport.Response-domain_GetCheckoutItemResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.DeleteCartItemResponse'
+        $ref: '#/definitions/domain.GetCheckoutItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-domain_DeleteUserCartResponse:
+  transport.Response-domain_GetHistoryResponse:
     properties:
       data:
-        $ref: '#/definitions/domain.DeleteUserCartResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_GetCartResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.GetCartResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_UpdateCartItemResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.UpdateCartItemResponse'
+        $ref: '#/definitions/domain.GetHistoryResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -200,115 +178,70 @@ definitions:
 info:
   contact: {}
 paths:
-  /is/v1/cart-service/add:
+  /is/v1/order-service/execute-transaction:
     post:
       consumes:
       - application/json
-      description: Insert into cart values ...
-      operationId: AddCartItem
+      description: Delete all items on cart -> minus quantity of product in cart service
+      operationId: ExecuteTransaction
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-domain_AddCartItemRequest'
+          $ref: '#/definitions/transport.Request-domain_ExecuteTransactionRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_AddCartItemResponse'
-      summary: AddCartItem
+            $ref: '#/definitions/transport.Response-domain_ExecuteTransactionResponse'
+      summary: ExecuteTransaction
       tags:
-      - CART SERVICE
-  /is/v1/cart-service/delete-cart-item:
+      - ORDER SERVICE
+  /is/v1/order-service/get-checkout-item:
     post:
       consumes:
       - application/json
-      description: giving the cartITemID delete the cartItem
-      operationId: DeleteCartItem
+      description: Get the checkout item (cdc from cart table)
+      operationId: GetCheckoutItem
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-domain_DeleteCartItemRequest'
+          $ref: '#/definitions/transport.Request-domain_GetCheckoutItemRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_DeleteCartItemResponse'
-      summary: DeleteCartItem
+            $ref: '#/definitions/transport.Response-domain_GetCheckoutItemResponse'
+      summary: GetCheckoutItem
       tags:
-      - CART SERVICE
-  /is/v1/cart-service/delete-user-cart:
+      - ORDER SERVICE
+  /is/v1/order-service/get-history:
     post:
       consumes:
       - application/json
-      description: delete all the record in table cart with corresponding userID
-      operationId: DeleteUserCart
+      description: Show a history of purchased products from a user
+      operationId: GetPurchasedProducts
       parameters:
       - description: Request
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-domain_DeleteUserCartRequest'
+          $ref: '#/definitions/transport.Request-domain_GetHistoryRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-domain_DeleteUserCartResponse'
-      summary: DeleteUserCart
+            $ref: '#/definitions/transport.Response-domain_GetHistoryResponse'
+      summary: GetPurchasedProducts
       tags:
-      - CART SERVICE
-  /is/v1/cart-service/get-items:
-    post:
-      consumes:
-      - application/json
-      description: select * from cart where userID = :1
-      operationId: GetCart
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        schema:
-          $ref: '#/definitions/transport.Request-domain_GetCartRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_GetCartResponse'
-      summary: GetCart
-      tags:
-      - CART SERVICE
-  /is/v1/cart-service/update:
-    post:
-      consumes:
-      - application/json
-      description: Update the quantity of an item in the cart. front end receives
-        ok returns then update StateQuantity
-      operationId: UpdateCartItem
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        schema:
-          $ref: '#/definitions/transport.Request-domain_UpdateCartItemRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_UpdateCartItemResponse'
-      summary: UpdateCartItem
-      tags:
-      - CART SERVICE
+      - ORDER SERVICE
 swagger: "2.0"

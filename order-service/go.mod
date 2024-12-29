@@ -11,6 +11,7 @@ require (
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/kingstonduy/go-core v0.0.0-00010101000000-000000000000
 	github.com/pkg/errors v0.9.1
+	github.com/shopspring/decimal v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/sony/gobreaker v1.0.0
 	github.com/swaggo/swag v1.16.4

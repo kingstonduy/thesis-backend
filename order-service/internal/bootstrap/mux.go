@@ -6,11 +6,11 @@ import (
 )
 
 func ResgisterPipeline(
-	CheckoutHandler domain.CheckoutHandler,
-	GetCheckoutItemHandler domain.GetCheckoutItemHandler,
-	GetHistoryHandler domain.GetHistoryHandler,
+	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
+	IGetCheckoutItemHandler domain.IGetCheckoutItemHandler,
+	IGetHistoryHandler domain.IGetHistoryHandler,
 ) {
-	pipeline.RegisterRequestHandler(CheckoutHandler)
-	pipeline.RegisterRequestHandler(GetCheckoutItemHandler)
-	pipeline.RegisterRequestHandler(GetHistoryHandler)
+	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
+	pipeline.RegisterRequestHandler(IGetCheckoutItemHandler)
+	pipeline.RegisterRequestHandler(IGetHistoryHandler)
 }

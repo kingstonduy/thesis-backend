@@ -12,7 +12,7 @@ import (
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
 		s.App.Post("/get-checkout-item", s.GetCheckoutItem)
-		s.App.Post("/checkout", s.Checkout)
+		s.App.Post("/execute-transaction", s.ExecuteTransaction)
 		s.App.Post("/get-history ", s.GetHistory)
 
 		return nil
@@ -33,16 +33,16 @@ func (s *HttpServer) GetCheckoutItem(ctx *fiber.Ctx) error {
 }
 
 //	 	@Tags 			ORDER SERVICE
-//		@Summary		Checkout
+//		@Summary		ExecuteTransaction
 //		@Description	Delete all items on cart -> minus quantity of product in cart service
-//		@ID				Checkout
+//		@ID				ExecuteTransaction
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[domain.CheckoutRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.CheckoutResponse]			"ok"
-//		@Router			/is/v1/order-service/checkout [post]
-func (s *HttpServer) Checkout(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.CheckoutRequest, *domain.CheckoutResponse](ctx, errorx.ErrorCodeTimeout)
+//		@Param			request	body		transport.Request[domain.ExecuteTransactionRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.ExecuteTransactionResponse]			"ok"
+//		@Router			/is/v1/order-service/execute-transaction [post]
+func (s *HttpServer) ExecuteTransaction(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.ExecuteTransactionRequest, *domain.ExecuteTransactionResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
 //	 	@Tags 			ORDER SERVICE
