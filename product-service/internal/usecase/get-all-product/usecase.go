@@ -43,11 +43,12 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) 
 	products := []domain.Product{}
 	for _, entity := range entities {
 		product := domain.Product{
-			ID:            entity.ProductID,
-			Name:          entity.ProductName,
-			ImageURL:      entity.ProductImage,
-			Price:         entity.ProductPrice,
-			AverageRating: entity.AvgRating,
+			ID:              entity.ProductID,
+			Name:            entity.ProductName,
+			ImageURL:        entity.ProductImage,
+			Price:           entity.ProductPrice,
+			AverageRating:   entity.AvgRating,
+			ProductQuantity: entity.ProductQuantity,
 		}
 		products = append(products, product)
 	}

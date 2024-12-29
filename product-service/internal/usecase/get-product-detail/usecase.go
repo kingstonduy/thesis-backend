@@ -41,12 +41,13 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductDetailReques
 	}
 
 	res = &domain.GetProductDetailResponse{
-		ID:          entity.ProductID,
-		Name:        entity.ProductName,
-		Catergory:   entity.ProductCategory,
-		Price:       entity.ProductPrice,
-		Description: entity.ProductDescription,
-		Image:       entity.ProductImage,
+		ID:              entity.ProductID,
+		Name:            entity.ProductName,
+		Catergory:       entity.ProductCategory,
+		Price:           entity.ProductPrice,
+		Description:     entity.ProductDescription,
+		Image:           entity.ProductImage,
+		ProductQuantity: entity.ProductQuantity,
 	}
 
 	return res, nil

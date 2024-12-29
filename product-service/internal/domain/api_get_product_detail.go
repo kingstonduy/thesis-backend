@@ -11,12 +11,13 @@ type GetProductDetailRequest struct {
 }
 
 type GetProductDetailResponse struct {
-	ID          string          `json:"productId"`
-	Name        string          `json:"productName"`
-	Catergory   string          `json:"productCatergory"`
-	Price       decimal.Decimal `json:"productPrice"`
-	Description string          `json:"productDescription"`
-	Image       string          `json:"productImage"`
+	ID              string          `json:"productId"`
+	Name            string          `json:"productName"`
+	Catergory       string          `json:"productCatergory"`
+	Price           decimal.Decimal `json:"productPrice"`
+	Description     string          `json:"productDescription"`
+	Image           string          `json:"productImage"`
+	ProductQuantity int             `json:"productQuantity"`
 }
 
 type IGetProductDetailHandler interface {

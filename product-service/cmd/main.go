@@ -7,7 +7,6 @@ import (
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/infra/postgres"
-	"github.com/kingstonduy/product-service/internal/infra/postgres/outbound"
 	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
 	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
 
@@ -42,7 +41,6 @@ var serverModule = fx.Module("server",
 
 var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewProductRepoImpl),
-	fx.Provide(outbound.NewCommentOutbound),
 )
 
 func main() {

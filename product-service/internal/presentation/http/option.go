@@ -17,7 +17,7 @@ func (s *HttpServer) WithRoutingOption() option {
 	}
 }
 
-//	 	@Tags 			product
+//	 	@Tags 			PRODUCT
 //		@Summary		GetAllProduct
 //		@Description	list all the products in the inventory
 //		@ID				GetAllProduct
@@ -30,7 +30,7 @@ func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx, errorx.ErrorCodeTimeout)
 }
 
-//	 	@Tags 			product
+//	 	@Tags 			PRODUCT
 //		@Summary		GetProductDetail
 //		@Description	Get the detail of a product
 //		@ID				GetProductDetail
