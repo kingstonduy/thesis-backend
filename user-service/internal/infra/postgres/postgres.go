@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	configuration "github.com/kingstonduy/user-service/internal/bootstrap"
 	"github.com/kingstonduy/user-service/internal/domain"
@@ -35,7 +36,6 @@ func (repo *productRepoImlp) GetUserByUserID(ctx context.Context, userID string)
 	var user domain.UserEntity
 	err := repo.db.DB.Get(ctx, &user, sqlQuery, userID)
 	if err != nil {
-		logger.Errorf(ctx, "Error fetching user by ID: %v", err)
 		return user, err
 	}
 	return user, nil
@@ -57,7 +57,6 @@ func (repo *productRepoImlp) GetUserByUserName(ctx context.Context, userName str
 	var user domain.UserEntity
 	err := repo.db.DB.Get(ctx, &user, sqlQuery, userName)
 	if err != nil {
-		logger.Errorf(ctx, "Error fetching user by username: %v", err)
 		return user, err
 	}
 	return user, nil
@@ -82,14 +81,13 @@ func (repo *productRepoImlp) Insert(ctx context.Context, user domain.UserEntity)
         );
     `
 	_, err := repo.db.DB.Exec(ctx, sqlQuery,
-		user.UserName.String, user.UserPassword.String, user.UserImage.String,
-		user.FirstName.String, user.LastName.String, user.DateOfBirth, user.Gender.String,
-		user.Email.String, user.PhoneNumber, user.Street.String, user.City.String,
-		user.CityCode.String, user.District.String, user.DistrictCode.String,
-		user.Ward.String, user.WardCode.String,
+		user.UserName, user.UserPassword, user.UserImage,
+		user.FirstName, user.LastName, user.DateOfBirth, user.Gender,
+		user.Email, user.PhoneNumber, user.Street, user.City,
+		user.CityCode, user.District, user.DistrictCode,
+		user.Ward, user.WardCode,
 	)
 	if err != nil {
-		logger.Errorf(ctx, "Error inserting user: %v", err)
 		return err
 	}
 	return nil
@@ -127,17 +125,15 @@ func (repo *productRepoImlp) Update(ctx context.Context, user domain.UserEntity)
 		user.DistrictCode, user.Ward, user.WardCode,
 	)
 	if err != nil {
-		logger.Errorf(ctx, "Error updating user: %v", err)
 		return err
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		logger.Errorf(ctx, "Error getting rows affected: %v", err)
 		return err
 	}
 	if rowsAffected == 0 {
-		return fmt.Errorf("no rows affected")
+		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
 	}
 	return nil
 }

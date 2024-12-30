@@ -8,7 +8,6 @@ import (
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/user-service/internal/domain"
-	sql_util "github.com/kingstonduy/user-service/internal/pkg/utils/sql"
 )
 
 type handler struct {
@@ -38,18 +37,18 @@ func (h *handler) Handle(ctx context.Context, req *domain.UpdateUserInformationR
 	now := time.Now()
 
 	entity := domain.UserEntity{
-		UserID:       sql_util.SetString(req.UserID),
-		UserName:     sql_util.SetString(req.UserName),
-		Gender:       sql_util.SetString(req.Gender),
-		Email:        sql_util.SetString(req.Email),
-		Street:       sql_util.SetString(req.Street),
-		City:         sql_util.SetString(req.City),
-		CityCode:     sql_util.SetString(req.CityCode),
-		District:     sql_util.SetString(req.District),
-		DistrictCode: sql_util.SetString(req.DistrictCode),
-		Ward:         sql_util.SetString(req.Ward),
-		WardCode:     sql_util.SetString(req.WardCode),
-		UpdatedAt:    sql_util.SetTime(now),
+		UserID:       req.UserID,
+		UserName:     req.UserName,
+		Gender:       req.Gender,
+		Email:        req.Email,
+		Street:       req.Street,
+		City:         req.City,
+		CityCode:     req.CityCode,
+		District:     req.District,
+		DistrictCode: req.DistrictCode,
+		Ward:         req.Ward,
+		WardCode:     req.WardCode,
+		UpdatedAt:    now,
 	}
 
 	if err = h.repo.Update(ctx, entity); err != nil {

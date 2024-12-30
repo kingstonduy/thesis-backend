@@ -41,19 +41,19 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetUserInformationRequ
 	}
 
 	res = &domain.GetUserInformationResponse{
-		UserID:       user.UserID.String,
-		UserName:     user.UserName.String,
-		Email:        user.Email.String,
-		PhoneNumber:  user.PhoneNumber.String,
-		Gender:       user.Gender.String,
-		DateOfBirth:  user.DateOfBirth.String,
-		Street:       user.Street.String,
-		City:         user.City.String,
-		CityCode:     user.CityCode.String,
-		District:     user.District.String,
-		DistrictCode: user.DistrictCode.String,
-		Ward:         user.Ward.String,
-		WardCode:     user.WardCode.String,
+		UserID:       user.UserID,
+		UserName:     user.UserName,
+		Email:        user.Email,
+		PhoneNumber:  user.PhoneNumber,
+		Gender:       user.Gender,
+		DateOfBirth:  user.DateOfBirth,
+		Street:       user.Street,
+		City:         user.City,
+		CityCode:     user.CityCode,
+		District:     user.District,
+		DistrictCode: user.DistrictCode,
+		Ward:         user.Ward,
+		WardCode:     user.WardCode,
 	}
 	return
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/user-service/internal/domain"
-	sql_util "github.com/kingstonduy/user-service/internal/pkg/utils/sql"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -45,25 +45,25 @@ func (h *handler) Handle(ctx context.Context, req *domain.RegisterRequest) (res 
 	now := time.Now()
 
 	entity := domain.UserEntity{
-		UserID:       sql_util.SetString(uuid.New().String()),
-		UserName:     sql_util.SetString(req.UserName),
-		UserPassword: sql_util.SetString(req.Password),
-		UserImage:    sql_util.SetString(DEFAULT_USER_IMAGE),
-		FirstName:    sql_util.SetString(DEFAULT_FIRST_NAME),
-		LastName:     sql_util.SetString(DEFAULT_LAST_NAME),
-		DateOfBirth:  sql_util.SetString(req.DateOfBirth),
-		Gender:       sql_util.SetString(req.Gender),
-		Email:        sql_util.SetString(req.Email),
-		PhoneNumber:  sql_util.SetString(req.PhoneNumber),
-		Street:       sql_util.SetString(req.Street),
-		City:         sql_util.SetString(req.City),
-		CityCode:     sql_util.SetString(req.CityCode),
-		District:     sql_util.SetString(req.District),
-		DistrictCode: sql_util.SetString(req.DistrictCode),
-		Ward:         sql_util.SetString(req.Ward),
-		WardCode:     sql_util.SetString(req.WardCode),
-		CreatedAt:    sql_util.SetTime(now),
-		UpdatedAt:    sql_util.SetTime(now),
+		UserID:       uuid.New().String(),
+		UserName:     req.UserName,
+		UserPassword: HashPassword(req.Password),
+		UserImage:    DEFAULT_USER_IMAGE,
+		FirstName:    DEFAULT_FIRST_NAME,
+		LastName:     DEFAULT_LAST_NAME,
+		DateOfBirth:  req.DateOfBirth,
+		Gender:       req.Gender,
+		Email:        req.Email,
+		PhoneNumber:  req.PhoneNumber,
+		Street:       req.Street,
+		City:         req.City,
+		CityCode:     req.CityCode,
+		District:     req.District,
+		DistrictCode: req.DistrictCode,
+		Ward:         req.Ward,
+		WardCode:     req.WardCode,
+		CreatedAt:    now,
+		UpdatedAt:    now,
 	}
 	if err = h.repo.Insert(ctx, entity); err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
@@ -72,4 +72,11 @@ func (h *handler) Handle(ctx context.Context, req *domain.RegisterRequest) (res 
 	}
 
 	return res, nil
+}
+
+// HashPassword hashes a password using bcrypt
+func HashPassword(password string) string {
+	// Generate a salted hash for the password
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(hash)
 }

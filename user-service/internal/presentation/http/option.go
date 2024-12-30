@@ -1,8 +1,11 @@
 package http_server
 
 import (
+	"encoding/json"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/kingstonduy/go-core/errorx"
+	"github.com/kingstonduy/go-core/transport"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
 	"github.com/kingstonduy/user-service/internal/domain"
@@ -30,7 +33,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.GetUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/update [post]
 func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			USER SERVICE
@@ -43,7 +46,7 @@ func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.UpdateUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/get-product-detail [post]
 func (s *HttpServer) UpdateUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			USER SERVICE
@@ -56,7 +59,7 @@ func (s *HttpServer) UpdateUserInformation(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.RegisterResponse]			"ok"
 //		@Router			/is/v1/user-service/register [post]
 func (s *HttpServer) Register(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.RegisterRequest, *domain.RegisterResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.RegisterRequest, *domain.RegisterResponse](ctx)
 }
 
 //	 	@Tags 			USER SERVICE
@@ -69,5 +72,17 @@ func (s *HttpServer) Register(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.LoginResponse]			"ok"
 //		@Router			/is/v1/user-service/login [post]
 func (s *HttpServer) Login(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.LoginRequest, *domain.LoginResponse](ctx, errorx.ErrorCodeTimeout)
+	f := func(ctx *fiber.Ctx, b []byte) {
+		var resType transport.Response[domain.LoginResponse]
+		json.Unmarshal(b, &resType)
+
+		//TODO remove EXPIRATION
+		jwt, _ := fiberx.CreateToken(resType.Data.UserID)
+		ctx.Cookie(&fiber.Cookie{
+			Name:    "jwt",
+			Value:   jwt,
+			Expires: time.Now().Add(time.Hour * 1),
+		})
+	}
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.LoginRequest, *domain.LoginResponse](ctx, fiberx.WithPostHandlerFunc(f))
 }
