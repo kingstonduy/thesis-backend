@@ -33,7 +33,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.GetUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/update [post]
 func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx, fiberx.WithAuthentication())
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx)
 }
 
 //	 	@Tags 			USER SERVICE
@@ -46,7 +46,7 @@ func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.UpdateUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/get-product-detail [post]
 func (s *HttpServer) UpdateUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx, fiberx.WithAuthentication())
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx)
 }
 
 //	 	@Tags 			USER SERVICE
@@ -83,6 +83,8 @@ func (s *HttpServer) Login(ctx *fiber.Ctx) error {
 			Value:   jwt,
 			Expires: time.Now().Add(time.Hour * 1),
 		})
+
+		ctx.Response().Header.Set("jwt", jwt)
 	}
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.LoginRequest, *domain.LoginResponse](ctx, fiberx.WithPostHandlerFunc(f))
 }
