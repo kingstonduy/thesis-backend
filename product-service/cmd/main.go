@@ -7,8 +7,10 @@ import (
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/infra/postgres"
+	execute_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/execute-transaction"
 	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
 	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
+	revert_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/revert-transaction"
 
 	http_server "github.com/kingstonduy/product-service/internal/presentation/http"
 	"go.uber.org/fx"
@@ -33,6 +35,8 @@ var configModule = fx.Module("config",
 var usecaseModule = fx.Module("usecase",
 	fx.Provide(get_products_uc.NewGetProductsHandler),
 	fx.Provide(get_product_detail_uc.NewGetProductDetailHandler),
+	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
+	fx.Provide(revert_transaction_uc.NewRevertTransactionHandler),
 )
 
 var serverModule = fx.Module("server",

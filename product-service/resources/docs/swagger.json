@@ -4,22 +4,27 @@
         "contact": {}
     },
     "paths": {
-        "/auth/login": {
+        "/is/v1/product-service/execute-transaction": {
             "post": {
-                "description": "Authenticate user",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["auth"],
-                "summary": "Login",
-                "operationId": "Login",
+                "description": "remove the product quantity from the inventory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "ExecuteTransaction",
+                "operationId": "ExecuteTransaction",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_LoginRequest"
+                            "$ref": "#/definitions/transport.Request-domain_ExecuteTransactionRequest"
                         }
                     }
                 ],
@@ -27,111 +32,24 @@
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_LoginResponse"
+                            "$ref": "#/definitions/transport.Response-domain_ExecuteTransactionResponse"
                         }
                     }
                 }
             }
         },
-        "/auth/validate": {
-            "post": {
-                "description": "Validate JWT token",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["auth"],
-                "summary": "ValidateJWT",
-                "operationId": "ValidateJWT",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_ValidateTokenRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_ValidateTokenResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart": {
-            "get": {
-                "description": "Get all items in the cart",
-                "produces": ["application/json"],
-                "tags": ["cart"],
-                "summary": "ListCartItems",
-                "operationId": "ListCartItems",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_CartItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/checkout": {
-            "post": {
-                "description": "Checkout cart items",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["cart"],
-                "summary": "Checkout",
-                "operationId": "Checkout",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_CheckoutResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/{productId}": {
-            "put": {
-                "description": "Update quantity of a product in the cart",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["cart"],
-                "summary": "UpdateCartItemQuantity",
-                "operationId": "UpdateCartItemQuantity",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_UpdateCartRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UpdateCartResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/is/v1/product/get-product-detail": {
+        "/is/v1/product-service/get-product-detail": {
             "post": {
                 "description": "Get the detail of a product",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["product"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
                 "summary": "GetProductDetail",
                 "operationId": "GetProductDetail",
                 "parameters": [
@@ -154,12 +72,18 @@
                 }
             }
         },
-        "/is/v1/product/get-products": {
+        "/is/v1/product-service/get-products": {
             "post": {
                 "description": "list all the products in the inventory",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["product"],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
                 "summary": "GetAllProduct",
                 "operationId": "GetAllProduct",
                 "parameters": [
@@ -182,63 +106,27 @@
                 }
             }
         },
-        "/orders": {
-            "get": {
-                "description": "Get all purchased products",
-                "produces": ["application/json"],
-                "tags": ["order"],
-                "summary": "ListPurchasedProducts",
-                "operationId": "ListPurchasedProducts",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_PurchasedProduct"
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{productId}/comments": {
-            "get": {
-                "description": "Get comments for a product",
-                "produces": ["application/json"],
-                "tags": ["comment"],
-                "summary": "GetComments",
-                "operationId": "GetComments",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Product ID",
-                        "name": "productId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-array_domain_Comment"
-                        }
-                    }
-                }
-            },
+        "/is/v1/product-service/revert-transaction": {
             "post": {
-                "description": "Add a comment to a product",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["comment"],
-                "summary": "AddComment",
-                "operationId": "AddComment",
+                "description": "revert the transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "RevertTransaction",
+                "operationId": "RevertTransaction",
                 "parameters": [
                     {
                         "description": "Request",
                         "name": "request",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_AddCommentRequest"
+                            "$ref": "#/definitions/transport.Request-domain_RevertTransactionRequest"
                         }
                     }
                 ],
@@ -246,51 +134,7 @@
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_AddCommentResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userId}": {
-            "get": {
-                "description": "Get user details",
-                "produces": ["application/json"],
-                "tags": ["user"],
-                "summary": "GetUserInformation",
-                "operationId": "GetUserInformation",
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UserInformation"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "Update user details",
-                "consumes": ["application/json"],
-                "produces": ["application/json"],
-                "tags": ["user"],
-                "summary": "UpdateUserInformation",
-                "operationId": "UpdateUserInformation",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_UpdateUserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_UpdateUserResponse"
+                            "$ref": "#/definitions/transport.Response-domain_RevertTransactionResponse"
                         }
                     }
                 }
@@ -298,73 +142,45 @@
         }
     },
     "definitions": {
-        "domain.AddCommentRequest": {
+        "domain.ExecuteTransactionRequest": {
             "type": "object",
             "properties": {
-                "content": {
-                    "type": "string"
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.ExecuteTransactionRequestDetail"
+                    }
                 },
-                "rating": {
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.ExecuteTransactionRequestDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemQuantity": {
                     "type": "integer"
+                },
+                "productId": {
+                    "type": "string"
                 }
             }
         },
-        "domain.AddCommentResponse": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
+        "domain.ExecuteTransactionResponse": {
+            "type": "object"
         },
-        "domain.CartItem": {
-            "type": "object",
-            "properties": {
-                "image_url": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "product_id": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                },
-                "quantity": {
-                    "type": "integer"
-                }
-            }
+        "domain.GetAllProductRequest": {
+            "type": "object"
         },
-        "domain.CheckoutResponse": {
+        "domain.GetAllProductResponse": {
             "type": "object",
             "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.Comment": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "rating": {
-                    "type": "number"
-                },
-                "timestamp": {
-                    "type": "string"
-                },
-                "userImage": {
-                    "type": "string"
-                },
-                "userName": {
-                    "type": "string"
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.Product"
+                    }
                 }
             }
         },
@@ -396,42 +212,9 @@
                 },
                 "productPrice": {
                     "type": "number"
-                }
-            }
-        },
-        "domain.GetAllProductRequest": {
-            "type": "object"
-        },
-        "domain.GetAllProductResponse": {
-            "type": "object",
-            "properties": {
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Product"
-                    }
-                }
-            }
-        },
-        "domain.LoginRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
                 },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "expires": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
+                "productQuantity": {
+                    "type": "integer"
                 }
             }
         },
@@ -441,165 +224,59 @@
                 "averageRating": {
                     "type": "number"
                 },
-                "id": {
+                "productId": {
                     "type": "string"
                 },
-                "imageUrl": {
+                "productImage": {
                     "type": "string"
                 },
-                "name": {
+                "productName": {
                     "type": "string"
                 },
-                "price": {
+                "productPrice": {
                     "type": "number"
-                }
-            }
-        },
-        "domain.PurchasedProduct": {
-            "type": "object",
-            "properties": {
-                "delivery_status": {
-                    "type": "string"
                 },
-                "image_url": {
-                    "type": "string"
-                },
-                "order_id": {
-                    "type": "string"
-                },
-                "payment_status": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.UpdateCartRequest": {
-            "type": "object",
-            "properties": {
-                "product_id": {
-                    "type": "string"
-                },
-                "quantity": {
+                "productQuantity": {
                     "type": "integer"
                 }
             }
         },
-        "domain.UpdateCartResponse": {
+        "domain.RevertTransactionRequest": {
             "type": "object",
             "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.UpdateUserRequest": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/domain.RevertTransactionRequestDetail"
+                    }
                 },
-                "date_of_birth": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "ward": {
+                "userID": {
                     "type": "string"
                 }
             }
         },
-        "domain.UpdateUserResponse": {
+        "domain.RevertTransactionRequestDetail": {
             "type": "object",
             "properties": {
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "domain.UserInformation": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
+                "cartItemQuantity": {
+                    "type": "integer"
                 },
-                "date_of_birth": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "phone_number": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                },
-                "ward": {
+                "productId": {
                     "type": "string"
                 }
             }
         },
-        "domain.ValidateTokenRequest": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
+        "domain.RevertTransactionResponse": {
+            "type": "object"
         },
-        "domain.ValidateTokenResponse": {
+        "transport.Request-domain_ExecuteTransactionRequest": {
             "type": "object",
-            "properties": {
-                "is_valid": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "transport.Request-domain_AddCommentRequest": {
-            "type": "object",
-            "required": ["trace"],
+            "required": [
+                "trace"
+            ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.AddCommentRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-domain_GetProductDetailRequest": {
-            "type": "object",
-            "required": ["trace"],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetProductDetailRequest"
+                    "$ref": "#/definitions/domain.ExecuteTransactionRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -608,7 +285,9 @@
         },
         "transport.Request-domain_GetAllProductRequest": {
             "type": "object",
-            "required": ["trace"],
+            "required": [
+                "trace"
+            ],
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.GetAllProductRequest"
@@ -618,138 +297,39 @@
                 }
             }
         },
-        "transport.Request-domain_LoginRequest": {
+        "transport.Request-domain_GetProductDetailRequest": {
             "type": "object",
-            "required": ["trace"],
+            "required": [
+                "trace"
+            ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.LoginRequest"
+                    "$ref": "#/definitions/domain.GetProductDetailRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_UpdateCartRequest": {
+        "transport.Request-domain_RevertTransactionRequest": {
             "type": "object",
-            "required": ["trace"],
+            "required": [
+                "trace"
+            ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.UpdateCartRequest"
+                    "$ref": "#/definitions/domain.RevertTransactionRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
                 }
             }
         },
-        "transport.Request-domain_UpdateUserRequest": {
-            "type": "object",
-            "required": ["trace"],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateUserRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-domain_ValidateTokenRequest": {
-            "type": "object",
-            "required": ["trace"],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.ValidateTokenRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-array_domain_CartItem": {
+        "transport.Response-domain_ExecuteTransactionResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.CartItem"
-                    }
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-array_domain_Comment": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.Comment"
-                    }
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-array_domain_PurchasedProduct": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.PurchasedProduct"
-                    }
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_AddCommentResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.AddCommentResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_CheckoutResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.CheckoutResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_GetProductDetailResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetProductDetailResponse"
+                    "$ref": "#/definitions/domain.ExecuteTransactionResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -773,11 +353,11 @@
                 }
             }
         },
-        "transport.Response-domain_LoginResponse": {
+        "transport.Response-domain_GetProductDetailResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.LoginResponse"
+                    "$ref": "#/definitions/domain.GetProductDetailResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -787,53 +367,11 @@
                 }
             }
         },
-        "transport.Response-domain_UpdateCartResponse": {
+        "transport.Response-domain_RevertTransactionResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/domain.UpdateCartResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UpdateUserResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UpdateUserResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_UserInformation": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.UserInformation"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_ValidateTokenResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.ValidateTokenResponse"
+                    "$ref": "#/definitions/domain.RevertTransactionResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
@@ -862,7 +400,10 @@
         },
         "transport.Trace": {
             "type": "object",
-            "required": ["cid", "cts"],
+            "required": [
+                "cid",
+                "cts"
+            ],
             "properties": {
                 "cid": {
                     "type": "string"

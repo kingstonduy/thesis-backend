@@ -5,7 +5,7 @@ go 1.21.6
 require (
 	github.com/gammazero/workerpool v1.1.3
 	github.com/go-resty/resty/v2 v2.12.0
-	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/kingstonduy/go-core v0.0.3
 	github.com/pkg/errors v0.9.1
@@ -48,6 +48,7 @@ require (
 	github.com/gofiber/adaptor/v2 v2.2.1 // indirect
 	github.com/gofiber/contrib/otelfiber/v2 v2.0.0 // indirect
 	github.com/gofiber/swagger v1.0.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect

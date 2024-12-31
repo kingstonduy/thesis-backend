@@ -2,8 +2,6 @@ package domain
 
 import (
 	"context"
-
-	"github.com/shopspring/decimal"
 )
 
 type ExecuteTransactionRequest struct {
@@ -12,13 +10,8 @@ type ExecuteTransactionRequest struct {
 }
 
 type ExecuteTransactionRequestDetail struct {
-	CartItemID       string          `json:"cartItemId"`
-	ProductID        string          `json:"productId"`
-	ProductName      string          `json:"productName"`
-	ProductImage     string          `json:"productImage"`
-	ProductCatergory string          `json:"productCatergory"`
-	ProductPrice     decimal.Decimal `json:"productPrice"`
-	CartItemQuantity int             `json:"cartItemQuantity"`
+	ProductID        string `json:"productId"`
+	CartItemQuantity int    `json:"cartItemQuantity"`
 }
 
 type ExecuteTransactionResponse struct {

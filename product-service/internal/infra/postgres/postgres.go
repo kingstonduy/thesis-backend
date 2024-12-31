@@ -101,12 +101,13 @@ func (repo *productRepoImlp) UpdateProductByID(ctx context.Context, product doma
             "PRODUCT_CATEGORY"=$7, 
             "GENDER"=$8
         WHERE 
-            "PRODUCT_ID"=$1;
+            "PRODUCT_ID"=$1 AND
+            "UPDATED_AT"=$9
     `
 	res, err := repo.db.DB.Exec(ctx, sqlQuery,
 		product.ProductID, product.ProductName, product.ProductDescription,
 		product.ProductImage, product.ProductQuantity, product.ProductPrice,
-		product.ProductCategory, product.Gender,
+		product.ProductCategory, product.Gender, product.UpdatedAt,
 	)
 	if err != nil {
 		return err

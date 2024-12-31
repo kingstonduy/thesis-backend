@@ -8,8 +8,11 @@ import (
 func ResgisterPipeline(
 	IGetProductsHandler domain.IGetProductsHandler,
 	IGetProductDetailHandler domain.IGetProductDetailHandler,
+	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
+	IRevertTransactionHandler domain.IRevertTransactionHandler,
 ) {
 	pipeline.RegisterRequestHandler(IGetProductsHandler)
 	pipeline.RegisterRequestHandler(IGetProductDetailHandler)
-
+	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
+	pipeline.RegisterRequestHandler(IRevertTransactionHandler)
 }
