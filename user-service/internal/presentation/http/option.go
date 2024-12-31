@@ -81,7 +81,7 @@ func (s *HttpServer) Login(ctx *fiber.Ctx) error {
 		ctx.Cookie(&fiber.Cookie{
 			Name:    "jwt",
 			Value:   jwt,
-			Expires: time.Now().Add(time.Hour * 1),
+			Expires: time.Now().Add(time.Hour * 5),
 		})
 
 		ctx.Response().Header.Set("jwt", jwt)

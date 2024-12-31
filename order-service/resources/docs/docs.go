@@ -49,40 +49,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/order-service/get-checkout-item": {
-            "post": {
-                "description": "Get the checkout item (cdc from cart table)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ORDER SERVICE"
-                ],
-                "summary": "GetCheckoutItem",
-                "operationId": "GetCheckoutItem",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-domain_GetCheckoutItemRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-domain_GetCheckoutItemResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/is/v1/order-service/get-history": {
             "post": {
                 "description": "Show a history of purchased products from a user",
@@ -162,48 +128,6 @@ const docTemplate = `{
         "domain.ExecuteTransactionResponse": {
             "type": "object"
         },
-        "domain.GetCheckoutItemRequest": {
-            "type": "object",
-            "properties": {
-                "userID": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.GetCheckoutItemResponse": {
-            "type": "object",
-            "properties": {
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domain.GetCheckoutItemResponseDetail"
-                    }
-                }
-            }
-        },
-        "domain.GetCheckoutItemResponseDetail": {
-            "type": "object",
-            "properties": {
-                "pricePerUnit": {
-                    "type": "number"
-                },
-                "productCatergory": {
-                    "type": "string"
-                },
-                "productId": {
-                    "type": "string"
-                },
-                "productImage": {
-                    "type": "string"
-                },
-                "productName": {
-                    "type": "string"
-                },
-                "productQuantity": {
-                    "type": "integer"
-                }
-            }
-        },
         "domain.GetHistoryRequest": {
             "type": "object",
             "properties": {
@@ -260,20 +184,6 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Request-domain_GetCheckoutItemRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetCheckoutItemRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
         "transport.Request-domain_GetHistoryRequest": {
             "type": "object",
             "required": [
@@ -293,20 +203,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/domain.ExecuteTransactionResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-domain_GetCheckoutItemResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/domain.GetCheckoutItemResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

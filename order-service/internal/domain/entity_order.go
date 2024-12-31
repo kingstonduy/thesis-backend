@@ -19,7 +19,6 @@ type OrderEntity struct {
 type IOrderRepo interface {
 	Insert(ctx context.Context, orderEntity OrderEntity) error
 	Update(ctx context.Context, orderEntity OrderEntity) error
-	GetCheckoutItem(ctx context.Context, params GetCheckoutItemParamIn) (GetCheckoutItemResponse, error)
 	GetHistory(ctx context.Context, params GetHistoryParamIn) (GetHistoryResponse, error)
 }
 

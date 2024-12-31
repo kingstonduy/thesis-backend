@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kingstonduy/cart-service/internal/domain"
 	_ "github.com/kingstonduy/cart-service/resources/docs"
-	"github.com/kingstonduy/go-core/errorx"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
 )
@@ -31,7 +30,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.GetCartResponse]			"ok"
 //		@Router			/is/v1/cart-service/get-items [post]
 func (s *HttpServer) GetCart(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetCartRequest, *domain.GetCartResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetCartRequest, *domain.GetCartResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE
@@ -44,7 +43,7 @@ func (s *HttpServer) GetCart(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.UpdateCartItemResponse]			"ok"
 //		@Router			/is/v1/cart-service/update [post]
 func (s *HttpServer) UpdateCartItem(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateCartItemRequest, *domain.UpdateCartItemResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateCartItemRequest, *domain.UpdateCartItemResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE
@@ -57,7 +56,7 @@ func (s *HttpServer) UpdateCartItem(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.DeleteCartItemResponse]			"ok"
 //		@Router			/is/v1/cart-service/delete-cart-item [post]
 func (s *HttpServer) DeleteCartItem(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemRequest, *domain.DeleteCartItemResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemRequest, *domain.DeleteCartItemResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE
@@ -70,7 +69,7 @@ func (s *HttpServer) DeleteCartItem(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.DeleteUserCartResponse]			"ok"
 //		@Router			/is/v1/cart-service/delete-user-cart [post]
 func (s *HttpServer) DeleteUserCart(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteUserCartRequest, *domain.DeleteUserCartResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteUserCartRequest, *domain.DeleteUserCartResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE
@@ -83,5 +82,5 @@ func (s *HttpServer) DeleteUserCart(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.AddCartItemResponse]			"ok"
 //		@Router			/is/v1/cart-service/add [post]
 func (s *HttpServer) AddCartItem(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.AddCartItemRequest, *domain.AddCartItemResponse](ctx, errorx.ErrorCodeTimeout)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.AddCartItemRequest, *domain.AddCartItemResponse](ctx, fiberx.WithAuthentication())
 }

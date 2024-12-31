@@ -48,6 +48,7 @@ require (
 	github.com/gofiber/adaptor/v2 v2.2.1 // indirect
 	github.com/gofiber/contrib/otelfiber/v2 v2.0.0 // indirect
 	github.com/gofiber/swagger v1.0.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -132,4 +133,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core
+replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core

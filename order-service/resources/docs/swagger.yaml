@@ -27,33 +27,6 @@ definitions:
     type: object
   domain.ExecuteTransactionResponse:
     type: object
-  domain.GetCheckoutItemRequest:
-    properties:
-      userID:
-        type: string
-    type: object
-  domain.GetCheckoutItemResponse:
-    properties:
-      details:
-        items:
-          $ref: '#/definitions/domain.GetCheckoutItemResponseDetail'
-        type: array
-    type: object
-  domain.GetCheckoutItemResponseDetail:
-    properties:
-      pricePerUnit:
-        type: number
-      productCatergory:
-        type: string
-      productId:
-        type: string
-      productImage:
-        type: string
-      productName:
-        type: string
-      productQuantity:
-        type: integer
-    type: object
   domain.GetHistoryRequest:
     properties:
       userID:
@@ -90,15 +63,6 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-domain_GetCheckoutItemRequest:
-    properties:
-      data:
-        $ref: '#/definitions/domain.GetCheckoutItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
   transport.Request-domain_GetHistoryRequest:
     properties:
       data:
@@ -112,15 +76,6 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/domain.ExecuteTransactionResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-domain_GetCheckoutItemResponse:
-    properties:
-      data:
-        $ref: '#/definitions/domain.GetCheckoutItemResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -198,28 +153,6 @@ paths:
           schema:
             $ref: '#/definitions/transport.Response-domain_ExecuteTransactionResponse'
       summary: ExecuteTransaction
-      tags:
-      - ORDER SERVICE
-  /is/v1/order-service/get-checkout-item:
-    post:
-      consumes:
-      - application/json
-      description: Get the checkout item (cdc from cart table)
-      operationId: GetCheckoutItem
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        schema:
-          $ref: '#/definitions/transport.Request-domain_GetCheckoutItemRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-domain_GetCheckoutItemResponse'
-      summary: GetCheckoutItem
       tags:
       - ORDER SERVICE
   /is/v1/order-service/get-history:

@@ -19,65 +19,6 @@ func NewOrderRepo(db *configuration.PostgresCon) domain.IOrderRepo {
 	}
 }
 
-// GetCheckoutItem implements domain.IOrderRepo.
-func (c *cartRepoImpl) GetCheckoutItem(ctx context.Context, params domain.GetCheckoutItemParamIn) (domain.GetCheckoutItemResponse, error) {
-	logger.Info(ctx, "GetCheckoutItem start")
-	defer logger.Info(ctx, "GetCheckoutItem end")
-
-	// SQL query to fetch cart items along with product details
-	sqlQuery := `
-        SELECT 
-            ci."PRODUCT_ID",
-            p."PRODUCT_IMAGE",
-            p."PRODUCT_NAME",
-            p."PRODUCT_CATEGORY",
-            ci."CART_ITEM_QUANTITY" AS product_quantity,
-            p."PRODUCT_PRICE" AS price_per_unit
-        FROM 
-            public."CART_ITEM" ci
-        INNER JOIN 
-            public."PRODUCT" p
-        ON 
-            ci."PRODUCT_ID" = p."PRODUCT_ID"
-        WHERE 
-            ci."USER_ID" = $1;
-    `
-
-	// Prepare response
-	var response domain.GetCheckoutItemResponse
-	rows, err := c.db.DB.Query(ctx, sqlQuery, params.UserID)
-	if err != nil {
-		logger.Errorf(ctx, "Failed to fetch checkout items: %v", err)
-		return response, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var detail domain.GetCheckoutItemResponseDetail
-		err := rows.Scan(
-			&detail.ProductID,
-			&detail.ProductImage,
-			&detail.ProductName,
-			&detail.ProductCatergory,
-			&detail.ProductQuantity,
-			&detail.PricePerUnit,
-		)
-		if err != nil {
-			logger.Errorf(ctx, "Failed to scan row: %v", err)
-			return response, err
-		}
-		response.Details = append(response.Details, detail)
-	}
-
-	// Check for any errors during iteration
-	if rows.Err() != nil {
-		logger.Errorf(ctx, "Error iterating over rows: %v", rows.Err())
-		return response, rows.Err()
-	}
-
-	return response, nil
-}
-
 // GetHistory implements domain.IOrderRepo.
 func (c *cartRepoImpl) GetHistory(ctx context.Context, params domain.GetHistoryParamIn) (domain.GetHistoryResponse, error) {
 	logger.Info(ctx, "GetHistory start")

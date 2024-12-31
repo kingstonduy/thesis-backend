@@ -66,7 +66,9 @@ type PostgresConfig struct {
 }
 
 type HttpConfig struct {
-	BaseUrl string `config:"BASE_URL"`
+	BaseUrl                      string `config:"BASE_URL"`
+	ExecuteTransactionCartUrl    string `config:"EXECUTE_TRANSACTION_CART_URL"`
+	ExecuteTransactionProductUrl string `config:"EXECUTE_TRANSACTION_PRODUCT_URL"`
 }
 
 type ServerConfig struct {

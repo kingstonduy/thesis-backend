@@ -7,10 +7,8 @@ import (
 
 func ResgisterPipeline(
 	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
-	IGetCheckoutItemHandler domain.IGetCheckoutItemHandler,
 	IGetHistoryHandler domain.IGetHistoryHandler,
 ) {
 	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
-	pipeline.RegisterRequestHandler(IGetCheckoutItemHandler)
 	pipeline.RegisterRequestHandler(IGetHistoryHandler)
 }

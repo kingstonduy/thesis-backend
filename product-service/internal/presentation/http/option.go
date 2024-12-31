@@ -13,9 +13,6 @@ func (s *HttpServer) WithRoutingOption() option {
 		s.App.Post("/get-products", s.ListProducts)
 		s.App.Post("/get-product-detail", s.GetProductDetails)
 		s.App.Post("/execute-transaction", s.ExecuteTransaction)
-		s.App.Get("/", func(c *fiber.Ctx) error {
-			return c.SendString("CORS Configured!")
-		})
 		return nil
 	}
 }
