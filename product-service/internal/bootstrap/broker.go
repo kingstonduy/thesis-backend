@@ -9,7 +9,7 @@ import (
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
 )
 
-func GetKafkaBroker(cfg *Configuration, logger logger.Logger) broker.Broker {
+func NewBroker(cfg *Configuration, logger logger.Logger) broker.Broker {
 	var (
 		bConfig = cfg.BrokerConfig
 	)

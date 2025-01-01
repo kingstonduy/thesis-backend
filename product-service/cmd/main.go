@@ -12,12 +12,13 @@ import (
 	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
 	revert_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/revert-transaction"
 
+	broker_server "github.com/kingstonduy/product-service/internal/presentation/broker"
 	http_server "github.com/kingstonduy/product-service/internal/presentation/http"
 	"go.uber.org/fx"
 )
 
 var configModule = fx.Module("config",
-	fx.Provide(configuration.GetKafkaBroker),
+	fx.Provide(configuration.NewBroker),
 	fx.Provide(configuration.NewCircuitBreaker),
 	fx.Provide(configuration.GetConfigurationInstance),
 	fx.Invoke(configuration.SetDefaults),
@@ -27,6 +28,7 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetMetrics),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
+	fx.Provide(configuration.NewCacheClient),
 	fx.Provide(configuration.NewRestyClient),
 	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetValidator),
@@ -41,6 +43,7 @@ var usecaseModule = fx.Module("usecase",
 
 var serverModule = fx.Module("server",
 	fx.Provide(http_server.NewHttpServer),
+	fx.Provide(broker_server.NewBrokerServer),
 )
 
 var infraModule = fx.Module("infras",
@@ -60,6 +63,7 @@ func main() {
 func run(
 	lc fx.Lifecycle,
 	HttpServer *http_server.HttpServer,
+	brokerServer *broker_server.BrokerServer,
 	log logger.Logger,
 	shutdowner fx.Shutdowner,
 ) {
@@ -74,6 +78,7 @@ func run(
 					shutdowner.Shutdown()
 				}),
 				server.WithServer("httpServer", HttpServer),
+				server.WithServer("brokerServer", brokerServer),
 			)
 
 			return serverWrapper.Start(gCtx)

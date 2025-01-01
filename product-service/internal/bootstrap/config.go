@@ -42,8 +42,8 @@ func GetConfigurationInstance() *Configuration {
 }
 
 type Configuration struct {
-	BrokerConfig KafkaBrokerConfig `config:",squash"`
-
+	BrokerConfig      KafkaBrokerConfig `config:",squash"`
+	RedisConfig       RedisConfig       `config:",squash"`
 	ServerConfig      ServerConfig      `config:",squash"`
 	HealthCheckConfig HealthCheckConfig `config:",squash"`
 	LoggerConfig      LoggerConfig      `config:",squash"`
@@ -89,25 +89,23 @@ type LoggerConfig struct {
 }
 
 type KafkaBrokerConfig struct {
-	Addresses                  string `config:"KAFKA_BROKERS"`
-	SASLEnabled                bool   `config:"KAFKA_SASL_ENABLED"`
-	SASLUser                   string `config:"KAFKA_SASL_USER"`
-	SASLPassword               string `config:"KAFKA_SASL_PASSWORD"`
-	SASLAlgorithm              string `config:"KAFKA_SASL_ALGORITHM"`
-	TLSEnabled                 bool   `config:"KAFKA_TLS_ENABLED"`
-	TLSSkipVerify              bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
-	TLSClientCertFile          string `config:"KAFKA_CLIENT_CERT_FILE"`
-	TLSClientKeyFile           string `config:"KAFKA_CLIENT_KEY_FILE"`
-	TLSCaCertFile              string `config:"KAFKA_CA_CERT_FILE"`
-	MessageTimeout             int    `config:"KAFKA_MESSAGE_TIMEOUT"`
-	ConsumerGroup              string `config:"KAFKA_CONSUMERGROUP"`
-	RollbackErrorConsumerGroup string `config:"KAFKA_ROLLBACK_ERROR_CONSUMER_GROUP"`
-	HandlerPool                int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	Addresses         string `config:"KAFKA_BROKERS"`
+	SASLEnabled       bool   `config:"KAFKA_SASL_ENABLED"`
+	SASLUser          string `config:"KAFKA_SASL_USER"`
+	SASLPassword      string `config:"KAFKA_SASL_PASSWORD"`
+	SASLAlgorithm     string `config:"KAFKA_SASL_ALGORITHM"`
+	TLSEnabled        bool   `config:"KAFKA_TLS_ENABLED"`
+	TLSSkipVerify     bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
+	TLSClientCertFile string `config:"KAFKA_CLIENT_CERT_FILE"`
+	TLSClientKeyFile  string `config:"KAFKA_CLIENT_KEY_FILE"`
+	TLSCaCertFile     string `config:"KAFKA_CA_CERT_FILE"`
+	ConsumerGroup     string `config:"KAFKA_CONSUMERGROUP"`
+	HandlerPool       int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	ProductCDCTopic   string `config:"PRODUCT_DB_CDC_TOPIC"`
 }
 
 type RedisConfig struct {
-	Address  string `config:"REDIS_ADDRESSES"`
-	Username string `config:"REDIS_USERNAME"`
-	Password string `config:"REDIS_PASSWORD"`
-	Prefix   string `config:"REDIS_SERVER_PREFIX"`
+	Addresses []string `config:"REDIS_ADDRESSES"`
+	Username  string   `config:"REDIS_USERNAME"`
+	Password  string   `config:"REDIS_PASSWORD"`
 }
