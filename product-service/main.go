@@ -1,26 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 func main() {
-	// Create
-	var person Person
-	person.Name = "John Doe"
-	person.Age = 30
+	// Define a handler for the GET request
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Check if the request method is GET
+		if r.Method != http.MethodGet {
+			http.Error(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
+			return
+		}
 
-	// Print
-	fmt.Printf("Name: %s, Age: %d\n", person.Name, person.Age)
+		// Send a response
+		fmt.Fprintf(w, "Hello, you've made a GET request!")
+	})
 
-	// Update
-	person.Age = 31
-	fmt.Printf("Updated Age: %d\n", person.Age)
-
-	// Delete
-	person = Person{}
-	fmt.Println(person.Name, person.Age)
-}
-
-type Person struct {
-	Name string
-	Age  int
+	// Start the server on port 8080
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Printf("Error starting server: %v\n", err)
+	}
 }
