@@ -49,7 +49,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/is/v1/cart-service/delete-cart-item": {
+        "/is/v1/cart-service/delete-cart-items": {
             "post": {
                 "description": "giving the cartITemID delete the cartItem",
                 "consumes": [
@@ -69,7 +69,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest"
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsRequest"
                         }
                     }
                 ],
@@ -77,41 +77,7 @@ const docTemplate = `{
                     "200": {
                         "description": "ok",
                         "schema": {
-                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/is/v1/cart-service/delete-user-cart": {
-            "post": {
-                "description": "delete all the record in table cart with corresponding userID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CART SERVICE"
-                ],
-                "summary": "DeleteUserCart",
-                "operationId": "DeleteUserCart",
-                "parameters": [
-                    {
-                        "description": "Request",
-                        "name": "request",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "schema": {
-                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse"
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsResponse"
                         }
                     }
                 }
@@ -725,27 +691,27 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_cart.AddCartItemResponse": {
             "type": "object"
         },
-        "github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest": {
+        "github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DelteCartItemsRequestDetail"
+                    }
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsResponse": {
+            "type": "object"
+        },
+        "github_com_kingstonduy_api-document_domain_cart.DelteCartItemsRequestDetail": {
             "type": "object",
             "properties": {
                 "cartItemID": {
                     "type": "string"
                 }
             }
-        },
-        "github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse": {
-            "type": "object"
-        },
-        "github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest": {
-            "type": "object",
-            "properties": {
-                "userId": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse": {
-            "type": "object"
         },
         "github_com_kingstonduy_api-document_domain_cart.GetCartItemDetail": {
             "type": "object",
@@ -1335,28 +1301,14 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest": {
+        "transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsRequest": {
             "type": "object",
             "required": [
                 "trace"
             ],
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest": {
-            "type": "object",
-            "required": [
-                "trace"
-            ],
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest"
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -1615,25 +1567,11 @@ const docTemplate = `{
                 }
             }
         },
-        "transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse": {
+        "transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse"
-                },
-                "result": {
-                    "$ref": "#/definitions/transport.Result"
-                },
-                "trace": {
-                    "$ref": "#/definitions/transport.Trace"
-                }
-            }
-        },
-        "transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse"
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"

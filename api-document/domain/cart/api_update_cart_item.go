@@ -14,6 +14,6 @@ type UpdateCartItemRequest struct {
 type UpdateCartItemResponse struct {
 }
 
-type UpdateCartItemHandler interface {
+type IUpdateCartItemHandler interface {
 	Handle(ctx context.Context, req *UpdateCartItemRequest) (res *UpdateCartItemResponse, err error)
 }

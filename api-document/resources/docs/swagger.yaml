@@ -17,19 +17,19 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_cart.AddCartItemResponse:
     type: object
-  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest:
+  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DelteCartItemsRequestDetail'
+        type: array
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsResponse:
+    type: object
+  github_com_kingstonduy_api-document_domain_cart.DelteCartItemsRequestDetail:
     properties:
       cartItemID:
         type: string
-    type: object
-  github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse:
-    type: object
-  github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest:
-    properties:
-      userId:
-        type: string
-    type: object
-  github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse:
     type: object
   github_com_kingstonduy_api-document_domain_cart.GetCartItemDetail:
     properties:
@@ -415,19 +415,10 @@ definitions:
     required:
     - trace
     type: object
-  transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest:
+  transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsRequest:
     properties:
       data:
-        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemRequest'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    required:
-    - trace
-    type: object
-  transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest:
-    properties:
-      data:
-        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartRequest'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -595,19 +586,10 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
-  transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse:
+  transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsResponse:
     properties:
       data:
-        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemResponse'
-      result:
-        $ref: '#/definitions/transport.Result'
-      trace:
-        $ref: '#/definitions/transport.Trace'
-    type: object
-  transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse:
-    properties:
-      data:
-        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteUserCartResponse'
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_cart.DeleteCartItemsResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -831,7 +813,7 @@ paths:
       summary: AddCartItem
       tags:
       - CART SERVICE
-  /is/v1/cart-service/delete-cart-item:
+  /is/v1/cart-service/delete-cart-items:
     post:
       consumes:
       - application/json
@@ -842,37 +824,15 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemRequest'
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsRequest'
       produces:
       - application/json
       responses:
         "200":
           description: ok
           schema:
-            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemResponse'
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteCartItemsResponse'
       summary: DeleteCartItem
-      tags:
-      - CART SERVICE
-  /is/v1/cart-service/delete-user-cart:
-    post:
-      consumes:
-      - application/json
-      description: delete all the record in table cart with corresponding userID
-      operationId: DeleteUserCart
-      parameters:
-      - description: Request
-        in: body
-        name: request
-        schema:
-          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ok
-          schema:
-            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_cart_DeleteUserCartResponse'
-      summary: DeleteUserCart
       tags:
       - CART SERVICE
   /is/v1/cart-service/get-items:
