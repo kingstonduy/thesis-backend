@@ -179,6 +179,24 @@ definitions:
       productName:
         type: string
     type: object
+  github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequestDetail'
+        type: array
+      userID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequestDetail:
+    properties:
+      cartItemQuantity:
+        type: integer
+      productId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.ExecuteTransactionResponse:
+    type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductRequest:
     type: object
   github_com_kingstonduy_api-document_domain_product.GetAllProductResponse:
@@ -195,6 +213,8 @@ definitions:
     type: object
   github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse:
     properties:
+      averageRating:
+        type: string
       productCatergory:
         type: string
       productDescription:
@@ -206,20 +226,80 @@ definitions:
       productName:
         type: string
       productPrice:
-        type: number
+        type: string
+      productQuantity:
+        type: integer
+      totalRating:
+        type: integer
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryRequest:
+    properties:
+      Category:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponseDetail'
+        type: array
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponseDetail:
+    properties:
+      averageRating:
+        type: string
+      productId:
+        type: string
+      productImage:
+        type: string
+      productName:
+        type: string
+      productPrice:
+        type: string
+      productQuantity:
+        type: integer
+      totalRating:
+        type: integer
+    type: object
+  github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest:
+    properties:
+      gender:
+        type: string
     type: object
   github_com_kingstonduy_api-document_domain_product.Product:
     properties:
       averageRating:
-        type: number
-      id:
         type: string
-      imageUrl:
+      productId:
         type: string
-      name:
+      productImage:
         type: string
-      price:
-        type: number
+      productName:
+        type: string
+      productPrice:
+        type: string
+      productQuantity:
+        type: integer
+      totalRating:
+        type: integer
+    type: object
+  github_com_kingstonduy_api-document_domain_product.RevertTransactionRequest:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionRequestDetail'
+        type: array
+      userID:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.RevertTransactionRequestDetail:
+    properties:
+      cartItemQuantity:
+        type: integer
+      productId:
+        type: string
+    type: object
+  github_com_kingstonduy_api-document_domain_product.RevertTransactionResponse:
     type: object
   github_com_kingstonduy_api-document_domain_user.GetUserInformationRequest:
     properties:
@@ -416,6 +496,15 @@ definitions:
     required:
     - trace
     type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
   transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest:
     properties:
       data:
@@ -429,6 +518,33 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    required:
+    - trace
+    type: object
+  transport.Request-github_com_kingstonduy_api-document_domain_product_RevertTransactionRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionRequest'
       trace:
         $ref: '#/definitions/transport.Trace'
     required:
@@ -560,6 +676,15 @@ definitions:
       trace:
         $ref: '#/definitions/transport.Trace'
     type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
   transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse:
     properties:
       data:
@@ -573,6 +698,33 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponse'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest'
+      result:
+        $ref: '#/definitions/transport.Result'
+      trace:
+        $ref: '#/definitions/transport.Trace'
+    type: object
+  transport.Response-github_com_kingstonduy_api-document_domain_product_RevertTransactionResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionResponse'
       result:
         $ref: '#/definitions/transport.Result'
       trace:
@@ -878,6 +1030,28 @@ paths:
       summary: GetPurchasedProducts
       tags:
       - ORDER SERVICE
+  /is/v1/product-service/execute-transaction:
+    post:
+      consumes:
+      - application/json
+      description: remove the product quantity from the inventory
+      operationId: ProductExecuteTransaction
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionResponse'
+      summary: ProductExecuteTransaction
+      tags:
+      - PRODUCT
   /is/v1/product-service/get-product-detail:
     post:
       consumes:
@@ -899,7 +1073,7 @@ paths:
             $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductDetailResponse'
       summary: GetProductDetail
       tags:
-      - product
+      - PRODUCT
   /is/v1/product-service/get-products:
     post:
       consumes:
@@ -921,7 +1095,73 @@ paths:
             $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse'
       summary: GetAllProduct
       tags:
-      - product
+      - PRODUCT
+  /is/v1/product-service/get-products-by-category:
+    post:
+      consumes:
+      - application/json
+      description: Get all products filter = {category}
+      operationId: GetProductByCategory
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryResponse'
+      summary: GetProductByCategory
+      tags:
+      - PRODUCT
+  /is/v1/product-service/get-products-by-gender:
+    post:
+      consumes:
+      - application/json
+      description: Get all products filter = {gender}
+      operationId: GetProductByGender
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest'
+      summary: GetProductByGender
+      tags:
+      - PRODUCT
+  /is/v1/product-service/revert-transaction:
+    post:
+      consumes:
+      - application/json
+      description: revert the transaction
+      operationId: RevertTransaction
+      parameters:
+      - description: Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_RevertTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_RevertTransactionResponse'
+      summary: RevertTransaction
+      tags:
+      - PRODUCT
   /is/v1/user-service/get-product-detail:
     post:
       consumes:

@@ -355,6 +355,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/is/v1/product-service/execute-transaction": {
+            "post": {
+                "description": "remove the product quantity from the inventory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "ProductExecuteTransaction",
+                "operationId": "ProductExecuteTransaction",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/is/v1/product-service/get-product-detail": {
             "post": {
                 "description": "Get the detail of a product",
@@ -365,7 +399,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "product"
+                    "PRODUCT"
                 ],
                 "summary": "GetProductDetail",
                 "operationId": "GetProductDetail",
@@ -399,7 +433,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "product"
+                    "PRODUCT"
                 ],
                 "summary": "GetAllProduct",
                 "operationId": "GetAllProduct",
@@ -418,6 +452,108 @@ const docTemplate = `{
                         "description": "ok",
                         "schema": {
                             "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/product-service/get-products-by-category": {
+            "post": {
+                "description": "Get all products filter = {category}",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "GetProductByCategory",
+                "operationId": "GetProductByCategory",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/product-service/get-products-by-gender": {
+            "post": {
+                "description": "Get all products filter = {gender}",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "GetProductByGender",
+                "operationId": "GetProductByGender",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/is/v1/product-service/revert-transaction": {
+            "post": {
+                "description": "revert the transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PRODUCT"
+                ],
+                "summary": "RevertTransaction",
+                "operationId": "RevertTransaction",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Request-github_com_kingstonduy_api-document_domain_product_RevertTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/transport.Response-github_com_kingstonduy_api-document_domain_product_RevertTransactionResponse"
                         }
                     }
                 }
@@ -836,6 +972,34 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequestDetail"
+                    }
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequestDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.ExecuteTransactionResponse": {
+            "type": "object"
+        },
         "github_com_kingstonduy_api-document_domain_product.GetAllProductRequest": {
             "type": "object"
         },
@@ -861,6 +1025,9 @@ const docTemplate = `{
         "github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse": {
             "type": "object",
             "properties": {
+                "averageRating": {
+                    "type": "string"
+                },
                 "productCatergory": {
                     "type": "string"
                 },
@@ -877,7 +1044,66 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "productPrice": {
-                    "type": "number"
+                    "type": "string"
+                },
+                "productQuantity": {
+                    "type": "integer"
+                },
+                "totalRating": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "Category": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponseDetail"
+                    }
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponseDetail": {
+            "type": "object",
+            "properties": {
+                "averageRating": {
+                    "type": "string"
+                },
+                "productId": {
+                    "type": "string"
+                },
+                "productImage": {
+                    "type": "string"
+                },
+                "productName": {
+                    "type": "string"
+                },
+                "productPrice": {
+                    "type": "string"
+                },
+                "productQuantity": {
+                    "type": "integer"
+                },
+                "totalRating": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest": {
+            "type": "object",
+            "properties": {
+                "gender": {
+                    "type": "string"
                 }
             }
         },
@@ -885,21 +1111,55 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "averageRating": {
-                    "type": "number"
-                },
-                "id": {
                     "type": "string"
                 },
-                "imageUrl": {
+                "productId": {
                     "type": "string"
                 },
-                "name": {
+                "productImage": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "number"
+                "productName": {
+                    "type": "string"
+                },
+                "productPrice": {
+                    "type": "string"
+                },
+                "productQuantity": {
+                    "type": "integer"
+                },
+                "totalRating": {
+                    "type": "integer"
                 }
             }
+        },
+        "github_com_kingstonduy_api-document_domain_product.RevertTransactionRequest": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionRequestDetail"
+                    }
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.RevertTransactionRequestDetail": {
+            "type": "object",
+            "properties": {
+                "cartItemQuantity": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_kingstonduy_api-document_domain_product.RevertTransactionResponse": {
+            "type": "object"
         },
         "github_com_kingstonduy_api-document_domain_user.GetUserInformationRequest": {
             "type": "object",
@@ -1201,6 +1461,20 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Request-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Request-github_com_kingstonduy_api-document_domain_product_GetAllProductRequest": {
             "type": "object",
             "required": [
@@ -1223,6 +1497,48 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Request-github_com_kingstonduy_api-document_domain_product_RevertTransactionRequest": {
+            "type": "object",
+            "required": [
+                "trace"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionRequest"
                 },
                 "trace": {
                     "$ref": "#/definitions/transport.Trace"
@@ -1425,6 +1741,20 @@ const docTemplate = `{
                 }
             }
         },
+        "transport.Response-github_com_kingstonduy_api-document_domain_product_ExecuteTransactionResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.ExecuteTransactionResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
         "transport.Response-github_com_kingstonduy_api-document_domain_product_GetAllProductResponse": {
             "type": "object",
             "properties": {
@@ -1444,6 +1774,48 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductDetailResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByCategoryResponse"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_product_GetProductsByGenderRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.GetProductsByGenderRequest"
+                },
+                "result": {
+                    "$ref": "#/definitions/transport.Result"
+                },
+                "trace": {
+                    "$ref": "#/definitions/transport.Trace"
+                }
+            }
+        },
+        "transport.Response-github_com_kingstonduy_api-document_domain_product_RevertTransactionResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_kingstonduy_api-document_domain_product.RevertTransactionResponse"
                 },
                 "result": {
                     "$ref": "#/definitions/transport.Result"
