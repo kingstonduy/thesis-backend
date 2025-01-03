@@ -1,3 +1,10 @@
+# custom image
+
+```
+docker build --network=host -t ubuntu-confluent .
+docker run -d --name confluent-container -p 9092:9092 -p 9021:9021 -p 8083:8083 ubuntu-confluent
+```
+
 # debezium
 
 ````shell

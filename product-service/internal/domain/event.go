@@ -1,14 +1,12 @@
 package domain
 
-import "time"
-
 type Event[T any] struct {
-	Payload T `json:"payload"`
+	Payload EventPayload[T] `json:"payload"`
 }
 
 type EventPayload[T any] struct {
-	Before T         `json:"before"`
-	After  T         `json:"after"`
-	Op     string    `json:"op"`
-	Ts     time.Time `json:"ts"`
+	Before T      `json:"before"`
+	After  T      `json:"after"`
+	Op     string `json:"op"`
+	Ts     int64  `json:"ts_ms"`
 }

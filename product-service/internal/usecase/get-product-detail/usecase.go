@@ -48,6 +48,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductDetailReques
 		Description:     entity.ProductDescription,
 		Image:           entity.ProductImage,
 		ProductQuantity: entity.ProductQuantity,
+		TotalRating:     entity.TotalRating,
 	}
 
 	return res, nil

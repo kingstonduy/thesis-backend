@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
+	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
@@ -46,8 +48,13 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 				return err
 			}
 
-			if product.ProductQuantity < item.CartItemQuantity {
+			if product.ProductQuantity == 0 {
 				err = fmt.Errorf("Product is out of stock")
+				return err
+			}
+
+			if product.ProductQuantity < item.CartItemQuantity {
+				err = fmt.Errorf("insufficient stock")
 				return err
 			}
 
@@ -57,7 +64,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			return err
 		}
 		return nil
-	})
+	}, database.WithIsolationLevelOptions(sql.LevelReadCommitted))
 	if err1 != nil {
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())

@@ -13,6 +13,8 @@ func (s *HttpServer) WithRoutingOption() option {
 		s.App.Post("/get-products", s.ListProducts)
 		s.App.Post("/get-product-detail", s.GetProductDetails)
 		s.App.Post("/execute-transaction", s.ExecuteTransaction)
+		s.App.Post("/get-products-by-category", s.GetProductByCategory)
+		s.App.Post("/get-products-by-gender", s.GetProductByGender)
 		return nil
 	}
 }
@@ -27,8 +29,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.GetAllProductResponse]			"ok"
 //		@Router			/is/v1/product-service/get-products [post]
 func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
-	// return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx, fiberx.WithAuthentication())
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			PRODUCT
@@ -41,8 +42,7 @@ func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.GetProductDetailResponse]			"ok"
 //		@Router			/is/v1/product-service/get-product-detail [post]
 func (s *HttpServer) GetProductDetails(ctx *fiber.Ctx) error {
-	// return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductDetailRequest, *domain.GetProductDetailResponse](ctx, fiberx.WithAuthentication())
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductDetailRequest, *domain.GetProductDetailResponse](ctx)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductDetailRequest, *domain.GetProductDetailResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			PRODUCT
@@ -69,4 +69,30 @@ func (s *HttpServer) ExecuteTransaction(ctx *fiber.Ctx) error {
 //		@Router			/is/v1/product-service/revert-transaction [post]
 func (s *HttpServer) RevertTransaction(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.RevertTransactionRequest, *domain.RevertTransactionResponse](ctx, fiberx.WithAuthentication())
+}
+
+//	 	@Tags 			PRODUCT
+//		@Summary		GetProductByGender
+//		@Description	Get all products filter = {gender}
+//		@ID				GetProductByGender
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.GetProductsByGenderRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetProductsByGenderRequest]			"ok"
+//		@Router			/is/v1/product-service/get-products-by-gender [post]
+func (s *HttpServer) GetProductByGender(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductsByGenderRequest, *domain.GetProductsByGenderResponse](ctx, fiberx.WithAuthentication())
+}
+
+//	 	@Tags 			PRODUCT
+//		@Summary		GetProductByCategory
+//		@Description	Get all products filter = {category}
+//		@ID				GetProductByCategory
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.GetProductsByCategoryRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetProductsByCategoryResponse]			"ok"
+//		@Router			/is/v1/product-service/get-products-by-category [post]
+func (s *HttpServer) GetProductByCategory(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetProductsByCategoryRequest, *domain.GetProductsByCategoryResponse](ctx, fiberx.WithAuthentication())
 }

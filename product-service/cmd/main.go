@@ -9,6 +9,8 @@ import (
 	"github.com/kingstonduy/product-service/internal/infra/postgres"
 	execute_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/execute-transaction"
 	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
+	get_product_by_category_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-by-category"
+	get_product_by_gender_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-by-gender"
 	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
 	revert_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/revert-transaction"
 
@@ -39,6 +41,8 @@ var usecaseModule = fx.Module("usecase",
 	fx.Provide(get_product_detail_uc.NewGetProductDetailHandler),
 	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
 	fx.Provide(revert_transaction_uc.NewRevertTransactionHandler),
+	fx.Provide(get_product_by_gender_uc.NewGetProductsByGenderHandler),
+	fx.Provide(get_product_by_category_uc.NewGetProductsByCategoryHandler),
 )
 
 var serverModule = fx.Module("server",

@@ -40,13 +40,20 @@ func (b *BrokerServer) CDCConsumer(topic string) error {
 	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
 		e.Ack()
 
-		var event domain.Event[domain.Product]
+		var event domain.Event[domain.ProductCdc]
 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-			logger.Error(context.TODO(), "failed to unmarshal event: %v", err)
+			logger.Errorf(context.TODO(), "failed to unmarshal event: %v", err)
 			return err
 		}
 
-		logger.Infof(c, "received event: %v", event)
+		logger.Infof(c, "consume message=%v", event)
+
+		if err := b.redisClient.Set(c, "PRODUCT_ID"+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
+			logger.Error(context.TODO(), "failed to set redis %v", err)
+			return err
+		}
+
+		// logger.Infof(c, "received event: %v", event)
 
 		return nil
 	}, b.GetSubscriptionOptions()...)

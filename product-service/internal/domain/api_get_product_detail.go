@@ -2,8 +2,6 @@ package domain
 
 import (
 	"context"
-
-	"github.com/shopspring/decimal"
 )
 
 type GetProductDetailRequest struct {
@@ -11,13 +9,15 @@ type GetProductDetailRequest struct {
 }
 
 type GetProductDetailResponse struct {
-	ID              string          `json:"productId"`
-	Name            string          `json:"productName"`
-	Catergory       string          `json:"productCatergory"`
-	Price           decimal.Decimal `json:"productPrice"`
-	Description     string          `json:"productDescription"`
-	Image           string          `json:"productImage"`
-	ProductQuantity int             `json:"productQuantity"`
+	ID              string `json:"productId"`
+	Name            string `json:"productName"`
+	Catergory       string `json:"productCatergory"`
+	Price           string `json:"productPrice"`
+	Description     string `json:"productDescription"`
+	Image           string `json:"productImage"`
+	ProductQuantity int    `json:"productQuantity"`
+	AverageRating   string `json:"averageRating"`
+	TotalRating     int    `json:"totalRating"`
 }
 
 type IGetProductDetailHandler interface {

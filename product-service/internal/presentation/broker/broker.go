@@ -4,12 +4,14 @@ import (
 	"context"
 
 	"github.com/gammazero/workerpool"
+	"github.com/kingstonduy/go-core/cache"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 )
 
 type BrokerServer struct {
+	redisClient   cache.CacheClient
 	cfg           *configuration.Configuration
 	Broker        broker.Broker
 	logger        logger.Logger
@@ -26,6 +28,7 @@ func (s *BrokerServer) GetStartOptions() []BrokerServerStartOption {
 }
 
 func NewBrokerServer(
+	redisClient cache.CacheClient,
 	cfg *configuration.Configuration,
 	broker broker.Broker,
 	logger logger.Logger,
@@ -35,6 +38,7 @@ func NewBrokerServer(
 	bConfig := config.BrokerConfig
 
 	BrokerServer := BrokerServer{
+		redisClient:   redisClient,
 		cfg:           cfg,
 		Broker:        broker,
 		logger:        logger,

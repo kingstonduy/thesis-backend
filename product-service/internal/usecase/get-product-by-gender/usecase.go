@@ -13,18 +13,18 @@ type handler struct {
 	repo domain.IProductRepo
 }
 
-func NewGetProductsHandler(
+func NewGetProductsByGenderHandler(
 	repo domain.IProductRepo,
-) domain.IGetProductsHandler {
+) domain.IGetProductsByGenderHandler {
 	return &handler{
 		repo: repo,
 	}
 }
 
-// Handle implements domain.IGetProductsHandler.
-func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) (res *domain.GetAllProductResponse, err error) {
-	logger.Info(ctx, "Get products handler start")
-	defer logger.Info(ctx, "Get products handler end")
+// Handle implements domain.IGetProductsByGenderHandler.
+func (h *handler) Handle(ctx context.Context, req *domain.GetProductsByGenderRequest) (res *domain.GetProductsByGenderResponse, err error) {
+	logger.Info(ctx, "GetProductsByGenderHandler start")
+	defer logger.Info(ctx, "GetProductsByGenderHandler end")
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -33,16 +33,16 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) 
 		}
 	}()
 
-	entities, err := h.repo.GetAllProduct(ctx)
+	entities, err := h.repo.GetProductByGender(ctx, req.Gender)
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}
 
-	products := []domain.Product{}
+	products := []domain.GetProductsByGenderResponseDetail{}
 	for _, entity := range entities {
-		product := domain.Product{
+		product := domain.GetProductsByGenderResponseDetail{
 			ID:              entity.ProductID,
 			Name:            entity.ProductName,
 			ImageURL:        entity.ProductImage,
@@ -54,8 +54,8 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) 
 		products = append(products, product)
 	}
 
-	res = &domain.GetAllProductResponse{
-		Products: products,
+	res = &domain.GetProductsByGenderResponse{
+		Details: products,
 	}
 
 	return res, nil

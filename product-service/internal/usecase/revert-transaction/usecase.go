@@ -2,8 +2,10 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
+	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
@@ -52,7 +54,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.RevertTransactionReque
 			return err
 		}
 		return nil
-	})
+	}, database.WithIsolationLevelOptions(sql.LevelReadCommitted))
 	if err1 != nil {
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
