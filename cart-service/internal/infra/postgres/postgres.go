@@ -6,6 +6,7 @@ import (
 
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/domain"
+	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 )
 
@@ -61,33 +62,6 @@ func (repo *cartRepoImpl) AddCartItem(ctx context.Context, params domain.AddCart
 		}
 		return nil
 	})
-}
-
-// DeleteUserCart implements domain.ICartRepo.
-func (repo *cartRepoImpl) DeleteUserCart(ctx context.Context, params domain.DeleteUserCartParams) error {
-	logger.Info(ctx, "DeleteUserCart start")
-	defer logger.Info(ctx, "DeleteUserCart end")
-
-	sqlQuery := `
-        DELETE FROM public."CART_ITEM"
-        WHERE "USER_ID" = $1;
-    `
-
-	res, err := repo.db.DB.Exec(ctx, sqlQuery, params.UserID)
-	if err != nil {
-		return err
-	}
-
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("no cart items found for the given user ID")
-	}
-
-	return nil
 }
 
 // GetCart implements domain.ICartRepo.
@@ -147,31 +121,40 @@ func (repo *cartRepoImpl) GetCart(ctx context.Context, paramsIn domain.GetCartPa
 	return paramsOut, nil
 }
 
-// DeleteCartItem implements domain.ICartRepo.
-func (repo *cartRepoImpl) DeleteCartItem(ctx context.Context, params domain.DeleteCartItemParams) error {
+// DeleteCartItemsByID implements domain.ICartRepo.
+func (repo *cartRepoImpl) DeleteCartItemsByID(ctx context.Context, params domain.DeleteCartItemParamsIn) error {
 	logger.Info(ctx, "DeleteCartItem start")
 	defer logger.Info(ctx, "DeleteCartItem end")
 
 	sqlQuery := `
-        DELETE FROM public."CART_ITEM"
-        WHERE "CART_ITEM_ID" = $1;
-    `
+	        DELETE FROM public."CART_ITEM"
+	        WHERE "CART_ITEM_ID" = $1;
+	    `
 
-	res, err := repo.db.DB.Exec(ctx, sqlQuery, params.CartItemID)
+	err := repo.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
+		for _, detail := range params.Details {
+			res, err := repo.db.DB.Exec(ctx, sqlQuery, detail.CartItemID)
+			if err != nil {
+				return err
+			}
+
+			rowsAffected, err := res.RowsAffected()
+			if err != nil {
+				return err
+			}
+
+			if rowsAffected == 0 {
+				return fmt.Errorf(errorx.ErrorMessageNotFound)
+			}
+		}
+
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("no cart item found with the given CartItemID")
-	}
-
 	return nil
+
 }
 
 // UpdateCartItem implements domain.ICartRepo.

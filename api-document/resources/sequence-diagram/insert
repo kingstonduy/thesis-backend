@@ -1,0 +1,36 @@
+title API Sequence Diagram
+
+participant User
+participant PresentationLayer
+participant Pipeline
+participant UseCase
+participant Repository
+participant Database
+participant Kafka
+participant OutboundService
+
+note over User, PresentationLayer: Insert API
+User -> PresentationLayer: HTTP Request (Insert)
+PresentationLayer -> Pipeline: Route to pipeline
+Pipeline -> UseCase: Route to use case
+UseCase -> Repository: Call insert method
+Repository -> Database: Perform insert
+alt Insert successful
+    Database --> Repository: Return success
+    Repository --> UseCase: Return success
+    UseCase -> PresentationLayer: Return success to client
+    PresentationLayer -> User: HTTP Response (Insert success)
+    par CDC Flow
+        Database --> Kafka: Emit change event
+        Kafka --> Consumer: Notify replicas update
+    end
+else Insert failed
+    Database --> Repository: Return error
+    Repository --> UseCase: Return error
+    UseCase -> PresentationLayer: Handle error
+    PresentationLayer -> User: HTTP Response (Insert failed)
+    par Error Handling Flow
+        UseCase -> Kafka: Publish error event
+        Kafka --> Consumers: Notify error subscribers
+    end
+end

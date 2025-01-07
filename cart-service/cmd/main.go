@@ -6,10 +6,9 @@ import (
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/infra/postgres"
 	add_cart_handler_uc "github.com/kingstonduy/cart-service/internal/usecase/add-cart-item"
-	delete_cart_item_uc "github.com/kingstonduy/cart-service/internal/usecase/delete-cart"
-	delete_user_cart "github.com/kingstonduy/cart-service/internal/usecase/delete-user-cart"
+	delete_cart_item_uc "github.com/kingstonduy/cart-service/internal/usecase/delete-cart-items"
 	get_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/get-cart"
-	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart"
+	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart-item"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 
@@ -35,10 +34,9 @@ var configModule = fx.Module("config",
 
 var usecaseModule = fx.Module("usecase",
 	fx.Provide(add_cart_handler_uc.NewAddCartItemHandler),
-	fx.Provide(delete_cart_item_uc.NewDeleteCartItemHandler),
+	fx.Provide(delete_cart_item_uc.NewIDeleteCartItemHandler),
 	fx.Provide(get_cart_uc.NewGetCartHandler),
 	fx.Provide(update_cart_uc.NewUpdateCartHandler),
-	fx.Provide(delete_user_cart.NewDeleteUserCartHandler),
 )
 
 var serverModule = fx.Module("server",

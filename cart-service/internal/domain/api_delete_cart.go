@@ -6,12 +6,15 @@ import "context"
 // 	tag = "DeleteCartItem"
 // )
 
-type DeleteCartItemRequest struct {
-	CartItemID string `json:"cartItemID"`
+type DeleteCartItemsRequest struct {
+	Details []DelteCartItemsRequestDetail `json:"details"`
 }
 
-type DeleteCartItemResponse struct{}
+type DelteCartItemsRequestDetail struct {
+	CartItemID string `json:"cartItemID"`
+}
+type DeleteCartItemsResponse struct{}
 
-type DeleteCartItemHandler interface {
-	Handle(ctx context.Context, req *DeleteCartItemRequest) (res *DeleteCartItemResponse, err error)
+type IDeleteCartItemHandler interface {
+	Handle(ctx context.Context, req *DeleteCartItemsRequest) (res *DeleteCartItemsResponse, err error)
 }

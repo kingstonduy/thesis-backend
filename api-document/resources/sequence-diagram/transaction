@@ -1,0 +1,79 @@
+title API Sequence Diagram
+
+participant User
+participant OrderService
+participant OrderDB
+participant ProductService
+participant ProductDB
+participant CartService
+participant CartDB
+participant Kafka
+
+note over User, OrderService: Checkout API
+User -> OrderService: HTTP Request (Checkout)
+
+OrderService -> OrderDB: Insert into tables:
+OrderDB --> OrderService: Success
+
+OrderService -> ProductService: HTTP Request (Reduce Product Quantity)
+ProductService -> ProductDB: Update product quantity
+alt Successful response (code == 00)
+ProductDB --> ProductService: Success
+ProductService --> OrderService: Response (code == 00)
+
+    OrderService -> CartService: HTTP Request (Clear Cart)
+    CartService -> CartDB: Remove all cart items for user
+    alt Successful response (code == 00)
+        CartDB --> CartService: Success
+        CartService --> OrderService: Response (code == 00)
+
+        OrderService -> OrderDB: Update transaction (SUCCESS)
+        alt Update successful
+            OrderDB --> OrderService: Success
+            OrderService -> User: HTTP Response (Checkout success)
+        else Update failed
+            OrderDB --> OrderService: Error
+            OrderService -> Kafka: Publish backout event
+            OrderService -> User: HTTP Response (Checkout failed: Backout triggered)
+        end
+    else Cart Service error (code != 00)
+        CartDB --> CartService: Error
+        CartService --> OrderService: Response (error)
+
+        OrderService -> ProductService: HTTP Request (Revert Product Quantity)
+        ProductService -> ProductDB: Revert product quantity
+        alt Revert successful
+            ProductDB --> ProductService: Success
+            ProductService --> OrderService: Response (success)
+            OrderService -> OrderDB: Update transaction (REVERT)
+            alt Update successful
+                OrderDB --> OrderService: Success
+                OrderService -> User: HTTP Response (Transaction reverted)
+            else Update failed
+                OrderDB --> OrderService: Error
+                OrderService -> Kafka: Publish backout event
+                OrderService -> User: HTTP Response (Revert failed: Backout triggered)
+            end
+        else Revert failed
+            ProductDB --> ProductService: Error
+            ProductService --> OrderService: Response (error)
+
+            OrderService -> Kafka: Publish rollback event
+        end
+    end
+
+else Product Service error (code != 00)
+ProductDB --> ProductService: Error
+ProductService --> OrderService: Response (error)
+
+    OrderService -> OrderDB: Update transaction (FAIL)
+    alt Update successful
+        OrderDB --> OrderService: Success
+        OrderService -> User: HTTP Response (Transaction failed)
+    else Update failed
+        OrderDB --> OrderService: Error
+        OrderService -> Kafka: Publish backout event
+        OrderService -> User: HTTP Response (Transaction failed: Backout triggered)
+    end
+
+end

@@ -26,6 +26,6 @@ type GetCartItemDetail struct {
 	CartItemQuantity int             `json:"cartItemQuantity"`
 }
 
-type GetCartHandler interface {
+type IGetCartHandler interface {
 	Handle(ctx context.Context, req *GetCartRequest) (res *GetCartResponse, err error)
 }

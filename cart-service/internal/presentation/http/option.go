@@ -13,8 +13,7 @@ func (s *HttpServer) WithRoutingOption() option {
 		s.App.Post("/add", s.AddCartItem)
 		s.App.Post("/get-items", s.GetCart)
 		s.App.Post("/update", s.UpdateCartItem)
-		s.App.Post("/delete-cart-item", s.DeleteCartItem)
-		s.App.Post("/delete-user-cart", s.DeleteUserCart)
+		s.App.Post("/delete-cart-items", s.DeleteCartItems)
 
 		return nil
 	}
@@ -52,24 +51,11 @@ func (s *HttpServer) UpdateCartItem(ctx *fiber.Ctx) error {
 //		@ID				DeleteCartItem
 //		@Accept			json
 //		@Produce		json
-//		@Param			request	body		transport.Request[domain.DeleteCartItemRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.DeleteCartItemResponse]			"ok"
-//		@Router			/is/v1/cart-service/delete-cart-item [post]
-func (s *HttpServer) DeleteCartItem(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemRequest, *domain.DeleteCartItemResponse](ctx, fiberx.WithAuthentication())
-}
-
-//	 	@Tags 			CART SERVICE
-//		@Summary		DeleteUserCart
-//		@Description	delete all the record in table cart with corresponding userID
-//		@ID				DeleteUserCart
-//		@Accept			json
-//		@Produce		json
-//		@Param			request	body		transport.Request[domain.DeleteUserCartRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.DeleteUserCartResponse]			"ok"
-//		@Router			/is/v1/cart-service/delete-user-cart [post]
-func (s *HttpServer) DeleteUserCart(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteUserCartRequest, *domain.DeleteUserCartResponse](ctx, fiberx.WithAuthentication())
+//		@Param			request	body		transport.Request[domain.DeleteCartItemsRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.DeleteCartItemsResponse]			"ok"
+//		@Router			/is/v1/cart-service/delete-cart-items [post]
+func (s *HttpServer) DeleteCartItems(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemsRequest, *domain.DeleteCartItemsResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE

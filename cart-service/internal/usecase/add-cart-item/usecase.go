@@ -16,20 +16,20 @@ type handler struct {
 
 func NewAddCartItemHandler(
 	repo domain.ICartRepo,
-) domain.AddCartItemHandler {
+) domain.IAddCartItemHandler {
 	return &handler{
 		repo: repo,
 	}
 }
 
-// Handle implements domain.AddCartItemHandler.
+// Handle implements domain.IAddCartItemHandler.
 func (h *handler) Handle(ctx context.Context, req *domain.AddCartItemRequest) (res *domain.AddCartItemResponse, err error) {
-	logger.Info(ctx, "AddCartItemHandler start")
-	defer logger.Info(ctx, "AddCartItemHandler end")
+	logger.Info(ctx, "IAddCartItemHandler start")
+	defer logger.Info(ctx, "IAddCartItemHandler end")
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("PANIC AddCartItemHandler %v", r)
+			err = fmt.Errorf("PANIC IAddCartItemHandler %v", r)
 			logger.Errorf(ctx, err.Error())
 		}
 	}()

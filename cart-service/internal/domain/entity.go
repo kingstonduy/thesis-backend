@@ -18,8 +18,7 @@ type ICartRepo interface {
 	AddCartItem(ctx context.Context, params AddCartItemParams) error
 	GetCart(ctx context.Context, params GetCartParamsIn) (GetCartParamsOut, error)
 	UpdateCartItem(ctx context.Context, params UpdateCartItemParams) error
-	DeleteCartItem(ctx context.Context, params DeleteCartItemParams) error
-	DeleteUserCart(ctx context.Context, params DeleteUserCartParams) error
+	DeleteCartItemsByID(ctx context.Context, params DeleteCartItemParamsIn) error
 }
 
 type DeleteUserCartParams struct {
@@ -41,6 +40,10 @@ type UpdateCartItemParams struct {
 	CartItemQuantity int    `json:"cartItemQuantity"`
 }
 
-type DeleteCartItemParams struct {
+type DeleteCartItemParamsIn struct {
+	Details []DeleteCartItemParamsInDetails
+}
+
+type DeleteCartItemParamsInDetails struct {
 	CartItemID string `json:"cartItemId"`
 }
