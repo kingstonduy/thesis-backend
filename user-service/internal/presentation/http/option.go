@@ -2,9 +2,11 @@ package http_server
 
 import (
 	"encoding/json"
+	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/transport"
 	_ "github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/http/fiberx"
@@ -18,6 +20,7 @@ func (s *HttpServer) WithRoutingOption() option {
 		s.App.Post("/update", s.UpdateUserInformation)
 		s.App.Post("/register", s.Register)
 		s.App.Post("/login", s.Login)
+		s.App.Post("/check-jwt", s.CheckJwt)
 
 		return nil
 	}
@@ -33,7 +36,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.GetUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/update [post]
 func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetUserInformationRequest, *domain.GetUserInformationResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			USER SERVICE
@@ -46,7 +49,7 @@ func (s *HttpServer) GetUserInformation(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.UpdateUserInformationResponse]			"ok"
 //		@Router			/is/v1/user-service/get-product-detail [post]
 func (s *HttpServer) UpdateUserInformation(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx)
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateUserInformationRequest, *domain.UpdateUserInformationResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			USER SERVICE
@@ -87,4 +90,62 @@ func (s *HttpServer) Login(ctx *fiber.Ctx) error {
 		ctx.Response().Header.Set("jwt", jwt)
 	}
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.LoginRequest, *domain.LoginResponse](ctx, fiberx.WithPostHandlerFunc(f))
+}
+
+type Req struct {
+	Token string `json:"jwt"`
+}
+
+func (s *HttpServer) CheckJwt(ctx *fiber.Ctx) error {
+
+	var reqType transport.Request[Req]
+	err := ctx.BodyParser(&reqType)
+	if err != nil {
+		errx := errorx.AuthenticationError("")
+		resType := transport.Response[any]{
+			Result: transport.Result{
+				Code:       errx.Code,
+				StatusCode: errx.Status,
+				Message:    errx.Message,
+				Details:    errx.Details,
+			},
+		}
+		return ctx.Status(errx.Status).JSON(resType)
+	}
+	token := reqType.Data.Token
+	if token == "" {
+		errx := errorx.AuthenticationErrorWithDetails("Missing token", "")
+		resType := transport.Response[any]{
+			Result: transport.Result{
+				Code:       errx.Code,
+				StatusCode: errx.Status,
+				Message:    errx.Message,
+				Details:    errx.Details,
+			},
+		}
+		return ctx.Status(errx.Status).JSON(resType)
+	}
+
+	_, err = fiberx.VerifyToken(token)
+	if err != nil {
+		errx := errorx.AuthenticationErrorWithDetails(err.Error(), "")
+		resType := transport.Response[any]{
+			Result: transport.Result{
+				Code:       errx.Code,
+				StatusCode: errx.Status,
+				Message:    errx.Message,
+				Details:    errx.Details,
+			},
+		}
+		return ctx.Status(errx.Status).JSON(resType)
+	}
+
+	resType := transport.Response[any]{
+		Result: transport.Result{
+			Code:       "00",
+			StatusCode: http.StatusOK,
+			Message:    "success",
+		},
+	}
+	return ctx.Status(http.StatusOK).JSON(resType)
 }
