@@ -90,7 +90,7 @@ func (s *BrokerServer) Start(ctx context.Context) error {
 }
 
 func (s *BrokerServer) Stop(ctx context.Context) error {
-	logger.Info(ctx, "stopped redis server")
+	logger.Info(ctx, "stopped broker server")
 	return nil
 }
 
