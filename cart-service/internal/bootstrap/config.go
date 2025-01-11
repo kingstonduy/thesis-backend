@@ -11,7 +11,7 @@ import (
 
 func GetConfigure() config.Configure {
 	cfg, err := viper.NewViperConfig(
-		config.WithConfigFile("./resources/local.env"),
+		config.WithConfigFile("./resources/dev.env"),
 		config.WithTagName("config"),
 		config.WithAutomaticEnv(true),
 	)
@@ -89,20 +89,19 @@ type LoggerConfig struct {
 }
 
 type KafkaBrokerConfig struct {
-	Addresses                  string `config:"KAFKA_BROKERS"`
-	SASLEnabled                bool   `config:"KAFKA_SASL_ENABLED"`
-	SASLUser                   string `config:"KAFKA_SASL_USER"`
-	SASLPassword               string `config:"KAFKA_SASL_PASSWORD"`
-	SASLAlgorithm              string `config:"KAFKA_SASL_ALGORITHM"`
-	TLSEnabled                 bool   `config:"KAFKA_TLS_ENABLED"`
-	TLSSkipVerify              bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
-	TLSClientCertFile          string `config:"KAFKA_CLIENT_CERT_FILE"`
-	TLSClientKeyFile           string `config:"KAFKA_CLIENT_KEY_FILE"`
-	TLSCaCertFile              string `config:"KAFKA_CA_CERT_FILE"`
-	MessageTimeout             int    `config:"KAFKA_MESSAGE_TIMEOUT"`
-	ConsumerGroup              string `config:"KAFKA_CONSUMERGROUP"`
-	RollbackErrorConsumerGroup string `config:"KAFKA_ROLLBACK_ERROR_CONSUMER_GROUP"`
-	HandlerPool                int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	Addresses         string `config:"KAFKA_BROKERS"`
+	SASLEnabled       bool   `config:"KAFKA_SASL_ENABLED"`
+	SASLUser          string `config:"KAFKA_SASL_USER"`
+	SASLPassword      string `config:"KAFKA_SASL_PASSWORD"`
+	SASLAlgorithm     string `config:"KAFKA_SASL_ALGORITHM"`
+	TLSEnabled        bool   `config:"KAFKA_TLS_ENABLED"`
+	TLSSkipVerify     bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
+	TLSClientCertFile string `config:"KAFKA_CLIENT_CERT_FILE"`
+	TLSClientKeyFile  string `config:"KAFKA_CLIENT_KEY_FILE"`
+	TLSCaCertFile     string `config:"KAFKA_CA_CERT_FILE"`
+	ConsumerGroup     string `config:"KAFKA_CONSUMERGROUP"`
+	HandlerPool       int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	ProductCDCTopic   string `config:"PRODUCT_DB_CDC_TOPIC"`
 }
 
 type RedisConfig struct {
