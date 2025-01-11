@@ -96,6 +96,10 @@ type Req struct {
 	Token string `json:"jwt"`
 }
 
+type CheckJwtResponse struct {
+	UserID string `json:"userId"`
+}
+
 func (s *HttpServer) CheckJwt(ctx *fiber.Ctx) error {
 
 	var reqType transport.Request[Req]
@@ -126,7 +130,7 @@ func (s *HttpServer) CheckJwt(ctx *fiber.Ctx) error {
 		return ctx.Status(errx.Status).JSON(resType)
 	}
 
-	_, err = fiberx.VerifyToken(token)
+	userID, err := fiberx.VerifyToken(token)
 	if err != nil {
 		errx := errorx.AuthenticationErrorWithDetails(err.Error(), "")
 		resType := transport.Response[any]{
@@ -145,6 +149,9 @@ func (s *HttpServer) CheckJwt(ctx *fiber.Ctx) error {
 			Code:       "00",
 			StatusCode: http.StatusOK,
 			Message:    "success",
+		},
+		Data: CheckJwtResponse{
+			UserID: userID,
 		},
 	}
 	return ctx.Status(http.StatusOK).JSON(resType)

@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/user-service/internal/domain"
@@ -59,7 +58,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.LoginRequest) (res *do
 	}
 
 	return &domain.LoginResponse{
-		UserID: uuid.New().String(),
+		UserID: user.UserID,
 	}, nil
 }
 
