@@ -10,7 +10,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/jackc/pgtype v1.14.4
 	github.com/jackc/pgx/v5 v5.7.1
-	github.com/kingstonduy/go-core v0.0.3
+	github.com/kingstonduy/go-core v0.0.5
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/replicase/pgcapture v0.0.65
@@ -170,4 +170,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core
+// replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core
