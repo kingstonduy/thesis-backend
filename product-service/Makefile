@@ -32,4 +32,5 @@ go-build:
 
 deploy:
 	docker build -t product-service .
-	docker run --rm -p 7002:7002 product-service
+	docker run --rm -d -p 7002:7002 --name product-service product-service
+
