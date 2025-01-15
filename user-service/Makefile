@@ -32,5 +32,5 @@ go-build:
 
 deploy:
 	docker build -t user-service .
-	docker run --rm -d -p 7001:7001 --name user-service user-service
+	docker run -d -p 7001:7001 --name user-service user-service
 
