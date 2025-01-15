@@ -31,6 +31,7 @@ go-build:
 	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
 
 deploy:
+	docker container rm cart-service
 	docker build -t cart-service .
 	docker run -d -p 7003:7003 --name cart-service cart-service
 

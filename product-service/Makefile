@@ -31,6 +31,7 @@ go-build:
 	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
 
 deploy:
+	docker container rm product-service
 	docker build -t product-service .
 	docker run -d -p 7002:7002 --name product-service product-service
 
