@@ -29,3 +29,7 @@ gen-converage:
 
 go-build:
 	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
+
+deploy:
+	docker build -t product-service .
+	docker run --rm -p 7002:7002 product-service
