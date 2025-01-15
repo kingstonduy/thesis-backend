@@ -26,3 +26,11 @@ gen-mock:
 gen-converage:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=./coverage.out -o coverage.html
+
+go-build:
+	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
+
+deploy:
+	docker build -t user-service .
+	docker run --rm -d -p 7002:7002 --name user-service user-service
+
