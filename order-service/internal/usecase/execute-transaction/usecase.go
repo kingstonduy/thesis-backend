@@ -9,33 +9,29 @@ import (
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/transport"
+	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
-	"github.com/kingstonduy/order-service/internal/pkg/utils"
-	"github.com/pkg/errors"
 )
 
 type handler struct {
 	orderRepo       domain.IOrderRepo
 	transactionRepo domain.ITransactionRepo
 	db              *configuration.PostgresCon
-	cartOutbound    domain.ICartOutbound
-	productOutbound domain.IProductOutbound
+	kafka           broker.Broker
 }
 
 func NewExecuteTransactionHandler(
 	orderRepo domain.IOrderRepo,
 	transactionRepo domain.ITransactionRepo,
 	db *configuration.PostgresCon,
-	cartOutbound domain.ICartOutbound,
-	productOutbound domain.IProductOutbound,
+	kafka broker.Broker,
 ) domain.IExecuteTransactionHandler {
 	return &handler{
 		orderRepo:       orderRepo,
 		transactionRepo: transactionRepo,
 		db:              db,
-		cartOutbound:    cartOutbound,
-		productOutbound: productOutbound,
+		kafka:           kafka,
 	}
 }
 
@@ -72,7 +68,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 	}
 
 	// insert db
-	err = h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
+	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range orderItems {
 			err = h.orderRepo.Insert(ctx, item)
 			if err != nil {
@@ -88,48 +84,29 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 
 		return nil
 	})
-
-	// gọi cart
-	_, err = h.cartOutbound.ExecuteTransaction(ctx, transport.Request[domain.CartExecuteTransactionRequest]{
-		Data:  getCartExecuteTransactionRequest(*req),
-		Trace: utils.GenRequestTrace(trace, "cart-service", ""),
-	})
 	if err != nil {
-		transaction.Status = domain.FAILED_STATUS
-		if err2 := h.transactionRepo.Update(ctx, transaction); err2 != nil {
-			errx := errorx.FailedWithDetails(errors.Wrap(err, err2.Error()).Error(), "")
-			logger.Error(ctx, errx.Error())
-			return nil, errx
-		}
+		errx := errorx.FailedWithDetails(err.Error(), "")
+		logger.Error(ctx, errx.Error())
+		return nil, errx
+	}
+	if err1 != nil {
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}
 
-	// gọi product
-	_, err = h.productOutbound.ExecuteTransaction(ctx, transport.Request[domain.ProductExecuteTransactionRequest]{
-		Data:  getProductExecuteTransactionRequest(*req),
-		Trace: utils.GenRequestTrace(trace, "product-service", ""),
-	})
-	if err != nil {
-		transaction.Status = domain.FAILED_STATUS
-		if err2 := h.transactionRepo.Update(ctx, transaction); err2 != nil {
-			errx := errorx.FailedWithDetails(errors.Wrap(err, err2.Error()).Error(), "")
-			logger.Error(ctx, errx.Error())
-			return nil, errx
-		}
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
+	// TODO add redis channel
+	cmd := domain.Command[domain.ProductExecuteTransactionRequest]{
+		AggregateID: trace.Sid,
+		CommandID:   uuid.New().String(),
+		CommandType: domain.EXECUTE_TRANSACTION_COMMAND,
+		Payloay:     getProductExecuteTransactionRequest(*req),
+		ReplyTo:     "redis-channel+uuid",
 	}
+	_ = cmd
+	// h.kafka.Publish(ctx, "")
 
-	// update transaction
-	transaction.Status = domain.COMPLETE_STATUS
-	if err = h.transactionRepo.Update(ctx, transaction); err != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
-	}
+	// TODO use redis pubsub to wait
 
 	return res, nil
 }

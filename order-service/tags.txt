@@ -1,4 +1,0 @@
-github.com/kingstonduy/order-service
-Checkout checkout
-GetCheckoutItem get_checkout_item
-GetHistory get_history

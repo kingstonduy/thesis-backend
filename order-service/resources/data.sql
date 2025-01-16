@@ -1,13 +1,3 @@
-CREATE TABLE public."CART_ITEM" (
-	"CART_ITEM_ID" uuid NOT NULL DEFAULT gen_random_uuid(),
-	"USER_ID" uuid NOT NULL,
-	"PRODUCT_ID" uuid NOT NULL,
-	"CART_ITEM_QUANTITY" numeric NOT NULL,
-	"CREATED_AT" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	"UPDATED_AT" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT "CART_ITEM_pkey" PRIMARY KEY ("CART_ITEM_ID")
-);
-
 CREATE TABLE public."ORDER_ITEM" (
     "ORDER_ID" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "PRODUCT_ID" UUID NOT NULL,
@@ -28,17 +18,11 @@ CREATE TABLE "TRANSACTION" (
     "UPDATED_AT" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE public."PRODUCT" (
-	"PRODUCT_ID" uuid NOT NULL DEFAULT gen_random_uuid(),
-	"PRODUCT_NAME" varchar(500) NOT NULL,
-	"PRODUCT_DESCRIPTION" json NOT NULL,
-	"PRODUCT_IMAGE" text NOT NULL,
-	"PRODUCT_QUANTITY" int4 NOT NULL,
-	"PRODUCT_PRICE" numeric(10, 2) NOT NULL,
-	"CREATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-	"UPDATED_AT" timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-	"PRODUCT_CATEGORY" varchar(50) NOT NULL,
-	"GENDER" varchar(10) NOT NULL,
-	"AVERAGE_RATING" numeric(3, 2) NULL,
-	CONSTRAINT "PRODUCT_pkey" PRIMARY KEY ("PRODUCT_ID")
+CREATE TABLE "OUTBOX" (
+    "AGGREGATE_ID" uuid NOT NULL,   -- Corresponds to AggregateID
+    "COMMAND_ID" uuid NOT NULL,    -- Corresponds to CommandID
+    "COMMAND_TYPE" VARCHAR(255) NOT NULL,  -- Corresponds to CommandType
+    "PAYLOAD" text,                       -- Corresponds to Payloay, stored as JSON for flexibility
+    "REPLY_TO" VARCHAR(255),               -- Corresponds to ReplyTo
+    PRIMARY KEY ("COMMAND_ID")             -- Unique identifier for each command
 );
