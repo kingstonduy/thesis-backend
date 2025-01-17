@@ -18,7 +18,7 @@ type OrderEntity struct {
 
 type IOrderRepo interface {
 	Insert(ctx context.Context, orderEntity OrderEntity) error
-	Update(ctx context.Context, orderEntity OrderEntity) error
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
 	GetHistory(ctx context.Context, params GetHistoryParamIn) (GetHistoryResponse, error)
 }
 

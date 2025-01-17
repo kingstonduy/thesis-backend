@@ -50,6 +50,7 @@ type Configuration struct {
 	TraceConfig       TracerConfig      `config:",squash"`
 	HttpConfig        HttpConfig        `config:",squash"`
 	PostgresConfig    PostgresConfig    `config:",squash"`
+	RedisConfig       RedisConfig       `config:",squash"`
 }
 
 type PostgresConfig struct {
@@ -108,8 +109,7 @@ type KafkaBrokerConfig struct {
 }
 
 type RedisConfig struct {
-	Address  string `config:"REDIS_ADDRESSES"`
-	Username string `config:"REDIS_USERNAME"`
-	Password string `config:"REDIS_PASSWORD"`
-	Prefix   string `config:"REDIS_SERVER_PREFIX"`
+	Addresses []string `config:"REDIS_ADDRESSES"`
+	Username  string   `config:"REDIS_USERNAME"`
+	Password  string   `config:"REDIS_PASSWORD"`
 }

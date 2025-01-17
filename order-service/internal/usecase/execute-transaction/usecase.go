@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -12,26 +13,33 @@ import (
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
+	redix "github.com/kingstonduy/order-service/internal/pkg/redis_broker"
 )
 
 type handler struct {
 	orderRepo       domain.IOrderRepo
 	transactionRepo domain.ITransactionRepo
+	outboxRepo      domain.IOutboxRepo
 	db              *configuration.PostgresCon
 	kafka           broker.Broker
+	redisPubSub     redix.PubSubBroker
 }
 
 func NewExecuteTransactionHandler(
 	orderRepo domain.IOrderRepo,
 	transactionRepo domain.ITransactionRepo,
+	outboxRepo domain.IOutboxRepo,
 	db *configuration.PostgresCon,
 	kafka broker.Broker,
+	redisPubSub redix.PubSubBroker,
 ) domain.IExecuteTransactionHandler {
 	return &handler{
 		orderRepo:       orderRepo,
 		transactionRepo: transactionRepo,
+		outboxRepo:      outboxRepo,
 		db:              db,
 		kafka:           kafka,
+		redisPubSub:     redisPubSub,
 	}
 }
 
@@ -48,6 +56,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 	}()
 
 	trace := transport.GetTraceByCtx(ctx)
+
 	now := time.Now()
 	transaction := domain.TransactionEntity{
 		TransactionID: uuid.New().String(),
@@ -56,15 +65,26 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 		CreatedAt:     now,
 		UpdatedAt:     now,
 	}
+
 	var orderItems = []domain.OrderEntity{}
 	for _, reqDetails := range req.Details {
 		orderItems = append(orderItems, domain.OrderEntity{
+			OrderID:       uuid.New().String(),
 			ProductID:     reqDetails.ProductID,
 			UserID:        req.UserID,
 			TransactionID: transaction.TransactionID,
 			CreatedAt:     now,
 			UpdatedAt:     now,
 		})
+	}
+
+	payloadStr, _ := json.Marshal(req)
+	var outbox domain.OutboxEntity = domain.OutboxEntity{
+		AggregateID: trace.Sid,
+		CommandID:   uuid.New().String(),
+		CommandType: domain.ORDER_INIT_TRANSACTION_COMMAND,
+		Payloay:     string(payloadStr),
+		ReplyTo:     h.redisPubSub.GetChannel(),
 	}
 
 	// insert db
@@ -79,6 +99,13 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 
 		err = h.transactionRepo.Insert(ctx, transaction)
 		if err != nil {
+			logger.Error(ctx, err)
+			return err
+		}
+
+		err = h.outboxRepo.Insert(ctx, outbox)
+		if err != nil {
+			logger.Error(ctx, err)
 			return err
 		}
 
@@ -95,18 +122,32 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 		return nil, errx
 	}
 
-	// TODO add redis channel
-	cmd := domain.Command[domain.ProductExecuteTransactionRequest]{
-		AggregateID: trace.Sid,
-		CommandID:   uuid.New().String(),
-		CommandType: domain.EXECUTE_TRANSACTION_COMMAND,
-		Payloay:     getProductExecuteTransactionRequest(*req),
-		ReplyTo:     "redis-channel+uuid",
+	// TODO add redis pubsub here to listen event
+	resultStr, err := h.redisPubSub.GetValue(ctx, trace.Sid, time.Second*10)
+	if err != nil {
+		errx := errorx.FailedWithDetails(err.Error(), "")
+		logger.Error(ctx, errx.Error())
+		return nil, errx
 	}
-	_ = cmd
-	// h.kafka.Publish(ctx, "")
 
-	// TODO use redis pubsub to wait
+	var result transport.Result
+	err = json.Unmarshal([]byte(resultStr), &result)
+	if err != nil {
+		errx := errorx.FailedWithDetails(err.Error(), "")
+		logger.Error(ctx, errx.Error())
+		return nil, errx
+	}
 
-	return res, nil
+	if result.Code == errorx.DefaultSuccessResponseCode {
+		return nil, nil
+	} else {
+		errx := &errorx.Error{
+			Code:    result.Code,
+			Status:  result.StatusCode,
+			Message: result.Message,
+			Details: result.Details,
+		}
+		logger.Error(ctx, errx.Error())
+		return nil, errx
+	}
 }

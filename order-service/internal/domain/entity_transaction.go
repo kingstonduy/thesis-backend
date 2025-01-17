@@ -38,6 +38,5 @@ func (tr TransactionEntity) GetFailedStatus() string {
 
 type ITransactionRepo interface {
 	Insert(ctx context.Context, tr TransactionEntity) error
-	Update(ctx context.Context, tr TransactionEntity) error
-	SelectByTransactionEntityID(ctx context.Context, id string) (TransactionEntity, error)
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
 }

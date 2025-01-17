@@ -27,7 +27,7 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Success		200		{object}	transport.Response[domain.ExecuteTransactionResponse]			"ok"
 //		@Router			/is/v1/order-service/execute-transaction [post]
 func (s *HttpServer) ExecuteTransaction(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.ExecuteTransactionRequest, *domain.ExecuteTransactionResponse](ctx, fiberx.WithAuthentication())
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.ExecuteTransactionRequest, *domain.ExecuteTransactionResponse](ctx)
 }
 
 //	 	@Tags 			ORDER SERVICE
@@ -40,5 +40,5 @@ func (s *HttpServer) ExecuteTransaction(ctx *fiber.Ctx) error {
 //		@Success		200		{object}	transport.Response[domain.GetHistoryResponse]			"ok"
 //		@Router			/is/v1/order-service/get-history [post]
 func (s *HttpServer) GetHistory(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetHistoryRequest, *domain.GetHistoryResponse](ctx, fiberx.WithAuthentication())
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetHistoryRequest, *domain.GetHistoryResponse](ctx)
 }

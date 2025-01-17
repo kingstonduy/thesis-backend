@@ -26,3 +26,12 @@ gen-mock:
 gen-converage:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -html=./coverage.out -o coverage.html
+
+go-build:
+	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
+
+deploy:
+	docker container rm order-service
+	docker build -t order-service .
+	docker run -d -p 7005:7005 --name order-service order-service
+

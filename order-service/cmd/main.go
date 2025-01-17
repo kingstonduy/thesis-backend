@@ -6,12 +6,12 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
-	"github.com/kingstonduy/order-service/internal/infra/outbound"
 	"github.com/kingstonduy/order-service/internal/infra/postgres"
 	execute_transaction_uc "github.com/kingstonduy/order-service/internal/usecase/execute-transaction"
 	get_history_uc "github.com/kingstonduy/order-service/internal/usecase/get-history"
 
 	http_server "github.com/kingstonduy/order-service/internal/presentation/http"
+	redis_server "github.com/kingstonduy/order-service/internal/presentation/redis_pubsub"
 	"go.uber.org/fx"
 )
 
@@ -26,6 +26,8 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetMetrics),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
+	fx.Provide(configuration.NewRedisClusterClient),
+	fx.Provide(configuration.NewRedixBroker),
 	fx.Provide(configuration.NewRestyClient),
 	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetValidator),
@@ -38,13 +40,13 @@ var usecaseModule = fx.Module("usecase",
 
 var serverModule = fx.Module("server",
 	fx.Provide(http_server.NewHttpServer),
+	fx.Provide(redis_server.NewRedisServer),
 )
 
 var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewOrderRepo),
 	fx.Provide(postgres.NewTransactionRepo),
-	fx.Provide(outbound.NewCartOutbound),
-	fx.Provide(outbound.NewProductOutbound),
+	fx.Provide(postgres.NewOutboxRepo),
 )
 
 func main() {
@@ -59,6 +61,7 @@ func main() {
 
 func run(
 	lc fx.Lifecycle,
+	redisServer *redis_server.RedisServer,
 	HttpServer *http_server.HttpServer,
 	log logger.Logger,
 	shutdowner fx.Shutdowner,
@@ -74,6 +77,7 @@ func run(
 					shutdowner.Shutdown()
 				}),
 				server.WithServer("httpServer", HttpServer),
+				server.WithServer("redisServer", redisServer),
 			)
 
 			return serverWrapper.Start(gCtx)
