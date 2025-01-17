@@ -1,0 +1,15 @@
+package domain
+
+type Command[T any] struct {
+	AggregateID string `json:"AGGREGATE_ID" db:"AGGREGATE_ID"`
+	CommandID   string `json:"COMMAND_ID" db:"COMMAND_ID"`
+	CommandType string `json:"COMMAND_TYPE" db:"COMMAND_TYPE"`
+	Payload     T      `json:"PAYLOAD" db:"PAYLOAD"`
+	ReplyTo     string `json:"REPLY_TO" db:"REPLY_TO"`
+}
+
+const (
+	ORDER_INIT_TRANSACTION_COMMAND        = "ORDER_INIT_TRANSACTION_COMMAND"
+	PRODUCT_COMPLETED_TRANSACTION_COMMAND = "PRODUCT_COMPLETED_TRANSACTION_COMMAND"
+	PRODUCT_FAILED_TRANSACTION_COMMAND    = "PRODUCT_FAILED_TRANSACTION_COMMAND"
+)

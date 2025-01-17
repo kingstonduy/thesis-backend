@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/kingstonduy/go-core/logger"
+	"github.com/kingstonduy/go-core/pipeline"
 	"github.com/kingstonduy/go-core/transport/broker"
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
 	"github.com/kingstonduy/product-service/internal/domain"
@@ -23,19 +24,25 @@ func WithSubscriptions() BrokerServerStartOption {
 	return func(b *BrokerServer) error {
 		g := new(errgroup.Group)
 
+		brokerCfg := b.cfg.BrokerConfig
+		// TODO open later
+		// g.Go(func() error {
+		// 	return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
+		// })
+		g.Go(func() error {
+			return b.OutboxHandler(brokerCfg.OrderOutboxTopic)
+		})
+
 		// wait for the subscription result, return error if present
 		if err := g.Wait(); err != nil {
 			return err
 		}
 
-		brokerCfg := b.cfg.BrokerConfig
-
-		b.CDCConsumer(brokerCfg.ProductCDCTopic)
 		return nil
 	}
 }
 
-func (b *BrokerServer) CDCConsumer(topic string) error {
+func (b *BrokerServer) ProductCDCHandler(topic string) error {
 	logger.Infof(context.TODO(), "consume from topic=%s", topic)
 	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
 		e.Ack()
@@ -55,6 +62,50 @@ func (b *BrokerServer) CDCConsumer(topic string) error {
 
 		// logger.Infof(c, "received event: %v", event)
 
+		return nil
+	}, b.GetSubscriptionOptions()...)
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer subscriber.Unsubscribe()
+		<-b.quit
+	}()
+	return nil
+}
+
+func (b *BrokerServer) OutboxHandler(topic string) error {
+	ctx := context.TODO()
+	logger.Infof(ctx, "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
+		e.Ack()
+
+		var event domain.Event[domain.OutboxEntity]
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
+			return err
+		}
+
+		switch event.Payload.After.CommandType {
+		case domain.ORDER_INIT_TRANSACTION_COMMAND:
+			cmd := domain.Command[domain.ExecuteTransactionRequest]{
+				AggregateID: event.Payload.After.AggregateID,
+				CommandID:   event.Payload.After.CommandID,
+				CommandType: event.Payload.After.CommandType,
+				ReplyTo:     event.Payload.After.ReplyTo,
+			}
+
+			if err := json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload); err != nil {
+				logger.Errorf(ctx, "failed to unmarshal command: %v", err)
+			} else {
+				_, err = pipeline.Send[*domain.Command[domain.ExecuteTransactionRequest], *domain.ExecuteTransactionResponse](ctx, &cmd)
+				if err != nil {
+					logger.Error(ctx, err)
+				}
+			}
+		}
+
+		logger.Infof(c, "consume message=%v", event)
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {

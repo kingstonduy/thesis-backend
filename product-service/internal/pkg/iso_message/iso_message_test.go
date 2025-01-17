@@ -1,0 +1,19 @@
+package isomessage
+
+import (
+	"testing"
+
+	"github.com/test-go/testify/assert"
+)
+
+func TestParsingIsoMessage(t *testing.T) {
+	hmac := `7235CFDE06BD96B8D4811B655C36594D`
+	s := "04150200F23A44810CE1801600000000170001011600371000232980019120000000040000001106073323363836143323110611067399000050697044843110736383610369800000001000000000000001OCB EBANKING           TP HCM        VNM033ACCOUNT.TITLE.1-0037100023298001\r7040020406IF_DEP0184129OCBB880430610606970406160037100023298001165218xxxxxxxx9999015chuyentiennapas013NGUYENVANTEST535CFB4570535085643435A3A9156F927A0F7EEC8F8EF777577688909EE14A51"
+	isoMessage, err := ToIsoMessage(s, hmac)
+	assert.NoError(t, err, "should parsing without error")
+
+	expected_sender := "ACCOUNT.TITLE.1-0037100023298001\r"
+	actual_sender := isoMessage.GetField(48)
+	assert.Equal(t, expected_sender, actual_sender, "sender from field 48 should match")
+
+}

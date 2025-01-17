@@ -12,7 +12,6 @@ func ResgisterPipeline(
 	IRevertTransactionHandler domain.IRevertTransactionHandler,
 	IGetProductsByGenderHandler domain.IGetProductsByGenderHandler,
 	IGetProductsByCategoryHandler domain.IGetProductsByCategoryHandler,
-
 ) {
 	pipeline.RegisterRequestHandler(IGetProductsHandler)
 	pipeline.RegisterRequestHandler(IGetProductDetailHandler)

@@ -9,6 +9,7 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/domain"
+	gensql "github.com/kingstonduy/product-service/internal/pkg/gen_sql"
 )
 
 const (
@@ -250,42 +251,29 @@ func (repo *productRepoImlp) GetProductByID(ctx context.Context, productID strin
 	return entity, nil
 }
 
-// UpdateProductByID implements domain.IProductRepo.
-func (repo *productRepoImlp) UpdateProductByID(ctx context.Context, product domain.ProductEntity) error {
-	logger.Info(ctx, "GetProductByID start")
-	defer logger.Info(ctx, "GetProductByID end")
+// Update implements domain.IProductRepo.
+func (repo *productRepoImlp) Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error {
+	logger.Info(ctx, "Update PRODUCT starts")
+	defer logger.Info(ctx, "Update PRODUCT ends")
 
-	sqlQuery := `
-        UPDATE public."PRODUCT"
-        SET 
-            "PRODUCT_NAME"=$2, 
-            "PRODUCT_DESCRIPTION"=$3, 
-            "PRODUCT_IMAGE"=$4, 
-            "PRODUCT_QUANTITY"=$5, 
-            "PRODUCT_PRICE"=$6, 
-            "CREATED_AT"=CURRENT_TIMESTAMP, 
-            "UPDATED_AT"=CURRENT_TIMESTAMP, 
-            "PRODUCT_CATEGORY"=$7, 
-            "GENDER"=$8,
-            "TOTAL_RATING"=$10,
-        WHERE 
-            "PRODUCT_ID"=$1 AND
-            "UPDATED_AT"=$9
-    `
-	res, err := repo.db.DB.Exec(ctx, sqlQuery,
-		product.ProductID, product.ProductName, product.ProductDescription,
-		product.ProductImage, product.ProductQuantity, product.ProductPrice,
-		product.ProductCategory, product.Gender, product.UpdatedAt, product.TotalRating,
-	)
+	sqlQuery, err := gensql.GenUpdateSql("PRODUCT", cols, conditions)
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := res.RowsAffected()
+	logger.Info(ctx, sqlQuery)
+
+	res, err := repo.db.DB.Exec(ctx, sqlQuery)
 	if err != nil {
 		return err
 	}
-	if rowsAffected == 0 {
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affectedRows == 0 {
 		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
 	}
 

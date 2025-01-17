@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"context"
-)
+import "context"
 
 type ExecuteTransactionRequest struct {
 	UserID  string                            `json:"userID"`
@@ -10,7 +8,12 @@ type ExecuteTransactionRequest struct {
 }
 
 type ExecuteTransactionRequestDetail struct {
+	CartItemID       string `json:"cartItemId"`
 	ProductID        string `json:"productId"`
+	ProductName      string `json:"productName"`
+	ProductImage     string `json:"productImage"`
+	ProductCatergory string `json:"productCatergory"`
+	ProductPrice     string `json:"productPrice"`
 	CartItemQuantity int    `json:"cartItemQuantity"`
 }
 
@@ -18,5 +21,5 @@ type ExecuteTransactionResponse struct {
 }
 
 type IExecuteTransactionHandler interface {
-	Handle(ctx context.Context, req *ExecuteTransactionRequest) (*ExecuteTransactionResponse, error)
+	Handle(ctx context.Context, req *Command[ExecuteTransactionRequest]) (*ExecuteTransactionResponse, error)
 }

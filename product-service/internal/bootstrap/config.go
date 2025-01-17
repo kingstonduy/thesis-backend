@@ -11,7 +11,7 @@ import (
 
 func GetConfigure() config.Configure {
 	cfg, err := viper.NewViperConfig(
-		config.WithConfigFile("./resources/dev.env"),
+		config.WithConfigFile("./resources/local.env"),
 		config.WithTagName("config"),
 		config.WithAutomaticEnv(true),
 	)
@@ -101,7 +101,8 @@ type KafkaBrokerConfig struct {
 	TLSCaCertFile     string `config:"KAFKA_CA_CERT_FILE"`
 	ConsumerGroup     string `config:"KAFKA_CONSUMERGROUP"`
 	HandlerPool       int    `config:"KAFKA_HANDLER_PUBLISHER"`
-	ProductCDCTopic   string `config:"PRODUCT_DB_CDC_TOPIC"`
+	ProductCDCTopic   string `config:"PRODUCT_SERVICE_TOPIC"`
+	OrderOutboxTopic  string `config:"ORDER_SERVICE_OUTBOX_TOPIC"`
 }
 
 type RedisConfig struct {

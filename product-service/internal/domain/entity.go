@@ -23,9 +23,9 @@ type ProductEntity struct {
 type IProductRepo interface {
 	GetAllProduct(ctx context.Context) ([]ProductEntity, error)
 	GetProductByID(ctx context.Context, productID string) (ProductEntity, error)
-	UpdateProductByID(ctx context.Context, product ProductEntity) error
 	GetProductByGender(ctx context.Context, gender string) ([]ProductEntity, error)
 	GetProductByCategory(ctx context.Context, category string) ([]ProductEntity, error)
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
 }
 
 type ProductCdc struct {

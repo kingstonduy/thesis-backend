@@ -20,7 +20,7 @@ import (
 )
 
 var configModule = fx.Module("config",
-	fx.Provide(configuration.NewBroker),
+	fx.Provide(configuration.GetKafkaBroker),
 	fx.Provide(configuration.NewCircuitBreaker),
 	fx.Provide(configuration.GetConfigurationInstance),
 	fx.Invoke(configuration.SetDefaults),
@@ -30,7 +30,9 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetMetrics),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
+	fx.Provide(configuration.NewRedisClusterClient),
 	fx.Provide(configuration.NewCacheClient),
+	fx.Provide(configuration.NewRedixBroker),
 	fx.Provide(configuration.NewRestyClient),
 	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetValidator),
@@ -52,6 +54,7 @@ var serverModule = fx.Module("server",
 
 var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewProductRepoImpl),
+	fx.Provide(postgres.NewOutboxRepo),
 )
 
 func main() {
