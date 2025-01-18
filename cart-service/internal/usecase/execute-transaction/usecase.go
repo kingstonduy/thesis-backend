@@ -59,9 +59,6 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 	req := cmd.Payload
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
-		err = fmt.Errorf("error simulating")
-		return nil
-
 		for _, item := range req.Details {
 			err = h.cartRepo.DeleteById(ctx, item.CartItemID)
 			if err != nil {
