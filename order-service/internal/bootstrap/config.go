@@ -42,15 +42,14 @@ func GetConfigurationInstance() *Configuration {
 }
 
 type Configuration struct {
-	BrokerConfig KafkaBrokerConfig `config:",squash"`
-
+	BrokerConfig      KafkaBrokerConfig `config:",squash"`
+	RedisConfig       RedisConfig       `config:",squash"`
 	ServerConfig      ServerConfig      `config:",squash"`
 	HealthCheckConfig HealthCheckConfig `config:",squash"`
 	LoggerConfig      LoggerConfig      `config:",squash"`
 	TraceConfig       TracerConfig      `config:",squash"`
 	HttpConfig        HttpConfig        `config:",squash"`
 	PostgresConfig    PostgresConfig    `config:",squash"`
-	RedisConfig       RedisConfig       `config:",squash"`
 }
 
 type PostgresConfig struct {
@@ -67,9 +66,7 @@ type PostgresConfig struct {
 }
 
 type HttpConfig struct {
-	BaseUrl                      string `config:"BASE_URL"`
-	ExecuteTransactionCartUrl    string `config:"EXECUTE_TRANSACTION_CART_URL"`
-	ExecuteTransactionProductUrl string `config:"EXECUTE_TRANSACTION_PRODUCT_URL"`
+	BaseUrl string `config:"BASE_URL"`
 }
 
 type ServerConfig struct {
@@ -92,20 +89,23 @@ type LoggerConfig struct {
 }
 
 type KafkaBrokerConfig struct {
-	Addresses                  string `config:"KAFKA_BROKERS"`
-	SASLEnabled                bool   `config:"KAFKA_SASL_ENABLED"`
-	SASLUser                   string `config:"KAFKA_SASL_USER"`
-	SASLPassword               string `config:"KAFKA_SASL_PASSWORD"`
-	SASLAlgorithm              string `config:"KAFKA_SASL_ALGORITHM"`
-	TLSEnabled                 bool   `config:"KAFKA_TLS_ENABLED"`
-	TLSSkipVerify              bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
-	TLSClientCertFile          string `config:"KAFKA_CLIENT_CERT_FILE"`
-	TLSClientKeyFile           string `config:"KAFKA_CLIENT_KEY_FILE"`
-	TLSCaCertFile              string `config:"KAFKA_CA_CERT_FILE"`
-	MessageTimeout             int    `config:"KAFKA_MESSAGE_TIMEOUT"`
-	ConsumerGroup              string `config:"KAFKA_CONSUMERGROUP"`
-	RollbackErrorConsumerGroup string `config:"KAFKA_ROLLBACK_ERROR_CONSUMER_GROUP"`
-	HandlerPool                int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	Addresses          string `config:"KAFKA_BROKERS"`
+	SASLEnabled        bool   `config:"KAFKA_SASL_ENABLED"`
+	SASLUser           string `config:"KAFKA_SASL_USER"`
+	SASLPassword       string `config:"KAFKA_SASL_PASSWORD"`
+	SASLAlgorithm      string `config:"KAFKA_SASL_ALGORITHM"`
+	TLSEnabled         bool   `config:"KAFKA_TLS_ENABLED"`
+	TLSSkipVerify      bool   `config:"KAFKA_TLS_SKIP_VERIFY"`
+	TLSClientCertFile  string `config:"KAFKA_CLIENT_CERT_FILE"`
+	TLSClientKeyFile   string `config:"KAFKA_CLIENT_KEY_FILE"`
+	TLSCaCertFile      string `config:"KAFKA_CA_CERT_FILE"`
+	ConsumerGroup      string `config:"KAFKA_CONSUMERGROUP"`
+	HandlerPool        int    `config:"KAFKA_HANDLER_PUBLISHER"`
+	ProductCDCTopic    string `config:"PRODUCT_SERVICE_TOPIC"`
+	OrderOutboxTopic   string `config:"ORDER_SERVICE_OUTBOX_TOPIC"`
+	ProductOutboxTopic string `config:"PRODUCT_SERVICE_OUTBOX_TOPIC"`
+	CartOutboxTopic    string `config:"CART_SERVICE_OUTBOX_TOPIC"`
+	CartTopic          string `config:"CART_TOPIC"`
 }
 
 type RedisConfig struct {

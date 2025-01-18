@@ -83,7 +83,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 		AggregateID: trace.Sid,
 		CommandID:   uuid.New().String(),
 		CommandType: domain.ORDER_INIT_TRANSACTION_COMMAND,
-		Payloay:     string(payloadStr),
+		Payload:     string(payloadStr),
 		ReplyTo:     h.redisPubSub.GetChannel(),
 	}
 
@@ -122,10 +122,14 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 		return nil, errx
 	}
 
-	// TODO add redis pubsub here to listen event
 	resultStr, err := h.redisPubSub.GetValue(ctx, trace.Sid, time.Second*10)
 	if err != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
+		if err == redix.ErrTimeout {
+			errx := errorx.TimeoutErrorWithDetails(err.Error(), "")
+			logger.Error(ctx, errx.Error())
+			return nil, errx
+		}
+		errx := errorx.Failed(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}

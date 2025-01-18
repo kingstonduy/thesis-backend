@@ -21,6 +21,7 @@ require (
 	github.com/swaggo/swag v1.16.4
 	github.com/test-go/testify v1.1.4
 	go.uber.org/fx v1.23.0
+	golang.org/x/sync v0.10.0
 )
 
 require (
@@ -94,6 +95,8 @@ require (
 	github.com/prometheus/common v0.48.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
+	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5 // indirect
+	github.com/redis/go-redis/extra/redisotel/v9 v9.0.5 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
@@ -129,7 +132,6 @@ require (
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
