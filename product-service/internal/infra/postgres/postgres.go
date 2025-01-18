@@ -227,26 +227,34 @@ func (repo *productRepoImlp) GetProductByID(ctx context.Context, productID strin
 	logger.Info(ctx, "GetProductByID start")
 	defer logger.Info(ctx, "GetProductByID end")
 
-	key := REDIS_KEY_GET_PRODUCT_ID + "-" + productID
+	// key := REDIS_KEY_GET_PRODUCT_ID + "-" + productID
+	// dur, err := repo.redisCLient.Get(ctx, key, &entity)
+	// if dur == -2 || err != nil {
+	// 	logger.Errorf(ctx, "cache miss key=%s", key)
+	// 	sqlQuery := `
+	//     select * from "PRODUCT" where "PRODUCT_ID"=$1;
+	// `
 
-	dur, err := repo.redisCLient.Get(ctx, key, &entity)
-	if dur == -2 || err != nil {
-		logger.Errorf(ctx, "cache miss key=%s", key)
-		sqlQuery := `
+	// 	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
+	// 		return entity, err
+	// 	}
+
+	// 	go func() {
+	// 		err = repo.redisCLient.Set(context.Background(), key, entity, 0)
+	// 		if err != nil {
+	// 			logger.Error(ctx, "Failed to set cache key=%s, error: %v", REDIS_KEY_GET_PRODUCTS, err)
+	// 		}
+	// 	}()
+	// 	return entity, nil
+	// }
+	// return entity, nil
+
+	sqlQuery := `
         select * from "PRODUCT" where "PRODUCT_ID"=$1;
     `
 
-		if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
-			return entity, err
-		}
-
-		go func() {
-			err = repo.redisCLient.Set(context.Background(), key, entity, 0)
-			if err != nil {
-				logger.Error(ctx, "Failed to set cache key=%s, error: %v", REDIS_KEY_GET_PRODUCTS, err)
-			}
-		}()
-		return entity, nil
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
+		return entity, err
 	}
 	return entity, nil
 }

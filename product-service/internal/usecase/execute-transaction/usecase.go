@@ -52,10 +52,9 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 
 	req := cmd.Payload
 
-	var product domain.ProductEntity
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
-			product, err = h.repo.GetProductByID(ctx, item.ProductID)
+			product, err := h.repo.GetProductByID(ctx, item.ProductID)
 			if err != nil {
 				return err
 			}
@@ -104,7 +103,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 		}
 
 		return nil
-	}, database.WithIsolationLevelOptions(sql.LevelReadCommitted))
+	}, database.WithIsolationLevelOptions(sql.LevelRepeatableRead))
 	if err1 != nil {
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())

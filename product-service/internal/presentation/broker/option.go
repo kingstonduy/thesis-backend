@@ -32,6 +32,9 @@ func WithSubscriptions() BrokerServerStartOption {
 		g.Go(func() error {
 			return b.OutboxHandler(brokerCfg.OrderOutboxTopic)
 		})
+		g.Go(func() error {
+			return b.CartFailedHandler(brokerCfg.CartTopic)
+		})
 
 		// wait for the subscription result, return error if present
 		if err := g.Wait(); err != nil {
@@ -106,6 +109,35 @@ func (b *BrokerServer) OutboxHandler(topic string) error {
 		}
 
 		logger.Infof(c, "consume message=%v", event)
+		return nil
+	}, b.GetSubscriptionOptions()...)
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer subscriber.Unsubscribe()
+		<-b.quit
+	}()
+	return nil
+}
+
+func (b *BrokerServer) CartFailedHandler(topic string) error {
+	ctx := context.TODO()
+	logger.Infof(ctx, "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
+		e.Ack() // auto ack
+		var event domain.Event[domain.Command[domain.RevertTransactionRequest]]
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			logger.Error(ctx, err)
+			return nil
+		}
+
+		_, err = pipeline.Send[*domain.Command[domain.RevertTransactionRequest], *domain.RevertTransactionResponse](ctx, &event.Payload.After)
+		if err != nil {
+			logger.Error(ctx, err)
+			return nil
+		}
+		logger.Infof(c, "consumed message=%v", event)
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {
