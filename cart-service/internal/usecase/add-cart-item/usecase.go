@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kingstonduy/cart-service/internal/domain"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
@@ -34,20 +35,19 @@ func (h *handler) Handle(ctx context.Context, req *domain.AddCartItemRequest) (r
 		}
 	}()
 
-	params := domain.AddCartItemParams{}
 	now := time.Now()
-	for _, item := range req.CartItems {
-		params.CartItems = append(params.CartItems, domain.CartItem{
-			UserID:           req.UserID,
-			ProductID:        item.ProductID,
-			CartItemQuantity: item.CartItemQuantity,
-			CreatedAt:        now,
-			UpdatedAt:        now,
-		})
+
+	cartItemEntity := domain.CartItem{
+		CartItemID:       uuid.New().String(),
+		UserID:           req.UserID,
+		ProductID:        req.ProductID,
+		CartItemQuantity: req.CartItemQuantity,
+		CreatedAt:        now,
+		UpdatedAt:        now,
 	}
 
-	if err := h.repo.AddCartItem(ctx, params); err != nil {
-		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
+	if err := h.repo.Insert(ctx, cartItemEntity); err != nil {
+		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}

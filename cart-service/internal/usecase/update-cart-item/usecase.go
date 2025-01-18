@@ -34,11 +34,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.UpdateCartItemRequest)
 	}()
 
 	if req.CartItemQuantity == 0 { // delete cartITem
-		err = h.repo.DeleteCartItemsByID(ctx, domain.DeleteCartItemParamsIn{
-			[]domain.DeleteCartItemParamsInDetails{
-				{req.CartItemID},
-			},
-		})
+		err = h.repo.DeleteById(ctx, req.CartItemID)
 		if err != nil {
 			errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 			logger.Error(ctx, errx.Error())
@@ -46,18 +42,20 @@ func (h *handler) Handle(ctx context.Context, req *domain.UpdateCartItemRequest)
 		}
 		return nil, nil
 	} else {
-		err = h.repo.UpdateCartItem(ctx, domain.UpdateCartItemParams{
-			CartItemID:       req.CartItemID,
-			CartItemQuantity: req.CartItemQuantity,
-		})
+		cols := map[string]interface{}{}
+		conditions := map[string]interface{}{}
 
+		cols["CART_ITEM_QUANTITY"] = req.CartItemQuantity
+		conditions["CART_ITEM_ID"] = req.CartItemID
+
+		err = h.repo.Update(ctx, cols, conditions)
 		if err != nil {
 			errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 			logger.Error(ctx, errx.Error())
 			return nil, errx
 		}
 
-		return res, nil
+		return nil, nil
 	}
 
 }

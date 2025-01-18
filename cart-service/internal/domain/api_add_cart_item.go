@@ -7,16 +7,12 @@ import "context"
 // )
 
 type AddCartItemRequest struct {
-	UserID    string              `json:"userId"`
-	CartItems []AddCartItemDetail `json:"cartItems"`
+	UserID           string `json:"userId"`
+	ProductID        string `json:"productId"`
+	CartItemQuantity int    `json:"cartItemQuantity"`
 }
 
 type AddCartItemResponse struct {
-}
-
-type AddCartItemDetail struct {
-	ProductID        string `json:"productId"`
-	CartItemQuantity int    `json:"cartItemQuantity"`
 }
 
 type IAddCartItemHandler interface {

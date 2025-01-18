@@ -6,6 +6,7 @@ import (
 
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/domain"
+	gensql "github.com/kingstonduy/cart-service/internal/pkg/gen_sql"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 )
@@ -18,50 +19,6 @@ func NewCartRepo(db *configuration.PostgresCon) domain.ICartRepo {
 	return &cartRepoImpl{
 		db: db,
 	}
-}
-
-// AddCartItem implements domain.ICartRepo.
-func (repo *cartRepoImpl) AddCartItem(ctx context.Context, params domain.AddCartItemParams) error {
-	logger.Info(ctx, "AddCartItem start")
-	defer logger.Info(ctx, "AddCartItem end")
-
-	sqlQuery := `
-        INSERT INTO public."CART_ITEM" (
-            "USER_ID", 
-            "PRODUCT_ID", 
-            "CART_ITEM_QUANTITY", 
-            "CREATED_AT", 
-            "UPDATED_AT"
-        )
-        VALUES (
-            $1, 
-            $2, 
-            $3, 
-            CURRENT_TIMESTAMP, 
-            CURRENT_TIMESTAMP
-        );
-    `
-
-	return repo.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
-		for _, item := range params.CartItems {
-			res, err := repo.db.DB.Exec(ctx, sqlQuery, item.UserID, item.ProductID, item.CartItemQuantity)
-			if err != nil {
-				logger.Errorf(ctx, err.Error())
-				return err
-			}
-
-			rowsAffected, err := res.RowsAffected()
-			if err != nil {
-				return err
-			}
-			if rowsAffected == 0 {
-				err = fmt.Errorf("no rows affected")
-				logger.Errorf(ctx, err.Error())
-				return err
-			}
-		}
-		return nil
-	})
 }
 
 // GetCart implements domain.ICartRepo.
@@ -122,7 +79,7 @@ func (repo *cartRepoImpl) GetCart(ctx context.Context, paramsIn domain.GetCartPa
 }
 
 // DeleteCartItemsByID implements domain.ICartRepo.
-func (repo *cartRepoImpl) DeleteCartItemsByID(ctx context.Context, params domain.DeleteCartItemParamsIn) error {
+func (repo *cartRepoImpl) DeleteById(ctx context.Context, id string) error {
 	logger.Info(ctx, "DeleteCartItem start")
 	defer logger.Info(ctx, "DeleteCartItem end")
 
@@ -131,47 +88,7 @@ func (repo *cartRepoImpl) DeleteCartItemsByID(ctx context.Context, params domain
 	        WHERE "CART_ITEM_ID" = $1;
 	    `
 
-	err := repo.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
-		for _, detail := range params.Details {
-			res, err := repo.db.DB.Exec(ctx, sqlQuery, detail.CartItemID)
-			if err != nil {
-				return err
-			}
-
-			rowsAffected, err := res.RowsAffected()
-			if err != nil {
-				return err
-			}
-
-			if rowsAffected == 0 {
-				return fmt.Errorf(errorx.ErrorMessageNotFound)
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-
-}
-
-// UpdateCartItem implements domain.ICartRepo.
-func (repo *cartRepoImpl) UpdateCartItem(ctx context.Context, params domain.UpdateCartItemParams) error {
-	logger.Info(ctx, "UpdateCartItem start")
-	defer logger.Info(ctx, "UpdateCartItem end")
-
-	sqlQuery := `
-        UPDATE public."CART_ITEM"
-        SET 
-            "CART_ITEM_QUANTITY" = $1,
-            "UPDATED_AT" = CURRENT_TIMESTAMP
-        WHERE 
-            "CART_ITEM_ID" = $2;
-    `
-
-	res, err := repo.db.DB.Exec(ctx, sqlQuery, params.CartItemQuantity, params.CartItemID)
+	res, err := repo.db.DB.Exec(ctx, sqlQuery, id)
 	if err != nil {
 		return err
 	}
@@ -182,7 +99,65 @@ func (repo *cartRepoImpl) UpdateCartItem(ctx context.Context, params domain.Upda
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("no cart item found with the given CartItemID")
+		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+	}
+
+	return nil
+}
+
+// Insert implements domain.ICartRepo.
+func (repo *cartRepoImpl) Insert(ctx context.Context, entity domain.CartItem) error {
+	logger.Info(ctx, "Insert CART_ITEM starts")
+	defer logger.Info(ctx, "Insert CART_ITEM ends")
+
+	sqlQuery, err := gensql.GenInsertSql("CART_ITEM", entity)
+	if err != nil {
+		return err
+	}
+
+	logger.Info(ctx, sqlQuery)
+
+	res, err := repo.db.DB.Exec(ctx, sqlQuery)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affectedRows == 0 {
+		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+	}
+
+	return nil
+}
+
+// Update implements domain.ICartRepo.
+func (repo *cartRepoImpl) Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error {
+	logger.Info(ctx, "Update CART_ITEM starts")
+	defer logger.Info(ctx, "Update CART_ITEM ends")
+
+	sqlQuery, err := gensql.GenUpdateSql("CART_ITEM", cols, conditions)
+	if err != nil {
+		return err
+	}
+
+	logger.Info(ctx, sqlQuery)
+
+	res, err := repo.db.DB.Exec(ctx, sqlQuery)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affectedRows == 0 {
+		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
 	}
 
 	return nil

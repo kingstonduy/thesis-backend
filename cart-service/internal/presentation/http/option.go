@@ -13,7 +13,6 @@ func (s *HttpServer) WithRoutingOption() option {
 		s.App.Post("/add", s.AddCartItem)
 		s.App.Post("/get-items", s.GetCart)
 		s.App.Post("/update", s.UpdateCartItem)
-		s.App.Post("/delete-cart-items", s.DeleteCartItems)
 
 		return nil
 	}
@@ -43,19 +42,6 @@ func (s *HttpServer) GetCart(ctx *fiber.Ctx) error {
 //		@Router			/is/v1/cart-service/update [post]
 func (s *HttpServer) UpdateCartItem(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.UpdateCartItemRequest, *domain.UpdateCartItemResponse](ctx, fiberx.WithAuthentication())
-}
-
-//	 	@Tags 			CART SERVICE
-//		@Summary		DeleteCartItem
-//		@Description	giving the cartITemID delete the cartItem
-//		@ID				DeleteCartItem
-//		@Accept			json
-//		@Produce		json
-//		@Param			request	body		transport.Request[domain.DeleteCartItemsRequest]			false	"Request"
-//		@Success		200		{object}	transport.Response[domain.DeleteCartItemsResponse]			"ok"
-//		@Router			/is/v1/cart-service/delete-cart-items [post]
-func (s *HttpServer) DeleteCartItems(ctx *fiber.Ctx) error {
-	return fiberx.RequestHandlerWithDynamicTimeout[*domain.DeleteCartItemsRequest, *domain.DeleteCartItemsResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			CART SERVICE

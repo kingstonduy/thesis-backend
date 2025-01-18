@@ -6,12 +6,13 @@ import (
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/infra/postgres"
 	add_cart_handler_uc "github.com/kingstonduy/cart-service/internal/usecase/add-cart-item"
-	delete_cart_item_uc "github.com/kingstonduy/cart-service/internal/usecase/delete-cart-items"
+	execute_transaction_uc "github.com/kingstonduy/cart-service/internal/usecase/execute-transaction"
 	get_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/get-cart"
 	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart-item"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 
+	broker_server "github.com/kingstonduy/cart-service/internal/presentation/broker"
 	http_server "github.com/kingstonduy/cart-service/internal/presentation/http"
 	"go.uber.org/fx"
 )
@@ -27,6 +28,9 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetMetrics),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
+	fx.Provide(configuration.NewRedisClusterClient),
+	fx.Provide(configuration.NewCacheClient),
+	fx.Provide(configuration.NewRedixBroker),
 	fx.Provide(configuration.NewRestyClient),
 	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetValidator),
@@ -34,17 +38,20 @@ var configModule = fx.Module("config",
 
 var usecaseModule = fx.Module("usecase",
 	fx.Provide(add_cart_handler_uc.NewAddCartItemHandler),
-	fx.Provide(delete_cart_item_uc.NewIDeleteCartItemHandler),
 	fx.Provide(get_cart_uc.NewGetCartHandler),
 	fx.Provide(update_cart_uc.NewUpdateCartHandler),
+	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
 )
 
 var serverModule = fx.Module("server",
 	fx.Provide(http_server.NewHttpServer),
+	fx.Provide(broker_server.NewBrokerServer),
 )
 
 var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewCartRepo),
+	fx.Provide(postgres.NewOutboxRepo),
+	fx.Provide(postgres.NewProductRepo),
 )
 
 func main() {
@@ -60,6 +67,7 @@ func main() {
 func run(
 	lc fx.Lifecycle,
 	HttpServer *http_server.HttpServer,
+	BrokerServer *broker_server.BrokerServer,
 	log logger.Logger,
 	shutdowner fx.Shutdowner,
 ) {
@@ -74,6 +82,7 @@ func run(
 					shutdowner.Shutdown()
 				}),
 				server.WithServer("httpServer", HttpServer),
+				server.WithServer("BrokerServer", BrokerServer),
 			)
 
 			return serverWrapper.Start(gCtx)

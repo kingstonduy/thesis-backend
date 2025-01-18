@@ -6,7 +6,7 @@ import (
 
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/domain"
-	gensql "github.com/kingstonduy/cart-service/internal/pkg/gen-sql"
+	gensql "github.com/kingstonduy/cart-service/internal/pkg/gen_sql"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 )

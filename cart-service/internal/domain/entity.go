@@ -15,37 +15,18 @@ type CartItem struct {
 }
 
 type ICartRepo interface {
-	AddCartItem(ctx context.Context, params AddCartItemParams) error
+	Insert(ctx context.Context, entity CartItem) error
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
+	DeleteById(ctx context.Context, id string) error
+	// VIEW
 	GetCart(ctx context.Context, params GetCartParamsIn) (GetCartParamsOut, error)
-	UpdateCartItem(ctx context.Context, params UpdateCartItemParams) error
-	DeleteCartItemsByID(ctx context.Context, params DeleteCartItemParamsIn) error
 }
 
-type DeleteUserCartParams struct {
-	UserID string `json:"userId"`
-}
-
-type AddCartItemParams struct {
-	CartItems []CartItem `json:"cartItems"`
-}
 type GetCartParamsIn struct {
 	UserID string `json:"userId"`
 }
 type GetCartParamsOut struct {
 	CartItems []GetCartItemDetail `json:"cartItems"`
-}
-
-type UpdateCartItemParams struct {
-	CartItemID       string `json:"cartItemId"`
-	CartItemQuantity int    `json:"cartItemQuantity"`
-}
-
-type DeleteCartItemParamsIn struct {
-	Details []DeleteCartItemParamsInDetails
-}
-
-type DeleteCartItemParamsInDetails struct {
-	CartItemID string `json:"cartItemId"`
 }
 
 type ProductCdc struct {

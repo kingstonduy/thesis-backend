@@ -47,9 +47,14 @@ func structToDBMap(data interface{}) (map[string]interface{}, error) {
 
 		dbTag := field.Tag.Get("db")
 		if dbTag != "" {
-			if !value.IsNil() { // Check if the value is not nil
-				result[dbTag] = value.Elem().Interface()
+			if value.Kind() == reflect.Ptr {
+				if !value.IsNil() { // Check if the value is not nil
+					result[dbTag] = value.Elem().Interface()
+				}
+			} else {
+				result[dbTag] = value.Interface()
 			}
+
 		}
 	}
 
@@ -97,7 +102,16 @@ func GenInsertSql(tableName string, data interface{}) (s string, err error) {
 	for key, _ := range colunnmNames {
 		val, ok := columns[key]
 		if ok {
-			insertRecord[key] = val
+			switch val.(type) {
+			case string:
+				if val != "" {
+					insertRecord[key] = val
+				} else {
+					insertRecord[key] = nil
+				}
+			default:
+				insertRecord[key] = val
+			}
 		} else {
 			insertRecord[key] = nil
 		}
