@@ -10,6 +10,7 @@ import (
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
 	"github.com/kingstonduy/cart-service/internal/domain"
 	redix "github.com/kingstonduy/cart-service/internal/pkg/redis_broker"
+	utils_transport "github.com/kingstonduy/cart-service/internal/pkg/transport"
 	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
@@ -66,7 +67,10 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 			}
 		}
 
-		result := transport.DefaultSuccessResponse.Result
+		result := transport.Response[any]{
+			Result: transport.DefaultSuccessResponse.Result,
+			Trace:  utils_transport.GenRequestTrace(cmd.Payload.Trace, "", ""),
+		}
 		resultStr, _ := json.Marshal(result)
 		outbox := domain.OutboxEntity{
 			AggregateID: cmd.AggregateID,
