@@ -11,7 +11,7 @@ import (
 
 func GetConfigure() config.Configure {
 	cfg, err := viper.NewViperConfig(
-		config.WithConfigFile("./resources/dev.env"),
+		config.WithConfigFile("./resources/local.env"),
 		config.WithTagName("config"),
 		config.WithAutomaticEnv(true),
 	)
