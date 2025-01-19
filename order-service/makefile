@@ -15,6 +15,6 @@ deploy:
 	-docker container stop order-service || true
 	-docker container rm order-service || true
 	docker build -t order-service .
-	docker run -d -p 7001:7001 --name order-service order-service
+	docker run -d -p 7005:7005 --name order-service order-service
 
 
