@@ -14,6 +14,7 @@ import (
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
 	redix "github.com/kingstonduy/order-service/internal/pkg/redis_broker"
+	utils_transport "github.com/kingstonduy/order-service/internal/pkg/transport"
 )
 
 type handler struct {
@@ -54,41 +55,48 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
-
 	trace := transport.GetTraceByCtx(ctx)
 
 	now := time.Now()
-	transaction := domain.TransactionEntity{
-		TransactionID: uuid.New().String(),
+	tr := domain.TransactionEntity{
+		TransactionID: trace.Sid,
 		Status:        domain.INIT_STATUS,
 		Processing:    1,
 		CreatedAt:     now,
 		UpdatedAt:     now,
 	}
-
-	var orderItems = []domain.OrderEntity{}
-	for _, reqDetails := range req.Details {
+	var orderItems []domain.OrderEntity
+	for _, item := range req.Details {
 		orderItems = append(orderItems, domain.OrderEntity{
 			OrderID:       uuid.New().String(),
-			ProductID:     reqDetails.ProductID,
+			ProductID:     item.ProductID,
 			UserID:        req.UserID,
-			TransactionID: transaction.TransactionID,
+			TransactionID: trace.Sid,
 			CreatedAt:     now,
 			UpdatedAt:     now,
 		})
 	}
 
-	payloadStr, _ := json.Marshal(req)
-	var outbox domain.OutboxEntity = domain.OutboxEntity{
+	reqType := transport.Request[domain.ExecuteTransactionRequest]{
+		Trace: utils_transport.GenRequestTrace(trace, "product-service", h.redisPubSub.GetChannel()),
+		Data:  *req,
+	}
+	reqStr, _ := json.Marshal(reqType)
+	outbox := domain.OutboxEntity{
 		AggregateID: trace.Sid,
 		CommandID:   uuid.New().String(),
 		CommandType: domain.ORDER_INIT_TRANSACTION_COMMAND,
-		Payload:     string(payloadStr),
+		Payload:     string(reqStr),
 		ReplyTo:     h.redisPubSub.GetChannel(),
 	}
 
-	// insert db
-	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
+	err2 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
+		err = h.transactionRepo.Insert(ctx, tr)
+		if err != nil {
+			logger.Error(ctx, err)
+			return err
+		}
+
 		for _, item := range orderItems {
 			err = h.orderRepo.Insert(ctx, item)
 			if err != nil {
@@ -97,61 +105,40 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			}
 		}
 
-		err = h.transactionRepo.Insert(ctx, transaction)
-		if err != nil {
-			logger.Error(ctx, err)
-			return err
-		}
-
 		err = h.outboxRepo.Insert(ctx, outbox)
 		if err != nil {
 			logger.Error(ctx, err)
 			return err
 		}
-
 		return nil
 	})
-	if err != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
-	}
-	if err1 != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
-	}
-
-	resultStr, err := h.redisPubSub.GetValue(ctx, trace.Sid, time.Second*10)
-	if err != nil {
-		if err == redix.ErrTimeout {
-			errx := errorx.TimeoutErrorWithDetails(err.Error(), "")
-			logger.Error(ctx, errx.Error())
-			return nil, errx
+	if err != nil || err2 != nil {
+		if err == nil {
+			err = err2
 		}
-		errx := errorx.Failed(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
-	}
-
-	var result transport.Result
-	err = json.Unmarshal([]byte(resultStr), &result)
-	if err != nil {
 		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}
 
-	if result.Code == errorx.DefaultSuccessResponseCode {
-		return nil, nil
-	} else {
-		errx := &errorx.Error{
-			Code:    result.Code,
-			Status:  result.StatusCode,
-			Message: result.Message,
-			Details: result.Details,
-		}
-		logger.Error(ctx, errx.Error())
+	resStr, err := h.redisPubSub.GetValue(ctx, trace.Sid, time.Second*20)
+	if err != nil {
+		errx := errorx.SuspendedErrorWithDetails(err.Error(), "")
+		logger.Error(ctx, errx)
 		return nil, errx
 	}
+	var resType transport.Response[domain.ExecuteTransactionResponse]
+	err = json.Unmarshal([]byte(resStr), &resType)
+	if err != nil {
+		errx := errorx.SuspendedErrorWithDetails(err.Error(), "")
+		logger.Error(ctx, errx)
+		return nil, errx
+	}
+
+	if resType.Result.Code != transport.DefaultSuccessResponse.Result.Code {
+		errx := errorx.SuspendedErrorWithDetails(resType.Result, "")
+		logger.Error(ctx, errx)
+		return nil, errx
+	}
+
+	return nil, nil
 }

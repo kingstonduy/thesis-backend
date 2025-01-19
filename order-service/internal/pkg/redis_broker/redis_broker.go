@@ -174,3 +174,12 @@ func (c *redisBroker) GetValue(ctx context.Context, key string, dur time.Duratio
 func (c *redisBroker) GetChannel() string {
 	return c.channel
 }
+
+func NewMessage(key string, value interface{}, channel string) RedisMessage {
+	str, _ := json.Marshal(value)
+	return RedisMessage{
+		Key:     key,
+		Value:   string(str),
+		Channel: channel,
+	}
+}

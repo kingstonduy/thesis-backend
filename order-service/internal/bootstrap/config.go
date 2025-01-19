@@ -11,7 +11,7 @@ import (
 
 func GetConfigure() config.Configure {
 	cfg, err := viper.NewViperConfig(
-		config.WithConfigFile("./resources/dev.env"),
+		config.WithConfigFile("./resources/local.env"),
 		config.WithTagName("config"),
 		config.WithAutomaticEnv(true),
 	)
@@ -102,6 +102,7 @@ type KafkaBrokerConfig struct {
 	ConsumerGroup      string `config:"KAFKA_CONSUMERGROUP"`
 	HandlerPool        int    `config:"KAFKA_HANDLER_PUBLISHER"`
 	ProductCDCTopic    string `config:"PRODUCT_SERVICE_TOPIC"`
+	OrderTopic         string `config:"ORDER_TOPIC"`
 	OrderOutboxTopic   string `config:"ORDER_SERVICE_OUTBOX_TOPIC"`
 	ProductOutboxTopic string `config:"PRODUCT_SERVICE_OUTBOX_TOPIC"`
 	CartOutboxTopic    string `config:"CART_SERVICE_OUTBOX_TOPIC"`

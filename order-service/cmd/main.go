@@ -10,7 +10,6 @@ import (
 	execute_transaction_uc "github.com/kingstonduy/order-service/internal/usecase/execute-transaction"
 	get_history_uc "github.com/kingstonduy/order-service/internal/usecase/get-history"
 
-	broker_server "github.com/kingstonduy/order-service/internal/presentation/broker"
 	http_server "github.com/kingstonduy/order-service/internal/presentation/http"
 	redis_server "github.com/kingstonduy/order-service/internal/presentation/redis_pubsub"
 	"go.uber.org/fx"
@@ -43,7 +42,6 @@ var usecaseModule = fx.Module("usecase",
 var serverModule = fx.Module("server",
 	fx.Provide(http_server.NewHttpServer),
 	fx.Provide(redis_server.NewRedisServer),
-	fx.Provide(broker_server.NewBrokerServer),
 )
 
 var infraModule = fx.Module("infras",
@@ -66,7 +64,6 @@ func run(
 	lc fx.Lifecycle,
 	redisServer *redis_server.RedisServer,
 	HttpServer *http_server.HttpServer,
-	brokerServer *broker_server.BrokerServer,
 	log logger.Logger,
 	shutdowner fx.Shutdowner,
 ) {
@@ -82,7 +79,6 @@ func run(
 				}),
 				server.WithServer("httpServer", HttpServer),
 				server.WithServer("redisServer", redisServer),
-				server.WithServer("brokerServer", brokerServer),
 			)
 
 			return serverWrapper.Start(gCtx)
