@@ -1,3 +1,0 @@
-github.com/kingstonduy/comment-service
-Add add
-GetComment get_comment
