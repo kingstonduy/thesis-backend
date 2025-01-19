@@ -29,12 +29,14 @@ func (c *orderRepoImpl) GetHistory(ctx context.Context, params domain.GetHistory
 	// SQL query to fetch order history for the user
 	sqlQuery := `
         SELECT 
-            oi."PRODUCT_ID",
-            p."PRODUCT_IMAGE",
-            p."PRODUCT_NAME",
-            oi."ORDER_ID",
-            oi."DELIVERY_STATUS",
-            oi."PAYMENT_STATUS"
+        oi."PRODUCT_ID",
+        p."PRODUCT_IMAGE",
+        p."PRODUCT_NAME",
+        oi."ORDER_ID",
+        oi."DELIVERY_STATUS",
+        oi."PAYMENT_STATUS",
+        oi."CREATED_AT",
+        oi."UPDATED_AT" 
         FROM 
             public."ORDER_ITEM" oi
         INNER JOIN 
@@ -43,6 +45,8 @@ func (c *orderRepoImpl) GetHistory(ctx context.Context, params domain.GetHistory
             oi."PRODUCT_ID" = p."PRODUCT_ID"
         WHERE 
             oi."USER_ID" = $1
+            AND oi."DELIVERY_STATUS" IS NOT null
+            and oi."PAYMENT_STATUS" is not null
         ORDER BY 
             oi."CREATED_AT" DESC;
     `
@@ -65,6 +69,8 @@ func (c *orderRepoImpl) GetHistory(ctx context.Context, params domain.GetHistory
 			&detail.OrderID,
 			&detail.DeliveryStatus,
 			&detail.PaymentStatus,
+			&detail.CreatedAt,
+			&detail.UpdatedAt,
 		)
 		if err != nil {
 			logger.Errorf(ctx, "Failed to scan row: %v", err)

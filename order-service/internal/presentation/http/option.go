@@ -11,7 +11,7 @@ import (
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
 		s.App.Post("/execute-transaction", s.ExecuteTransaction)
-		s.App.Post("/get-history ", s.GetHistory)
+		s.App.Post("/get-history", s.GetHistory)
 
 		return nil
 	}

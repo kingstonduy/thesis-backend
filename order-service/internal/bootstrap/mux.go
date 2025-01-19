@@ -8,7 +8,9 @@ import (
 func ResgisterPipeline(
 	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
 	IGetHistoryHandler domain.IGetHistoryHandler,
+	ICartCompletedHandler domain.ICartCompletedHandler,
 ) {
 	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
 	pipeline.RegisterRequestHandler(IGetHistoryHandler)
+	pipeline.RegisterRequestHandler(ICartCompletedHandler)
 }
