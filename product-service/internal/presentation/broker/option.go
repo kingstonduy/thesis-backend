@@ -48,49 +48,48 @@ func WithSubscriptions() BrokerServerStartOption {
 	}
 }
 
-func (b *BrokerServer) ProductCDCHandler(topic string) error {
-	logger.Infof(context.TODO(), "consume from topic=%s", topic)
-	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
-		e.Ack()
+// func (b *BrokerServer) ProductCDCHandler(topic string) error {
+// 	logger.Infof(context.TODO(), "consume from topic=%s", topic)
+// 	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
+// 		e.Ack()
 
-		var event domain.Event[domain.ProductCdc]
-		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-			logger.Errorf(context.TODO(), "failed to unmarshal event: %v", err)
-			return err
-		}
+// 		var event domain.Event[domain.ProductCdc]
+// 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+// 			logger.Errorf(context.TODO(), "failed to unmarshal event: %v", err)
+// 			return err
+// 		}
 
-		logger.Infof(c, "consume message=%v", event)
+// 		logger.Infof(c, "consume message=%v", event)
 
-		if err := b.redisClient.Set(c, "PRODUCT_ID"+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
-			logger.Error(context.TODO(), "failed to set redis %v", err)
-			return err
-		}
+// 		if err := b.redisClient.Set(c, "PRODUCT_ID"+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
+// 			logger.Error(context.TODO(), "failed to set redis %v", err)
+// 			return err
+// 		}
 
-		// logger.Infof(c, "received event: %v", event)
+// 		// logger.Infof(c, "received event: %v", event)
 
-		return nil
-	}, b.GetSubscriptionOptions()...)
-	if err != nil {
-		return err
-	}
-	go func() {
-		defer subscriber.Unsubscribe()
-		<-b.quit
-	}()
-	return nil
-}
+// 		return nil
+// 	}, b.GetSubscriptionOptions()...)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	go func() {
+// 		defer subscriber.Unsubscribe()
+// 		<-b.quit
+// 	}()
+// 	return nil
+// }
 
 func (b *BrokerServer) EventHandler(topic string) error {
-	ctx := context.TODO()
-	logger.Infof(ctx, "consume from topic=%s", topic)
-	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
+	logger.Infof(context.TODO(), "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
 		e.Ack() // auto ack
 		var event domain.Event[domain.OutboxEntity]
 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
 			return nil
 		}
-		c = trace.InjectTraceparent(c, event.Payload.After.TraceParent)
+		ctx = trace.InjectTraceparent(ctx, event.Payload.After.TraceParent)
 
 		switch event.Payload.After.CommandType {
 		case domain.ORDER_INIT_TRANSACTION_COMMAND:
@@ -130,7 +129,7 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			logger.Errorf(ctx, "does not handle this event=%v", event)
 		}
 
-		logger.Infof(c, "consumed message=%v", event)
+		logger.Infof(ctx, "consumed message=%v", event)
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {

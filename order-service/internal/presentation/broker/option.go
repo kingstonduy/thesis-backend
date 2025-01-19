@@ -45,16 +45,15 @@ func WithSubscriptions() BrokerServerStartOption {
 }
 
 func (b *BrokerServer) EventHandler(topic string) error {
-	ctx := context.TODO()
-	logger.Infof(ctx, "consume from topic=%s", topic)
-	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
+	logger.Infof(context.Background(), "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
 		e.Ack() // auto ack
 		var event domain.Event[domain.OutboxEntity]
 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
 			return nil
 		}
-		c = trace.InjectTraceparent(c, event.Payload.After.TraceParent)
+		ctx = trace.InjectTraceparent(ctx, event.Payload.After.TraceParent)
 
 		switch event.Payload.After.CommandType {
 		case domain.CART_COMPLETED_TRANSACTION_COMMAND:
@@ -78,7 +77,7 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			logger.Errorf(ctx, "does not handle this event=%v", event)
 		}
 
-		logger.Infof(c, "consumed message=%v", event)
+		logger.Infof(ctx, "consumed message=%v", event)
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {
