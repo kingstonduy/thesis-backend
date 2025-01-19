@@ -8,6 +8,7 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
+	redix "github.com/kingstonduy/product-service/internal/pkg/redis_broker"
 )
 
 type BrokerServer struct {
@@ -19,6 +20,7 @@ type BrokerServer struct {
 	consumerGroup string
 	quit          chan struct{}
 	workerpool    *workerpool.WorkerPool
+	redisPubSub   redix.PubSubBroker
 }
 
 func (s *BrokerServer) GetStartOptions() []BrokerServerStartOption {
@@ -33,6 +35,7 @@ func NewBrokerServer(
 	broker broker.Broker,
 	logger logger.Logger,
 	config *configuration.Configuration,
+	redisPubSub redix.PubSubBroker,
 ) *BrokerServer {
 
 	bConfig := config.BrokerConfig
@@ -45,6 +48,7 @@ func NewBrokerServer(
 		consumerGroup: bConfig.ConsumerGroup,
 		quit:          make(chan struct{}),
 		workerpool:    workerpool.New(100),
+		redisPubSub:   redisPubSub,
 	}
 
 	go func() {

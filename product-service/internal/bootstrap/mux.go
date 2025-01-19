@@ -8,15 +8,15 @@ import (
 func ResgisterPipeline(
 	IGetProductsHandler domain.IGetProductsHandler,
 	IGetProductDetailHandler domain.IGetProductDetailHandler,
-	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
-	IRevertTransactionHandler domain.IRevertTransactionHandler,
 	IGetProductsByGenderHandler domain.IGetProductsByGenderHandler,
 	IGetProductsByCategoryHandler domain.IGetProductsByCategoryHandler,
+	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
+	IRevertTransactionHandler domain.IRevertTransactionHandler,
 ) {
 	pipeline.RegisterRequestHandler(IGetProductsHandler)
 	pipeline.RegisterRequestHandler(IGetProductDetailHandler)
-	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
-	pipeline.RegisterRequestHandler(IRevertTransactionHandler)
 	pipeline.RegisterRequestHandler(IGetProductsByGenderHandler)
 	pipeline.RegisterRequestHandler(IGetProductsByCategoryHandler)
+	pipeline.RegisterRequestHandler(IExecuteTransactionHandler)
+	pipeline.RegisterRequestHandler(IRevertTransactionHandler)
 }

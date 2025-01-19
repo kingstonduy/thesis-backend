@@ -11,6 +11,7 @@ import (
 	"github.com/kingstonduy/go-core/database"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
+	"github.com/kingstonduy/go-core/transport"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/domain"
 	redix "github.com/kingstonduy/product-service/internal/pkg/redis_broker"
@@ -39,7 +40,7 @@ func NewExecuteTransactionHandler(
 }
 
 // Handle implements domain.IExecuteTransactionHandler.
-func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.ExecuteTransactionRequest]) (res *domain.ExecuteTransactionResponse, err error) {
+func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.ExecuteTransactionRequest]]) (res *domain.ExecuteTransactionResponse, err error) {
 	logger.Info(ctx, "Get products handler start")
 	defer logger.Info(ctx, "Get products handler end")
 
@@ -50,7 +51,13 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 		}
 	}()
 
-	req := cmd.Payload
+	req := cmd.Payload.Data
+
+	reqType := transport.Request[domain.ExecuteTransactionRequest]{
+		Trace: utils_transport.GenRequestTrace(cmd.Payload.Trace, "", cmd.ReplyTo),
+		Data:  req,
+	}
+	reqTypeStr, _ := json.Marshal(reqType)
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
@@ -86,16 +93,15 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 				return err
 			}
 		}
-
-		payloadStr, _ := json.Marshal(req)
 		// if update all products successfully
 		var outbox domain.OutboxEntity = domain.OutboxEntity{
 			AggregateID: cmd.AggregateID,
 			CommandID:   uuid.New().String(),
 			CommandType: domain.PRODUCT_COMPLETED_TRANSACTION_COMMAND,
-			Payload:     string(payloadStr),
+			Payload:     string(reqTypeStr),
 			ReplyTo:     cmd.ReplyTo,
 		}
+
 		err = h.outboxRepo.Insert(ctx, outbox)
 		if err != nil {
 			logger.Error(ctx, err)
@@ -104,36 +110,28 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 
 		return nil
 	}, database.WithIsolationLevelOptions(sql.LevelRepeatableRead))
-	if err1 != nil {
+	if err != nil || err1 != nil {
+		if err == nil {
+			err = err1
+		}
+
+		outbox := domain.OutboxEntity{
+			AggregateID: cmd.AggregateID,
+			CommandID:   uuid.New().String(),
+			CommandType: domain.PRODUCT_FAILED_TRANSACTION_COMMAND,
+			Payload:     string(reqTypeStr),
+			ReplyTo:     "",
+		}
+
+		err1 = h.outboxRepo.Insert(ctx, outbox)
+		if err1 != nil {
+			errx := errorx.SuspendedErrorWithDetails(err1.Error(), "")
+			logger.Error(ctx, errx.Error())
+			return nil, errx
+		}
+
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
-
-		result := utils_transport.GenResultFromErrorx(ctx, errx)
-		resultStr, _ := json.Marshal(result)
-		err2 := h.redisPubSub.Publish(ctx, redix.RedisMessage{
-			Key:     cmd.AggregateID,
-			Value:   string(resultStr),
-			Channel: cmd.ReplyTo,
-		})
-		if err2 != nil {
-			logger.Error(ctx, err2)
-		}
-		return nil, errx
-	}
-
-	if err != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		result := utils_transport.GenResultFromErrorx(ctx, errx)
-		resultStr, _ := json.Marshal(result)
-		err2 := h.redisPubSub.Publish(ctx, redix.RedisMessage{
-			Key:     cmd.AggregateID,
-			Value:   string(resultStr),
-			Channel: cmd.ReplyTo,
-		})
-		if err2 != nil {
-			logger.Error(ctx, err2)
-		}
 		return nil, errx
 	}
 

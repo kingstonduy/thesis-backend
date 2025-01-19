@@ -12,7 +12,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgtype v1.14.4
 	github.com/jackc/pgx/v5 v5.7.1
-	github.com/kingstonduy/go-core v0.0.5
+	github.com/kingstonduy/go-core v0.0.6
 	github.com/moov-io/iso8583 v0.22.3
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pkg/errors v0.9.1
