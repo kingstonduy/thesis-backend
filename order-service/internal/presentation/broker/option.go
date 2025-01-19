@@ -6,6 +6,7 @@ import (
 
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/pipeline"
+	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/broker"
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
@@ -53,6 +54,7 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
 			return nil
 		}
+		c = trace.InjectTraceparent(c, event.Payload.After.TraceParent)
 
 		switch event.Payload.After.CommandType {
 		case domain.CART_COMPLETED_TRANSACTION_COMMAND:

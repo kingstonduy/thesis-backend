@@ -8,6 +8,7 @@ type OutboxEntity struct {
 	CommandType string `json:"COMMAND_TYPE" db:"COMMAND_TYPE"`
 	Payload     string `json:"PAYLOAD" db:"PAYLOAD"`
 	ReplyTo     string `json:"REPLY_TO" db:"REPLY_TO"`
+	TraceParent string `json:"TRACE_PARENT" db:"TRACE_PARENT"`
 }
 
 type IOutboxRepo interface {

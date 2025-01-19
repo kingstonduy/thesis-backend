@@ -10,6 +10,13 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+/*
+ALTER SYSTEM SET max_replication_slots = 10;
+ALTER SYSTEM SET max_wal_senders = 10;
+SELECT pg_reload_conf();
+SET TIME ZONE 'GMT+7';
+*/
+
 func main() {
 	// PostgreSQL connection details
 	user := "postgres"      // Replace with your PostgreSQL username

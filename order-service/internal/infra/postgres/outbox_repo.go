@@ -6,6 +6,7 @@ import (
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
+	"github.com/kingstonduy/go-core/trace"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
 	gensql "github.com/kingstonduy/order-service/internal/pkg/gen_sql"
@@ -25,6 +26,7 @@ func NewOutboxRepo(db *configuration.PostgresCon) domain.IOutboxRepo {
 func (repo *outboxRepoImpl) Insert(ctx context.Context, entity domain.OutboxEntity) error {
 	logger.Info(ctx, "Insert OUTBOX starts")
 	defer logger.Info(ctx, "Insert OUTBOX ends")
+	entity.TraceParent = trace.ExtractTraceparent(ctx)
 
 	sqlQuery, err := gensql.GenInsertSql("OUTBOX", entity)
 	if err != nil {
