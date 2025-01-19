@@ -45,7 +45,7 @@ func NewExecuteTransactionHandler(
 }
 
 // Handle implements domain.IExecuteTransactionHandler.
-func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.ExecuteTransactionRequest]) (res *domain.ExecuteTransactionResponse, err error) {
+func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.ExecuteTransactionRequest]]) (res *domain.ExecuteTransactionResponse, err error) {
 	logger.Info(ctx, "Get products handler start")
 	defer logger.Info(ctx, "Get products handler end")
 
@@ -55,8 +55,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
-
-	req := cmd.Payload
+	req := cmd.Payload.Data
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
@@ -85,57 +84,39 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[domain.Execute
 		return nil
 	}, database.WithIsolationLevelOptions(sql.LevelReadUncommitted))
 
-	if err1 != nil {
+	if err != nil || err1 != nil {
+		if err == nil {
+			err = err1
+		}
+		reqTypeStr, _ := json.Marshal(cmd.Payload.Data)
+		outbox := domain.OutboxEntity{
+			AggregateID: cmd.AggregateID,
+			CommandID:   uuid.New().String(),
+			CommandType: domain.CART_FAILED_TRANSACTION_COMMAND,
+			Payload:     string(reqTypeStr),
+			ReplyTo:     "",
+		}
+
+		err1 = h.outboxRepo.Insert(ctx, outbox)
+		if err1 != nil {
+			errx := errorx.SuspendedErrorWithDetails(err1.Error(), "")
+			logger.Error(ctx, errx.Error())
+			return nil, errx
+		}
+
 		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
-
-		event := domain.Event[domain.Command[domain.ExecuteTransactionRequest]]{
-			Payload: domain.EventPayload[domain.Command[domain.ExecuteTransactionRequest]]{
-				After: domain.Command[domain.ExecuteTransactionRequest]{
-					AggregateID: cmd.AggregateID,
-					CommandID:   uuid.New().String(),
-					CommandType: domain.CART_FAILED_TRANSACTION_COMMAND,
-					Payload:     cmd.Payload,
-					ReplyTo:     cmd.ReplyTo,
-				},
-			},
-		}
-		eventStr, _ := json.Marshal(event)
-		kMsg := broker.Message{
-			Key:  []byte(cmd.AggregateID),
-			Body: eventStr,
-		}
-		if err = h.kafka.Publish(ctx, h.cfg.BrokerConfig.CartTopic, &kMsg); err != nil {
-			logger.Error(ctx, err)
-			return nil, err
-		}
 		return nil, errx
 	}
 
+	err = h.redisPubSub.Publish(ctx, redix.NewMessage(
+		cmd.AggregateID,
+		transport.Response[any]{Result: transport.DefaultSuccessResponse.Result},
+		cmd.ReplyTo,
+	))
 	if err != nil {
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-
-		event := domain.Event[domain.Command[domain.ExecuteTransactionRequest]]{
-			Payload: domain.EventPayload[domain.Command[domain.ExecuteTransactionRequest]]{
-				After: domain.Command[domain.ExecuteTransactionRequest]{
-					AggregateID: cmd.AggregateID,
-					CommandID:   uuid.New().String(),
-					CommandType: domain.CART_FAILED_TRANSACTION_COMMAND,
-					Payload:     cmd.Payload,
-					ReplyTo:     cmd.ReplyTo,
-				},
-			},
-		}
-		eventStr, _ := json.Marshal(event)
-		kMsg := broker.Message{
-			Key:  []byte(cmd.AggregateID),
-			Body: eventStr,
-		}
-		if err = h.kafka.Publish(ctx, h.cfg.BrokerConfig.CartTopic, &kMsg); err != nil {
-			logger.Error(ctx, err)
-			return nil, err
-		}
+		errx := errorx.SuspendedErrorWithDetails(err.Error(), "cart-service")
+		logger.Error(ctx, errx)
 		return nil, errx
 	}
 

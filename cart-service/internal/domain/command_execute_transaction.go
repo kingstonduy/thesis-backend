@@ -1,6 +1,10 @@
 package domain
 
-import "context"
+import (
+	"context"
+
+	"github.com/kingstonduy/go-core/transport"
+)
 
 type ExecuteTransactionRequest struct {
 	UserID  string                            `json:"userID"`
@@ -21,5 +25,5 @@ type ExecuteTransactionResponse struct {
 }
 
 type IExecuteTransactionHandler interface {
-	Handle(ctx context.Context, req *Command[ExecuteTransactionRequest]) (*ExecuteTransactionResponse, error)
+	Handle(ctx context.Context, req *Command[transport.Request[ExecuteTransactionRequest]]) (*ExecuteTransactionResponse, error)
 }
