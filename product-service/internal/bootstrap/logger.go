@@ -20,7 +20,7 @@ func GetLogger(cfg *Configuration, tracer trace.Tracer) logger.Logger {
 	}
 
 	hook, _ := rotateLog.NewRotateLogHook(
-		rotateLog.WithRotateLogFilePattern("./access_log.%Y%m%d"),
+		rotateLog.WithRotateLogFilePattern("./access_log.log"),
 	)
 
 	if strings.ToUpper(cfg.LoggerConfig.LogLevel) == "DEBUG" {

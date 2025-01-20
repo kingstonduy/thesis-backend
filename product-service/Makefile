@@ -1,3 +1,5 @@
+PWD := $(shell pwd)
+
 ## gen swagger
 gen-swagger:
 	swag init -g ./internal/presentation/http/http.go -o resources/docs --parseDependency true
@@ -15,6 +17,5 @@ deploy:
 	-docker container stop product-service || true
 	-docker container rm product-service || true
 	docker build -t product-service .
-	docker run -d -p 7002:7002 --name product-service product-service
-
+	docker run -d -p 7002:7002 -v ./:/app --name product-service product-service
 
