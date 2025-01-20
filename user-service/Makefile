@@ -15,6 +15,6 @@ deploy:
 	-docker container stop user-service || true
 	-docker container rm user-service || true
 	docker build -t user-service .
-	docker run -d -p 7001:7001 --name user-service user-service
+	docker run -d -p 7001:7001 -v ./:/app --name user-service user-service
 
 
