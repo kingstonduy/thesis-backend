@@ -21,7 +21,7 @@ func main() {
 	// PostgreSQL connection details
 	user := "postgres"      // Replace with your PostgreSQL username
 	password := "postgres"  // Replace with your PostgreSQL password
-	host := "34.124.235.0"  // Replace with your PostgreSQL host
+	host := "10.148.0.7"  // Replace with your PostgreSQL host
 	port := 5432            // Replace with your PostgreSQL port
 	defaultDB := "postgres" // Default database to connect to
 

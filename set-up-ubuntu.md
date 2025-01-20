@@ -1,3 +1,6 @@
+# Add dependencies
+sudo apt install make
+
 # Add Docker's official GPG key:
 
 sudo apt-get update
@@ -36,6 +39,8 @@ cd infras
 
 git clone https://github.com/kingstonduy/debezium.git
 git clone https://github.com/kingstonduy/redis.git
+git clone https://github.com/kingstonduy/elk-thesis.git
+
 cd ..
 cd repos
 git clone https://github.com/kingstonduy/thesis-backend.git
