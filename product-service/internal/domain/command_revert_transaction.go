@@ -2,6 +2,8 @@ package domain
 
 import (
 	"context"
+
+	"github.com/kingstonduy/go-core/transport"
 )
 
 type RevertTransactionRequest struct {
@@ -23,5 +25,5 @@ type RevertTransactionResponse struct {
 }
 
 type IRevertTransactionHandler interface {
-	Handle(ctx context.Context, cmd *Command[RevertTransactionRequest]) (*RevertTransactionResponse, error)
+	Handle(ctx context.Context, cmd Command[transport.Request[RevertTransactionRequest]]) (res *RevertTransactionResponse, err error)
 }

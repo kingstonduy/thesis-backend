@@ -19,34 +19,34 @@ import (
 )
 
 type handler struct {
-	repo        domain.IProductRepo
-	outboxRepo  domain.IOutboxRepo
-	db          *configuration.PostgresCon
-	redisPubSub redix.PubSubBroker
+	inventoryRepo domain.IInventoryRepo
+	outboxRepo    domain.IOutboxRepo
+	db            *configuration.PostgresCon
+	redisPubSub   redix.PubSubBroker
 }
 
 func NewExecuteTransactionHandler(
-	repo domain.IProductRepo,
+	inventoryRepo domain.IInventoryRepo,
 	outboxRepo domain.IOutboxRepo,
 	db *configuration.PostgresCon,
 	redisPubSub redix.PubSubBroker,
 ) domain.IExecuteTransactionHandler {
 	return &handler{
-		repo:        repo,
-		outboxRepo:  outboxRepo,
-		db:          db,
-		redisPubSub: redisPubSub,
+		inventoryRepo: inventoryRepo,
+		outboxRepo:    outboxRepo,
+		db:            db,
+		redisPubSub:   redisPubSub,
 	}
 }
 
 // Handle implements domain.IExecuteTransactionHandler.
 func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.ExecuteTransactionRequest]]) (res *domain.ExecuteTransactionResponse, err error) {
-	logger.Info(ctx, "Get products handler start")
-	defer logger.Info(ctx, "Get products handler end")
+	logger.Info(ctx, "ExecuteTransaction handler start")
+	defer logger.Info(ctx, "ExecuteTransaction handler end")
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("PANIC Get products handler %v", r)
+			err = fmt.Errorf("PANIC ExecuteTransaction handler %v", r)
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
@@ -61,33 +61,33 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
-			product, err := h.repo.GetProductByID(ctx, item.ProductID)
+			inventory, err := h.inventoryRepo.SelectByProductID(ctx, item.ProductID)
 			if err != nil {
 				return err
 			}
 
-			if product.ProductQuantity == 0 {
+			if inventory.InventoryQuantity == 0 {
 				err = fmt.Errorf("Product is out of stock")
 				return err
 			}
 
-			if product.ProductQuantity < item.CartItemQuantity {
+			if inventory.InventoryQuantity < item.CartItemQuantity {
 				err = fmt.Errorf("insufficient stock")
 				return err
 			}
 
-			product.ProductQuantity -= item.CartItemQuantity
+			inventory.InventoryQuantity -= item.CartItemQuantity
 
 			conditions := map[string]interface{}{
-				"PRODUCT_ID": product.ProductID,
-				"UPDATED_AT": product.UpdatedAt,
+				"PRODUCT_ID": inventory.ProductID,
+				"UPDATED_AT": inventory.UpdatedAt,
 			}
 			columns := map[string]interface{}{
-				"PRODUCT_QUANTITY": product.ProductQuantity,
-				"UPDATED_AT":       time.Now(),
+				"INVENTORY_QUANTITY": inventory.InventoryQuantity,
+				"UPDATED_AT":         time.Now(),
 			}
 
-			err = h.repo.Update(ctx, columns, conditions)
+			err = h.inventoryRepo.Update(ctx, columns, conditions)
 			if err != nil {
 				logger.Error(ctx, err.Error())
 				return err

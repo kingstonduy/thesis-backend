@@ -10,35 +10,33 @@ type ProductEntity struct {
 	ProductName        string    `json:"PRODUCT_NAME" db:"PRODUCT_NAME"`
 	ProductDescription string    `json:"PRODUCT_DESCRIPTION" db:"PRODUCT_DESCRIPTION"`
 	ProductImage       string    `json:"PRODUCT_IMAGE" db:"PRODUCT_IMAGE"`
-	ProductQuantity    int       `json:"PRODUCT_QUANTITY" db:"PRODUCT_QUANTITY"`
 	ProductPrice       string    `json:"PRODUCT_PRICE" db:"PRODUCT_PRICE"`
-	CreatedAt          time.Time `json:"CREATED_AT" db:"CREATED_AT"`
-	UpdatedAt          time.Time `json:"UPDATED_AT" db:"UPDATED_AT"`
 	ProductCategory    string    `json:"PRODUCT_CATEGORY" db:"PRODUCT_CATEGORY"`
 	Gender             string    `json:"GENDER" db:"GENDER"`
-	AvgRating          string    `json:"AVERAGE_RATING" db:"AVERAGE_RATING"`
-	TotalRating        int       `json:"TOTAL_RATING" db:"TOTAL_RATING"`
+	CreatedAt          time.Time `json:"CREATED_AT" db:"CREATED_AT"`
+	UpdatedAt          time.Time `json:"UPDATED_AT" db:"UPDATED_AT"`
+}
+
+type ProductView struct {
+	ProductID          string    `json:"PRODUCT_ID" db:"PRODUCT_ID"`
+	ProductName        string    `json:"PRODUCT_NAME" db:"PRODUCT_NAME"`
+	ProductDescription string    `json:"PRODUCT_DESCRIPTION" db:"PRODUCT_DESCRIPTION"`
+	ProductImage       string    `json:"PRODUCT_IMAGE" db:"PRODUCT_IMAGE"`
+	ProductPrice       string    `json:"PRODUCT_PRICE" db:"PRODUCT_PRICE"`
+	ProductQuantity    int       `json:"PRODUCT_QUANTITY" db:"PRODUCT_QUANTITY"`
+	ProductCategory    string    `json:"PRODUCT_CATEGORY" db:"PRODUCT_CATEGORY"`
+	Gender             string    `json:"GENDER" db:"GENDER"`
+	CreatedAt          time.Time `json:"CREATED_AT" db:"CREATED_AT"`
+	UpdatedAt          time.Time `json:"UPDATED_AT" db:"UPDATED_AT"`
 }
 
 type IProductRepo interface {
-	GetAllProduct(ctx context.Context) ([]ProductEntity, error)
-	GetProductByID(ctx context.Context, productID string) (ProductEntity, error)
-	GetProductByGender(ctx context.Context, gender string) ([]ProductEntity, error)
-	GetProductByCategory(ctx context.Context, category string) ([]ProductEntity, error)
-	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
-}
+	GetProductDetail(ctx context.Context, id string) (entity ProductView, err error)
+	GetAllProduct(ctx context.Context) ([]ProductView, error)
+	GetProductByGender(ctx context.Context, gender string) ([]ProductView, error)
+	GetProductByCategory(ctx context.Context, category string) ([]ProductView, error)
 
-type ProductCdc struct {
-	ProductID          string `json:"PRODUCT_ID" db:"PRODUCT_ID"`
-	ProductName        string `json:"PRODUCT_NAME" db:"PRODUCT_NAME"`
-	ProductDescription string `json:"PRODUCT_DESCRIPTION" db:"PRODUCT_DESCRIPTION"`
-	ProductImage       string `json:"PRODUCT_IMAGE" db:"PRODUCT_IMAGE"`
-	ProductQuantity    int    `json:"PRODUCT_QUANTITY" db:"PRODUCT_QUANTITY"`
-	ProductPrice       string `json:"PRODUCT_PRICE" db:"PRODUCT_PRICE"`
-	CreatedAt          int    `json:"CREATED_AT" db:"CREATED_AT"`
-	UpdatedAt          int    `json:"UPDATED_AT" db:"UPDATED_AT"`
-	ProductCategory    string `json:"PRODUCT_CATEGORY" db:"PRODUCT_CATEGORY"`
-	Gender             string `json:"GENDER" db:"GENDER"`
-	AvgRating          string `json:"AVERAGE_RATING" db:"AVERAGE_RATING"`
-	TotalRating        int    `json:"TOTAL_RATING" db:"TOTAL_RATING"`
+	GetProductByID(ctx context.Context, productID string) (ProductEntity, error)
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
+	Insert(ctx context.Context, entity ProductEntity) error
 }

@@ -13,11 +13,12 @@ type GetProductsByCategoryResponse struct {
 type GetProductsByCategoryResponseDetail struct {
 	ID              string `json:"productId"`
 	Name            string `json:"productName"`
-	ImageURL        string `json:"productImage"`
+	Catergory       string `json:"productCatergory"`
 	Price           string `json:"productPrice"`
-	AverageRating   string `json:"averageRating"`
+	Description     string `json:"productDescription"`
+	Image           string `json:"productImage"`
 	ProductQuantity int    `json:"productQuantity"`
-	TotalRating     int    `json:"totalRating"`
+	Gender string `json:"gender"`
 }
 
 type IGetProductsByCategoryHandler interface {

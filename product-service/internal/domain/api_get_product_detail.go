@@ -16,8 +16,7 @@ type GetProductDetailResponse struct {
 	Description     string `json:"productDescription"`
 	Image           string `json:"productImage"`
 	ProductQuantity int    `json:"productQuantity"`
-	AverageRating   string `json:"averageRating"`
-	TotalRating     int    `json:"totalRating"`
+	Gender string `json:"gender"`
 }
 
 type IGetProductDetailHandler interface {

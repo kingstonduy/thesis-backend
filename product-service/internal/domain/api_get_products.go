@@ -8,19 +8,19 @@ type GetAllProductRequest struct {
 }
 
 type GetAllProductResponse struct {
-	Products []Product `json:"products"`
+	Details []GetAllProductResponseDetail `json:"details"`
 }
 
-type Product struct {
+type GetAllProductResponseDetail struct {
 	ID              string `json:"productId"`
 	Name            string `json:"productName"`
-	ImageURL        string `json:"productImage"`
+	Catergory       string `json:"productCatergory"`
 	Price           string `json:"productPrice"`
-	AverageRating   string `json:"averageRating"`
+	Description     string `json:"productDescription"`
+	Image           string `json:"productImage"`
 	ProductQuantity int    `json:"productQuantity"`
-	TotalRating     int    `json:"totalRating"`
+	Gender string `json:"gender"`
 }
-
 type IGetProductsHandler interface {
 	Handle(ctx context.Context, req *GetAllProductRequest) (res *GetAllProductResponse, err error)
 }

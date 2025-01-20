@@ -40,22 +40,23 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) 
 		return nil, errx
 	}
 
-	products := []domain.Product{}
+	products := []domain.GetAllProductResponseDetail{}
 	for _, entity := range entities {
-		product := domain.Product{
-			ID:              entity.ProductID,
-			Name:            entity.ProductName,
-			ImageURL:        entity.ProductImage,
-			Price:           entity.ProductPrice,
-			AverageRating:   entity.AvgRating,
+		product := domain.GetAllProductResponseDetail{
+			ID             : entity.ProductID,
+			Name           : entity.ProductName,
+			Catergory      : entity.ProductCategory,
+			Price          : entity.ProductPrice,
+			Description    : entity.ProductDescription,
+			Image          : entity.ProductImage,
 			ProductQuantity: entity.ProductQuantity,
-			TotalRating:     entity.TotalRating,
+			Gender : entity.Gender,
 		}
 		products = append(products, product)
 	}
 
 	res = &domain.GetAllProductResponse{
-		Products: products,
+		Details: products,
 	}
 
 	return res, nil

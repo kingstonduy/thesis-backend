@@ -33,7 +33,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductDetailReques
 		}
 	}()
 
-	entity, err := h.repo.GetProductByID(ctx, req.ID)
+	entity, err := h.repo.GetProductDetail(ctx, req.ID)
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
@@ -48,7 +48,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductDetailReques
 		Description:     entity.ProductDescription,
 		Image:           entity.ProductImage,
 		ProductQuantity: entity.ProductQuantity,
-		TotalRating:     entity.TotalRating,
+		Gender:          entity.Gender,
 	}
 
 	return res, nil
