@@ -7,9 +7,7 @@ WORKDIR /app
 # Step 3: Copy the executable and environment file into the container
 COPY main .
 # Copy the file to the container
-COPY resources/dev.env ./resources/
-# Rename the file to local.env
-RUN mv ./resources/dev.env ./resources/local.env
+COPY resources/local.env ./resources/
 
 
 # Step 5: Define the command to run your Go executable
