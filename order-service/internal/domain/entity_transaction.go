@@ -10,6 +10,7 @@ const (
 	COMPLETE_STATUS = "COMPLETE"
 	REVERT_STATUS   = "REVERT"
 	FAILED_STATUS   = "FAIL"
+	CANCEL_STATUS   = "CANCEL"
 )
 
 type TransactionEntity struct {
@@ -39,4 +40,5 @@ func (tr TransactionEntity) GetFailedStatus() string {
 type ITransactionRepo interface {
 	Insert(ctx context.Context, tr TransactionEntity) error
 	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
+	SelectByTransactionID(ctx context.Context, id string) (TransactionEntity, error)
 }

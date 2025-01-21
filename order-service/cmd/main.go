@@ -12,6 +12,7 @@ import (
 	cart_completed_uc "github.com/kingstonduy/order-service/internal/usecase/cart-competed"
 	execute_transaction_uc "github.com/kingstonduy/order-service/internal/usecase/execute-transaction"
 	get_history_uc "github.com/kingstonduy/order-service/internal/usecase/get-history"
+	revert_transaction_uc "github.com/kingstonduy/order-service/internal/usecase/revert-transaction"
 
 	broker_server "github.com/kingstonduy/order-service/internal/presentation/broker"
 	http_server "github.com/kingstonduy/order-service/internal/presentation/http"
@@ -42,6 +43,7 @@ var usecaseModule = fx.Module("usecase",
 	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
 	fx.Provide(get_history_uc.NewGetHistoryHandler),
 	fx.Provide(cart_completed_uc.NewCartCompltedHandler),
+	fx.Provide(revert_transaction_uc.NewRevertTransactionHandler),
 )
 
 var serverModule = fx.Module("server",
@@ -54,6 +56,7 @@ var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewOrderRepo),
 	fx.Provide(postgres.NewTransactionRepo),
 	fx.Provide(postgres.NewOutboxRepo),
+	fx.Provide(postgres.NewProductRepo),
 )
 
 func main() {

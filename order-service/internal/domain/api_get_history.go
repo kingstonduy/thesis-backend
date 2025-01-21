@@ -14,14 +14,15 @@ type GetHistoryResponse struct {
 }
 
 type GetHistoryResponseDetail struct {
-	ProductID      string    `json:"productId"`
-	ProductImage   string    `json:"productImage"`
-	ProductName    string    `json:"productName"`
-	OrderID        string    `json:"orderId"`
-	DeliveryStatus string    `json:"deliveryStatus"`
-	PaymentStatus  string    `json:"paymentStatus"`
-	CreatedAt      time.Time `json:"createdAt"`
-	UpdatedAt      time.Time `json:"updatedAt"`
+	ProductID         string    `json:"productId"`
+	ProductImage      string    `json:"productImage"`
+	ProductName       string    `json:"productName"`
+	OrderID           string    `json:"orderId"`
+	DeliveryStatus    string    `json:"deliveryStatus"`
+	PaymentStatus     string    `json:"paymentStatus"`
+	TransactionStatus string    `json:"transactionStatus"`
+	CreatedAt         time.Time `json:"createdAt"`
+	UpdatedAt         time.Time `json:"updatedAt"`
 }
 
 type IGetHistoryHandler interface {

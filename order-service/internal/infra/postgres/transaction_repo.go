@@ -80,3 +80,18 @@ func (repo *transactionRepo) Update(ctx context.Context, cols map[string]interfa
 
 	return nil
 }
+
+// SelectByID implements domain.ITransactionRepo.
+func (repo *transactionRepo) SelectByTransactionID(ctx context.Context, transactionID string) (entity domain.TransactionEntity, err error) {
+	logger.Info(ctx, "Select TRANSACTION ByTransactionID start")
+	defer logger.Info(ctx, "Select TRANSACTION ByTransactionID end")
+	sqlQuery := `
+            select * from "TRANSACTION" where "TRANSACTION_ID"=$1;
+        `
+
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, transactionID); err != nil {
+		return entity, err
+	}
+
+	return entity, nil
+}

@@ -28,27 +28,31 @@ func (c *orderRepoImpl) GetHistory(ctx context.Context, params domain.GetHistory
 
 	// SQL query to fetch order history for the user
 	sqlQuery := `
-        SELECT 
+    SELECT 
         oi."PRODUCT_ID",
         p."PRODUCT_IMAGE",
         p."PRODUCT_NAME",
         oi."ORDER_ID",
         oi."DELIVERY_STATUS",
         oi."PAYMENT_STATUS",
+        t."STATUS" as "TRANSACTION_STATUS",
         oi."CREATED_AT",
-        oi."UPDATED_AT" 
-        FROM 
-            public."ORDER_ITEM" oi
-        INNER JOIN 
-            public."PRODUCT" p
-        ON 
-            oi."PRODUCT_ID" = p."PRODUCT_ID"
-        WHERE 
-            oi."USER_ID" = $1
-            AND oi."DELIVERY_STATUS" IS NOT null
-            and oi."PAYMENT_STATUS" is not null
-        ORDER BY 
-            oi."CREATED_AT" DESC;
+        oi."UPDATED_AT"
+    FROM 
+        public."ORDER_ITEM" oi
+    INNER JOIN 
+        public."PRODUCT" p
+    ON 
+        oi."PRODUCT_ID" = p."PRODUCT_ID"
+    INNER JOIN 
+        public."TRANSACTION" t
+    ON 
+        oi."TRANSACTION_ID" = t."TRANSACTION_ID" -- Join with TRANSACTION table
+    WHERE 
+        oi."USER_ID" = $1
+        AND oi."DELIVERY_STATUS" IS NOT NULL
+    ORDER BY 
+        oi."CREATED_AT" DESC;
     `
 
 	// Prepare response
@@ -69,6 +73,7 @@ func (c *orderRepoImpl) GetHistory(ctx context.Context, params domain.GetHistory
 			&detail.OrderID,
 			&detail.DeliveryStatus,
 			&detail.PaymentStatus,
+			&detail.TransactionStatus,
 			&detail.CreatedAt,
 			&detail.UpdatedAt,
 		)

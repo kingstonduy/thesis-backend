@@ -27,12 +27,14 @@ func WithSubscriptions() BrokerServerStartOption {
 		g := new(errgroup.Group)
 
 		brokerCfg := b.cfg.BrokerConfig
-		// TODO open later
-		// g.Go(func() error {
-		// 	return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
-		// })
+		g.Go(func() error {
+			return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
+		})
 		g.Go(func() error {
 			return b.EventHandler(brokerCfg.CartOutboxTopic)
+		})
+		g.Go(func() error {
+			return b.EventHandler(brokerCfg.ProductOutboxTopic)
 		})
 
 		// wait for the subscription result, return error if present
@@ -72,12 +74,77 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			if err != nil {
 				logger.Error(ctx, err)
 			}
-
+		case domain.CART_FAILED_TRANSACTION_COMMAND:
+			cmd := domain.Command[transport.Request[domain.RevertTransactionRequest]]{
+				AggregateID: event.Payload.After.AggregateID,
+				CommandID:   event.Payload.After.CommandID,
+				CommandType: event.Payload.After.CommandType,
+				ReplyTo:     event.Payload.After.ReplyTo,
+			}
+			err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
+			_, err := pipeline.Send[*domain.Command[transport.Request[domain.RevertTransactionRequest]], *domain.RevertTransactionResponse](ctx, &cmd)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
+		case domain.PRODUCT_FAILED_TRANSACTION_COMMAND:
+			cmd := domain.Command[transport.Request[domain.RevertTransactionRequest]]{
+				AggregateID: event.Payload.After.AggregateID,
+				CommandID:   event.Payload.After.CommandID,
+				CommandType: event.Payload.After.CommandType,
+				ReplyTo:     event.Payload.After.ReplyTo,
+			}
+			err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
+			_, err := pipeline.Send[*domain.Command[transport.Request[domain.RevertTransactionRequest]], *domain.RevertTransactionResponse](ctx, &cmd)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
 		default:
 			logger.Errorf(ctx, "does not handle this event=%v", event)
 		}
 
 		logger.Infof(ctx, "consumed message=%v", event)
+		return nil
+	}, b.GetSubscriptionOptions()...)
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer subscriber.Unsubscribe()
+		<-b.quit
+	}()
+	return nil
+}
+
+func (b *BrokerServer) ProductCDCHandler(topic string) error {
+	logger.Infof(context.TODO(), "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
+		e.Ack()
+
+		var event domain.Event[domain.ProductEntity]
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
+			return nil
+		}
+
+		logger.Infof(ctx, "consume message=%v", event)
+
+		if err := b.productRepo.Insert(ctx, event.Payload.After); err != nil {
+			logger.Error(ctx, err)
+			return nil
+		}
+
+		logger.Infof(ctx, "received event: %v", event)
+
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {
