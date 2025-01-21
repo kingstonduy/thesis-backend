@@ -103,7 +103,7 @@ type KafkaBrokerConfig struct {
 	HandlerPool       int    `config:"KAFKA_HANDLER_PUBLISHER"`
 	ProductCDCTopic   string `config:"PRODUCT_SERVICE_TOPIC"`
 	OrderOutboxTopic  string `config:"ORDER_SERVICE_OUTBOX_TOPIC"`
-	CartTopic         string `config:"CART_TOPIC"`
+	CartOutboxTopic   string `config:"CART_SERVICE_OUTBOX_TOPIC"`
 }
 
 type RedisConfig struct {

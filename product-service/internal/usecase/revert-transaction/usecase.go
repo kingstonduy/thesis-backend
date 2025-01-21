@@ -36,7 +36,7 @@ func NewRevertTransactionHandler(
 }
 
 // Handle implements domain.IRevertTransactionHandler.
-func (h *handler) Handle(ctx context.Context, cmd domain.Command[transport.Request[domain.RevertTransactionRequest]]) (res *domain.RevertTransactionResponse, err error) {
+func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.RevertTransactionRequest]]) (res *domain.RevertTransactionResponse, err error) {
 	logger.Info(ctx, "RevertTransaction handler start")
 	defer logger.Info(ctx, "RevertTransaction handler end")
 	defer func() {

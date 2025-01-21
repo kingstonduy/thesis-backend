@@ -25,5 +25,5 @@ type RevertTransactionResponse struct {
 }
 
 type IRevertTransactionHandler interface {
-	Handle(ctx context.Context, cmd Command[transport.Request[RevertTransactionRequest]]) (res *RevertTransactionResponse, err error)
+	Handle(ctx context.Context, cmd *Command[transport.Request[RevertTransactionRequest]]) (*RevertTransactionResponse, error)
 }

@@ -30,13 +30,16 @@ func WithSubscriptions() BrokerServerStartOption {
 		g := new(errgroup.Group)
 
 		brokerCfg := b.cfg.BrokerConfig
-		// TODO open later
 		g.Go(func() error {
 			return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
 		})
 
 		g.Go(func() error {
 			return b.EventHandler(brokerCfg.OrderOutboxTopic)
+		})
+
+		g.Go(func() error {
+			return b.EventHandler(brokerCfg.CartOutboxTopic)
 		})
 
 		// wait for the subscription result, return error if present
@@ -124,7 +127,23 @@ func (b *BrokerServer) EventHandler(topic string) error {
 				}
 				return nil
 			}
-
+		case domain.CART_FAILED_TRANSACTION_COMMAND:
+			cmd := domain.Command[transport.Request[domain.RevertTransactionRequest]]{
+				AggregateID: event.Payload.After.AggregateID,
+				CommandID:   event.Payload.After.CommandID,
+				CommandType: event.Payload.After.CommandType,
+				ReplyTo:     event.Payload.After.ReplyTo,
+			}
+			err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
+			_, err := pipeline.Send[*domain.Command[transport.Request[domain.RevertTransactionRequest]], *domain.RevertTransactionResponse](ctx, &cmd)
+			if err != nil {
+				logger.Error(ctx, err)
+				return nil
+			}
 		default:
 			logger.Errorf(ctx, "does not handle this event=%v", event)
 		}
