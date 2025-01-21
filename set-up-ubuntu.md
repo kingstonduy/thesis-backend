@@ -52,3 +52,12 @@ sudo tar -C /usr/local -xvf go1.22.10.linux-amd64.tar.gz
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.profile
 source ~/.profile
 go version
+
+
+# set up node
+sudo apt update
+sudo apt upgrade
+sudo apt install -y curl
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+node --version
