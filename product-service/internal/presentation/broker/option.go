@@ -61,7 +61,7 @@ func (b *BrokerServer) ProductCDCHandler(topic string) error {
 
 		logger.Infof(c, "consume message=%v", event)
 
-		if err := b.redisClient.Set(c, "PRODUCT_ID"+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
+		if err := b.redisClient.Set(c, domain.REDIS_KEY_PRODUCT_ID+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
 			logger.Error(context.TODO(), "failed to set redis %v", err)
 			return err
 		}

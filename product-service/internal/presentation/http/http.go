@@ -31,7 +31,7 @@ func NewHttpServer(
 	tracer trace.Tracer,
 ) *HttpServer {
 	fiberApp := fiberx.NewFiberApp(
-		fiberx.WithLogger(logger),
+		// fiberx.WithLogger(logger),
 		fiberx.WithTracer(tracer),
 		fiberx.WithBasePath(cfg.ServerConfig.HttpBasePath),
 		fiberx.WithSwaggerPath("/swagger/*"),

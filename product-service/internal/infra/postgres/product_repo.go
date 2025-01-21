@@ -3,6 +3,7 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/kingstonduy/go-core/cache"
 	"github.com/kingstonduy/go-core/errorx"
@@ -39,7 +40,11 @@ func (repo *productRepoImlp) GetAllProduct(ctx context.Context) (entities []doma
 	logger.Info(ctx, "GetAllProduct start")
 	defer logger.Info(ctx, "GetAllProduct end")
 
-	sqlQuery := `
+	redisKey := domain.REDIS_KEY_GET_ALL_PRODUCTS
+	dur, err := repo.redisCLient.Get(ctx, redisKey, &entities)
+	if dur == -2 || err != nil {
+		logger.Info(ctx, "redis miss fetching from db")
+		sqlQuery := `
         SELECT 
             p."PRODUCT_ID", 
             p."PRODUCT_NAME", 
@@ -57,37 +62,40 @@ func (repo *productRepoImlp) GetAllProduct(ctx context.Context) (entities []doma
             p."PRODUCT_ID" = i."PRODUCT_ID";
     `
 
-	rows, err := repo.db.DB.Query(ctx, sqlQuery)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var product domain.ProductView
-		err = rows.Scan(
-			&product.ProductID,
-			&product.ProductName,
-			&product.ProductDescription,
-			&product.ProductImage,
-			&product.ProductPrice,
-			&product.ProductCategory,
-			&product.Gender,
-			&product.ProductQuantity,
-		)
+		rows, err := repo.db.DB.Query(ctx, sqlQuery)
 		if err != nil {
 			return nil, err
 		}
-		entities = append(entities, product)
-	}
+		defer rows.Close()
 
-	if rows.Err() != nil {
-		logger.Errorf(ctx, rows.Err().Error())
-		return nil, rows.Err()
-	}
+		for rows.Next() {
+			var product domain.ProductView
+			err = rows.Scan(
+				&product.ProductID,
+				&product.ProductName,
+				&product.ProductDescription,
+				&product.ProductImage,
+				&product.ProductPrice,
+				&product.ProductCategory,
+				&product.Gender,
+				&product.ProductQuantity,
+			)
+			if err != nil {
+				return nil, err
+			}
+			entities = append(entities, product)
+		}
 
-	if len(entities) == 0 {
-		return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		if rows.Err() != nil {
+			logger.Errorf(ctx, rows.Err().Error())
+			return nil, rows.Err()
+		}
+
+		if len(entities) == 0 {
+			return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		}
+		go repo.redisCLient.Set(context.Background(), redisKey, entities, 0)
+		return entities, nil
 	}
 	return entities, nil
 }
@@ -97,8 +105,12 @@ func (repo *productRepoImlp) GetProductByCategory(ctx context.Context, category 
 	logger.Info(ctx, "GetProductByGender start")
 	defer logger.Info(ctx, "GetProductByGender end")
 
-	sqlQuery :=
-		`
+	redisKey := fmt.Sprintf(domain.REDIS_KEY_CATEGORY+"%s", strings.ToUpper(category))
+	dur, err := repo.redisCLient.Get(ctx, redisKey, &entities)
+	if dur == -2 || err != nil {
+		logger.Info(ctx, "redis miss fetching from db")
+		sqlQuery :=
+			`
         SELECT 
             p."PRODUCT_ID", 
             p."PRODUCT_NAME", 
@@ -117,37 +129,40 @@ func (repo *productRepoImlp) GetProductByCategory(ctx context.Context, category 
         WHERE 
             p."PRODUCT_CATEGORY" = $1;
     `
-	rows, err := repo.db.DB.Query(ctx, sqlQuery, category)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var product domain.ProductView
-		err = rows.Scan(
-			&product.ProductID,
-			&product.ProductName,
-			&product.ProductDescription,
-			&product.ProductImage,
-			&product.ProductPrice,
-			&product.ProductCategory,
-			&product.Gender,
-			&product.ProductQuantity,
-		)
+		rows, err := repo.db.DB.Query(ctx, sqlQuery, category)
 		if err != nil {
 			return nil, err
 		}
-		entities = append(entities, product)
-	}
+		defer rows.Close()
 
-	if rows.Err() != nil {
-		logger.Errorf(ctx, rows.Err().Error())
-		return nil, rows.Err()
-	}
+		for rows.Next() {
+			var product domain.ProductView
+			err = rows.Scan(
+				&product.ProductID,
+				&product.ProductName,
+				&product.ProductDescription,
+				&product.ProductImage,
+				&product.ProductPrice,
+				&product.ProductCategory,
+				&product.Gender,
+				&product.ProductQuantity,
+			)
+			if err != nil {
+				return nil, err
+			}
+			entities = append(entities, product)
+		}
 
-	if len(entities) == 0 {
-		return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		if rows.Err() != nil {
+			logger.Errorf(ctx, rows.Err().Error())
+			return nil, rows.Err()
+		}
+
+		if len(entities) == 0 {
+			return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		}
+		go repo.redisCLient.Set(context.Background(), redisKey, entities, 0)
+		return entities, nil
 	}
 	return entities, nil
 }
@@ -157,8 +172,12 @@ func (repo *productRepoImlp) GetProductByGender(ctx context.Context, gender stri
 	logger.Info(ctx, "GetProductByGender start")
 	defer logger.Info(ctx, "GetProductByGender end")
 
-	sqlQuery :=
-		`
+	redisKey := fmt.Sprintf(domain.REDIS_KEY_GENDER+"%s", strings.ToUpper(gender))
+	dur, err := repo.redisCLient.Get(ctx, redisKey, &entities)
+	if dur == -2 || err != nil {
+		logger.Info(ctx, "redis miss fetching from db")
+		sqlQuery :=
+			`
         SELECT 
             p."PRODUCT_ID", 
             p."PRODUCT_NAME", 
@@ -177,37 +196,40 @@ func (repo *productRepoImlp) GetProductByGender(ctx context.Context, gender stri
         WHERE 
             p."GENDER" = $1;
     `
-	rows, err := repo.db.DB.Query(ctx, sqlQuery, gender)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var product domain.ProductView
-		err = rows.Scan(
-			&product.ProductID,
-			&product.ProductName,
-			&product.ProductDescription,
-			&product.ProductImage,
-			&product.ProductPrice,
-			&product.ProductCategory,
-			&product.Gender,
-			&product.ProductQuantity,
-		)
+		rows, err := repo.db.DB.Query(ctx, sqlQuery, gender)
 		if err != nil {
 			return nil, err
 		}
-		entities = append(entities, product)
-	}
+		defer rows.Close()
 
-	if rows.Err() != nil {
-		logger.Errorf(ctx, rows.Err().Error())
-		return nil, rows.Err()
-	}
+		for rows.Next() {
+			var product domain.ProductView
+			err = rows.Scan(
+				&product.ProductID,
+				&product.ProductName,
+				&product.ProductDescription,
+				&product.ProductImage,
+				&product.ProductPrice,
+				&product.ProductCategory,
+				&product.Gender,
+				&product.ProductQuantity,
+			)
+			if err != nil {
+				return nil, err
+			}
+			entities = append(entities, product)
+		}
 
-	if len(entities) == 0 {
-		return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		if rows.Err() != nil {
+			logger.Errorf(ctx, rows.Err().Error())
+			return nil, rows.Err()
+		}
+
+		if len(entities) == 0 {
+			return nil, fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+		}
+		go repo.redisCLient.Set(context.Background(), redisKey, entities, 0)
+		return entities, nil
 	}
 	return entities, nil
 }
@@ -217,12 +239,19 @@ func (repo *productRepoImlp) GetProductByID(ctx context.Context, productID strin
 	logger.Info(ctx, "GetProductByID start")
 	defer logger.Info(ctx, "GetProductByID end")
 
-	sqlQuery := `
-        select * from "PRODUCT" where "PRODUCT_ID"=$1;
-    `
+	redisKey := fmt.Sprintf(domain.REDIS_KEY_PRODUCT_ID+"%s", strings.ToUpper(productID))
+	dur, err := repo.redisCLient.Get(ctx, redisKey, entity)
+	if dur == -2 || err != nil {
+		logger.Info(ctx, "redis miss fetching from db")
+		sqlQuery := `
+            select * from "PRODUCT" where "PRODUCT_ID"=$1;
+        `
 
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
-		return entity, err
+		if err = repo.db.DB.Get(ctx, &entity, sqlQuery, productID); err != nil {
+			return entity, err
+		}
+		go repo.redisCLient.Set(context.Background(), redisKey, entity, 0)
+		return entity, nil
 	}
 	return entity, nil
 }
@@ -232,7 +261,11 @@ func (repo *productRepoImlp) GetProductDetail(ctx context.Context, id string) (e
 	logger.Info(ctx, "GetProductDetail start")
 	defer logger.Info(ctx, "GetProductDetail end")
 
-	sqlQuery := `
+	redisKey := fmt.Sprintf(domain.REDIS_KEY_PRODUCT_DETAIL+"%s", strings.ToUpper(id))
+	dur, err := repo.redisCLient.Get(ctx, redisKey, entity)
+	if dur == -2 || err != nil {
+		logger.Info(ctx, "redis miss fetching from db")
+		sqlQuery := `
         SELECT 
             p."PRODUCT_ID", 
             p."PRODUCT_NAME", 
@@ -252,8 +285,11 @@ func (repo *productRepoImlp) GetProductDetail(ctx context.Context, id string) (e
             p."PRODUCT_ID" = $1;
     `
 
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, id); err != nil {
-		return entity, err
+		if err = repo.db.DB.Get(ctx, &entity, sqlQuery, id); err != nil {
+			return entity, err
+		}
+		go repo.redisCLient.Set(context.Background(), redisKey, entity, 0)
+		return entity, nil
 	}
 	return entity, nil
 }
