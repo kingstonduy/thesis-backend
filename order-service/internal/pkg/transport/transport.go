@@ -2,6 +2,7 @@ package utils_transport
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -87,4 +88,10 @@ func GenResultFromErrorx(ctx context.Context, errx *errorx.Error) (result *trans
 	}
 
 	return result
+}
+
+func GenRequestTraceString(originalTrace transport.Trace, to string, replyTo string) string {
+	trace := GenRequestTrace(originalTrace, to, replyTo)
+	s, _ := json.Marshal(trace)
+	return string(s)
 }

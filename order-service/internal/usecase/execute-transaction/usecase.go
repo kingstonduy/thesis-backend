@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
+	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
@@ -55,11 +56,10 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			logger.Errorf(ctx, err.Error())
 		}
 	}()
-	trace := transport.GetTraceByCtx(ctx)
 
 	now := time.Now()
 	tr := domain.TransactionEntity{
-		TransactionID: trace.Sid,
+		TransactionID: transport.GetTraceByCtx(ctx).Sid,
 		Status:        domain.INIT_STATUS,
 		Processing:    1,
 		CreatedAt:     now,
@@ -71,23 +71,22 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			OrderID:       uuid.New().String(),
 			ProductID:     item.ProductID,
 			UserID:        req.UserID,
-			TransactionID: trace.Sid,
+			TransactionID: transport.GetTraceByCtx(ctx).Sid,
 			CreatedAt:     now,
 			UpdatedAt:     now,
 		})
 	}
 
-	reqType := transport.Request[domain.ExecuteTransactionRequest]{
-		Trace: utils_transport.GenRequestTrace(trace, "product-service", h.redisPubSub.GetChannel()),
-		Data:  *req,
-	}
-	reqStr, _ := json.Marshal(reqType)
-	outbox := domain.OutboxEntity{
-		AggregateID: trace.Sid,
+	reqStr, _ := json.Marshal(req)
+
+	var outboxEntity domain.OutboxEntity = domain.OutboxEntity{
+		AggregateID: transport.GetTraceByCtx(ctx).Sid,
 		CommandID:   uuid.New().String(),
 		CommandType: domain.ORDER_INIT_TRANSACTION_COMMAND,
 		Payload:     string(reqStr),
+		Trace:       utils_transport.GenRequestTraceString(transport.GetTraceByCtx(ctx), "", ""),
 		ReplyTo:     h.redisPubSub.GetChannel(),
+		TraceParent: trace.ExtractTraceparent(ctx),
 	}
 
 	err2 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
@@ -105,7 +104,7 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 			}
 		}
 
-		err = h.outboxRepo.Insert(ctx, outbox)
+		err = h.outboxRepo.Insert(ctx, outboxEntity)
 		if err != nil {
 			logger.Error(ctx, err)
 			return err
@@ -120,12 +119,13 @@ func (h *handler) Handle(ctx context.Context, req *domain.ExecuteTransactionRequ
 		return nil, errx
 	}
 
-	resStr, err := h.redisPubSub.GetValue(ctx, trace.Sid, time.Second*20)
+	resStr, err := h.redisPubSub.GetValue(ctx, transport.GetTraceByCtx(ctx).Sid, time.Second*20)
 	if err != nil {
 		errx := errorx.SuspendedErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx)
 		return nil, errx
 	}
+
 	var resType transport.Response[domain.ExecuteTransactionResponse]
 	err = json.Unmarshal([]byte(resStr), &resType)
 	if err != nil {

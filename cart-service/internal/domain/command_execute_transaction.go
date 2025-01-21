@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/transport"
 )
 
@@ -26,4 +27,5 @@ type ExecuteTransactionResponse struct {
 
 type IExecuteTransactionHandler interface {
 	Handle(ctx context.Context, req *Command[transport.Request[ExecuteTransactionRequest]]) (*ExecuteTransactionResponse, error)
+	Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) error
 }

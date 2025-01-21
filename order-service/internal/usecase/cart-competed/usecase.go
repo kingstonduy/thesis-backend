@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/logger"
-	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
@@ -35,8 +35,8 @@ func NewCartCompltedHandler(
 	}
 }
 
-// Handle implements domain.ICartCompletedHandler.
-func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.CartCompletedRequest]]) (res *domain.CartCompletedResponse, err error) {
+// Handle1 implements domain.ICartCompletedHandler.
+func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
 	logger.Info(ctx, "CartCompletedHandler start")
 	defer logger.Info(ctx, "CartCompletedHandler end")
 	defer func() {
@@ -52,7 +52,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 			"PAYMENT_STATUS":  domain.COMPLETE_STATUS,
 		}
 		conditions := map[string]interface{}{
-			"TRANSACTION_ID": cmd.AggregateID,
+			"TRANSACTION_ID": outbox.AggregateID,
 		}
 
 		if err = h.orderRepo.Update(ctx, cols, conditions); err != nil {
@@ -78,9 +78,8 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 			err = err1
 		}
 		logger.Error(ctx, err)
-		return nil, err
+		return err
 	}
 
-	return nil, nil
-
+	return nil
 }

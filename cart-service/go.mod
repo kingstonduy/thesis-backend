@@ -9,7 +9,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.1
-	github.com/kingstonduy/go-core v0.0.6
+	github.com/kingstonduy/go-core v0.0.9
 	github.com/moov-io/iso8583 v0.22.3
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pkg/errors v0.9.1
@@ -144,4 +144,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-repos/go-core
+// replace github.com/kingstonduy/go-core => /home/kingstonduy/working/repos/go-core

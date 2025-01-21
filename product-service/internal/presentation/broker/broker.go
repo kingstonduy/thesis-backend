@@ -5,6 +5,7 @@ import (
 
 	"github.com/gammazero/workerpool"
 	"github.com/kingstonduy/go-core/cache"
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/transport/broker"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
@@ -21,6 +22,7 @@ type BrokerServer struct {
 	quit          chan struct{}
 	workerpool    *workerpool.WorkerPool
 	redisPubSub   redix.PubSubBroker
+	dp            cmd_pipeline.DispatcherHandler
 }
 
 func (s *BrokerServer) GetStartOptions() []BrokerServerStartOption {
@@ -36,6 +38,7 @@ func NewBrokerServer(
 	logger logger.Logger,
 	config *configuration.Configuration,
 	redisPubSub redix.PubSubBroker,
+	dp cmd_pipeline.DispatcherHandler,
 ) *BrokerServer {
 
 	bConfig := config.BrokerConfig
@@ -49,6 +52,7 @@ func NewBrokerServer(
 		quit:          make(chan struct{}),
 		workerpool:    workerpool.New(100),
 		redisPubSub:   redisPubSub,
+		dp:            dp,
 	}
 
 	go func() {

@@ -3,7 +3,7 @@ package domain
 import (
 	"context"
 
-	"github.com/kingstonduy/go-core/transport"
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 )
 
 type CartCompletedRequest struct {
@@ -24,5 +24,5 @@ type CartCompletedRequestDetail struct {
 type CartCompletedResponse struct{}
 
 type ICartCompletedHandler interface {
-	Handle(ctx context.Context, req *Command[transport.Request[CartCompletedRequest]]) (*CartCompletedResponse, error)
+	Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) error
 }

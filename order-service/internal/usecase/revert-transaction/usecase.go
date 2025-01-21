@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
-	"github.com/kingstonduy/go-core/transport"
 	configuration "github.com/kingstonduy/order-service/internal/bootstrap"
 	"github.com/kingstonduy/order-service/internal/domain"
 )
@@ -30,8 +30,8 @@ func NewRevertTransactionHandler(
 	}
 }
 
-// Handle implements domain.IRevertTransactionHandler.
-func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.RevertTransactionRequest]]) (res *domain.RevertTransactionResponse, err error) {
+// Handle1 implements domain.IRevertTransactionHandler.
+func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
 	logger.Info(ctx, "RevertTransaction handler start")
 	defer logger.Info(ctx, "RevertTransaction handler end")
 	defer func() {
@@ -42,7 +42,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 	}()
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
-		tr, err := h.transactionRepo.SelectByTransactionID(ctx, cmd.AggregateID)
+		tr, err := h.transactionRepo.SelectByTransactionID(ctx, outbox.AggregateID)
 		if err != nil {
 			return err
 		}
@@ -84,6 +84,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 		}
 		errx := errorx.SuspendedErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
+		return errx
 	}
-	return nil, nil
+	return nil
 }

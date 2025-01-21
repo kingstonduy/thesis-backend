@@ -3,7 +3,7 @@ package domain
 import (
 	"context"
 
-	"github.com/kingstonduy/go-core/transport"
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 )
 
 type RevertTransactionRequest struct {
@@ -25,5 +25,5 @@ type RevertTransactionResponse struct {
 }
 
 type IRevertTransactionHandler interface {
-	Handle(ctx context.Context, cmd *Command[transport.Request[RevertTransactionRequest]]) (*RevertTransactionResponse, error)
+	Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) error
 }

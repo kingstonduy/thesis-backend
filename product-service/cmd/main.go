@@ -36,6 +36,7 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.NewRestyClient),
 	fx.Provide(configuration.GetTracer),
 	fx.Provide(configuration.GetValidator),
+	fx.Provide(configuration.NewDispatcher),
 )
 
 var usecaseModule = fx.Module("usecase",
