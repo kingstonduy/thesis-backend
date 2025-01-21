@@ -60,6 +60,11 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
+			if item.CartItemID == "TEST_CART_FAILED" {
+				err = fmt.Errorf("simulate cart failed")
+				return err
+			}
+
 			err = h.cartRepo.DeleteById(ctx, item.CartItemID)
 			if err != nil {
 				logger.Error(ctx, err)
@@ -92,7 +97,7 @@ func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Requ
 		if err == nil {
 			err = err1
 		}
-		reqTypeStr, _ := json.Marshal(cmd.Payload.Data)
+		reqTypeStr, _ := json.Marshal(cmd.Payload)
 		outbox := domain.OutboxEntity{
 			AggregateID: cmd.AggregateID,
 			CommandID:   uuid.New().String(),

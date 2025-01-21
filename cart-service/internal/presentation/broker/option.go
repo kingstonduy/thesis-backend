@@ -30,10 +30,10 @@ func WithSubscriptions() BrokerServerStartOption {
 		g := new(errgroup.Group)
 
 		brokerCfg := b.cfg.BrokerConfig
-		// TODO open later
-		// g.Go(func() error {
-		// 	return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
-		// })
+
+		g.Go(func() error {
+			return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
+		})
 		g.Go(func() error {
 			return b.EventHandler(brokerCfg.ProductOutboxTopic)
 		})
@@ -97,6 +97,38 @@ func (b *BrokerServer) EventHandler(topic string) error {
 		}
 
 		logger.Infof(ctx, "consumed message=%v", event)
+		return nil
+	}, b.GetSubscriptionOptions()...)
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer subscriber.Unsubscribe()
+		<-b.quit
+	}()
+	return nil
+}
+
+func (b *BrokerServer) ProductCDCHandler(topic string) error {
+	logger.Infof(context.TODO(), "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
+		e.Ack()
+
+		var event domain.Event[domain.ProductEntity]
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
+			return nil
+		}
+
+		logger.Infof(ctx, "consume message=%v", event)
+
+		if err := b.productRepo.Insert(ctx, event.Payload.After); err != nil {
+			logger.Error(ctx, err)
+			return nil
+		}
+
+		logger.Infof(ctx, "received event: %v", event)
+
 		return nil
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {

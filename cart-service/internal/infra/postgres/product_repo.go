@@ -22,7 +22,7 @@ func NewProductRepo(db *configuration.PostgresCon) domain.IProductRepo {
 }
 
 // Insert implements domain.IProductRepo.
-func (repo *productRepo) Insert(ctx context.Context, entity domain.ProductCdc) error {
+func (repo *productRepo) Insert(ctx context.Context, entity domain.ProductEntity) error {
 	sqlQuery, _ := gensql.GenInsertSql("PRODUCT", entity)
 
 	logger.Infof(ctx, "sql query: %s", sqlQuery)
@@ -45,6 +45,30 @@ func (repo *productRepo) Insert(ctx context.Context, entity domain.ProductCdc) e
 }
 
 // Update implements domain.IProductRepo.
-func (p *productRepo) Update(ctx context.Context, cols map[string]interface{}, condition map[string]interface{}) error {
-	panic("unimplemented")
+func (repo *productRepo) Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error {
+	logger.Info(ctx, "Update PRODUCT starts")
+	defer logger.Info(ctx, "Update PRODUCT ends")
+
+	sqlQuery, err := gensql.GenUpdateSql("PRODUCT", cols, conditions)
+	if err != nil {
+		return err
+	}
+
+	logger.Info(ctx, sqlQuery)
+
+	res, err := repo.db.DB.Exec(ctx, sqlQuery)
+	if err != nil {
+		return err
+	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affectedRows == 0 {
+		return fmt.Errorf(errorx.ErrorMessageNoRowAffected)
+	}
+
+	return nil
 }

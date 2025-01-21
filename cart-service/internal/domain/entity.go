@@ -28,23 +28,3 @@ type GetCartParamsIn struct {
 type GetCartParamsOut struct {
 	CartItems []GetCartItemDetail `json:"cartItems"`
 }
-
-type ProductCdc struct {
-	ProductID          string `json:"PRODUCT_ID" db:"PRODUCT_ID"`
-	ProductName        string `json:"PRODUCT_NAME" db:"PRODUCT_NAME"`
-	ProductDescription string `json:"PRODUCT_DESCRIPTION" db:"PRODUCT_DESCRIPTION"`
-	ProductImage       string `json:"PRODUCT_IMAGE" db:"PRODUCT_IMAGE"`
-	ProductQuantity    int    `json:"PRODUCT_QUANTITY" db:"PRODUCT_QUANTITY"`
-	ProductPrice       string `json:"PRODUCT_PRICE" db:"PRODUCT_PRICE"`
-	CreatedAt          int    `json:"CREATED_AT" db:"CREATED_AT"`
-	UpdatedAt          int    `json:"UPDATED_AT" db:"UPDATED_AT"`
-	ProductCategory    string `json:"PRODUCT_CATEGORY" db:"PRODUCT_CATEGORY"`
-	Gender             string `json:"GENDER" db:"GENDER"`
-	AvgRating          string `json:"AVERAGE_RATING" db:"AVERAGE_RATING"`
-	TotalRating        int    `json:"TOTAL_RATING" db:"TOTAL_RATING"`
-}
-
-type IProductRepo interface {
-	Insert(ctx context.Context, entity ProductCdc) error
-	Update(ctx context.Context, cols map[string]interface{}, condition map[string]interface{}) error
-}

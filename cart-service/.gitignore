@@ -90,6 +90,7 @@ logs/
 
 src/test/resources/data/_*
 
-access_log.*
+*.log
+main
 
 .DS_Store
