@@ -240,7 +240,7 @@ func (repo *productRepoImlp) GetProductByID(ctx context.Context, productID strin
 	defer logger.Info(ctx, "GetProductByID end")
 
 	redisKey := fmt.Sprintf(domain.REDIS_KEY_PRODUCT_ID+"%s", strings.ToUpper(productID))
-	dur, err := repo.redisCLient.Get(ctx, redisKey, entity)
+	dur, err := repo.redisCLient.Get(ctx, redisKey, &entity)
 	if dur == -2 || err != nil {
 		logger.Info(ctx, "redis miss fetching from db")
 		sqlQuery := `
@@ -262,7 +262,7 @@ func (repo *productRepoImlp) GetProductDetail(ctx context.Context, id string) (e
 	defer logger.Info(ctx, "GetProductDetail end")
 
 	redisKey := fmt.Sprintf(domain.REDIS_KEY_PRODUCT_DETAIL+"%s", strings.ToUpper(id))
-	dur, err := repo.redisCLient.Get(ctx, redisKey, entity)
+	dur, err := repo.redisCLient.Get(ctx, redisKey, &entity)
 	if dur == -2 || err != nil {
 		logger.Info(ctx, "redis miss fetching from db")
 		sqlQuery := `
