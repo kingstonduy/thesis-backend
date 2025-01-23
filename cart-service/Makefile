@@ -15,6 +15,7 @@ deploy:
 	-docker container stop cart-service || true
 	-docker container rm cart-service || true
 	docker build -t cart-service .
-	docker run -d -p 7003:7003 -v ./:/app --name cart-service cart-service
+	docker network connect kong-net product-service || true
+	docker run -d --network=kong-net -p 7003:7003 -v ./:/app --name cart-service cart-service
 
 

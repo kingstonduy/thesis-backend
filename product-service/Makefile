@@ -19,4 +19,3 @@ deploy:
 	docker build -t product-service .
 	docker network connect kong-net product-service || true
 	docker run -d --network=kong-net -p 7002:7002 -v ./:/app --name product-service product-service
-

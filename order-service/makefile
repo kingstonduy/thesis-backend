@@ -15,6 +15,7 @@ deploy:
 	-docker container stop order-service || true
 	-docker container rm order-service || true
 	docker build -t order-service .
-	docker run -d -p 7005:7005 -v ./:/app --name order-service order-service
+	docker network connect kong-net product-service || true
+	docker run -d --network=kong-net -p 7005:7005 -v ./:/app --name order-service order-service
 
 
