@@ -27,11 +27,7 @@ func (repo *customerRepoImpl) GetUserByUserID(ctx context.Context, userID string
 	defer logger.Info(ctx, "GetUserByUserID end")
 
 	sqlQuery := `
-        SELECT 
-        "USER_ID", "USER_NAME", "USER_PASSWORD", "USER_IMAGE", 
-        "FIRST_NAME", "LAST_NAME", "GENDER", "EMAIL", 
-        "STREET", "CITY", "CITY_CODE", "DISTRICT", 
-        "DISTRICT_CODE", "WARD", "WARD_CODE", "CREATED_AT", "UPDATED_AT"
+        SELECT *
         FROM public."CUSTOMER" WHERE "USER_ID"=$1;
     `
 	var user domain.UserEntity
@@ -48,11 +44,7 @@ func (repo *customerRepoImpl) GetUserByUserName(ctx context.Context, userName st
 	defer logger.Info(ctx, "GetUserByUserName end")
 
 	sqlQuery := `
-        SELECT 
-        "USER_ID", "USER_NAME", "USER_PASSWORD", "USER_IMAGE", 
-        "FIRST_NAME", "LAST_NAME", "GENDER", "EMAIL", 
-        "STREET", "CITY", "CITY_CODE", "DISTRICT", 
-        "DISTRICT_CODE", "WARD", "WARD_CODE", "CREATED_AT", "UPDATED_AT"
+        SELECT *
         FROM public."CUSTOMER" WHERE "USER_NAME"=$1;
     `
 	var user domain.UserEntity

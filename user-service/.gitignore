@@ -93,3 +93,6 @@ src/test/resources/data/_*
 *.log
 
 .DS_Store
+
+
+main
