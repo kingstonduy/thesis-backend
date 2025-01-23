@@ -29,7 +29,7 @@ type UserEntity struct {
 
 type IUserRepo interface {
 	Insert(ctx context.Context, user UserEntity) error
-	Update(ctx context.Context, user UserEntity) error
+	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
 	GetUserByUserID(ctx context.Context, userID string) (UserEntity, error)
 	GetUserByUserName(ctx context.Context, userName string) (UserEntity, error)
 }

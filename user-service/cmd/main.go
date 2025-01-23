@@ -44,7 +44,8 @@ var serverModule = fx.Module("server",
 )
 
 var infraModule = fx.Module("infras",
-	fx.Provide(postgres.NewProductRepoImpl),
+	fx.Provide(postgres.NewCustomerRepo),
+	fx.Provide(postgres.NewLocationRepo),
 )
 
 func main() {

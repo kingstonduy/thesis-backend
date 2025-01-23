@@ -15,6 +15,7 @@ deploy:
 	-docker container stop user-service || true
 	-docker container rm user-service || true
 	docker build -t user-service .
-	docker run -d -p 7001:7001 -v ./:/app --name user-service user-service
+	docker network connect kong-net product-service || true
+	docker run -d --network=kong-net -p 7001:7001 -v ./:/app --name user-service user-service
 
 

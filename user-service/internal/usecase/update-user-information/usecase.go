@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
@@ -34,25 +33,13 @@ func (h *handler) Handle(ctx context.Context, req *domain.UpdateUserInformationR
 		}
 	}()
 
-	now := time.Now()
-
-	entity := domain.UserEntity{
-		UserID:       req.UserID,
-		UserName:     req.UserName,
-		Gender:       req.Gender,
-		Email:        req.Email,
-		Street:       req.Street,
-		City:         req.City,
-		CityCode:     req.CityCode,
-		District:     req.District,
-		DistrictCode: req.DistrictCode,
-		Ward:         req.Ward,
-		WardCode:     req.WardCode,
-		UpdatedAt:    now,
+	cols := map[string]interface{}{}
+	condtions := map[string]interface{}{
+		"USER_ID": req.UserID,
 	}
 
-	if err = h.repo.Update(ctx, entity); err != nil {
-		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
+	if err = h.repo.Update(ctx, cols, condtions); err != nil {
+		errx := errorx.FailedWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}

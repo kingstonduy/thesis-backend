@@ -1,13 +1,26 @@
-package utils
+package utils_transport
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/transport"
 )
+
+func GenRandomTrace() transport.Trace {
+	return transport.Trace{
+		From: "SAGA",
+		To:   "",
+		Cid:  uuid.New().String(),
+		Sid:  uuid.New().String(),
+		Cts:  time.Now().UnixMilli(),
+		Sts:  time.Now().UnixMilli(),
+	}
+}
 
 // response trace là saga cầm cái trace trả về thằng gọi nó (vd: napas-fast-fund-247)
 //
@@ -42,7 +55,7 @@ func GenRequestTrace(originalTrace transport.Trace, to string, replyTo string) t
 	now := time.Now()
 
 	trace := transport.Trace{
-		From:               "asset-mgmt",
+		From:               "napas-fast-fund-saga",
 		To:                 to,
 		Cid:                originalTrace.Cid,
 		Sid:                originalTrace.Sid,
@@ -75,4 +88,10 @@ func GenResultFromErrorx(ctx context.Context, errx *errorx.Error) (result *trans
 	}
 
 	return result
+}
+
+func GenRequestTraceString(originalTrace transport.Trace, to string, replyTo string) string {
+	trace := GenRequestTrace(originalTrace, to, replyTo)
+	s, _ := json.Marshal(trace)
+	return string(s)
 }

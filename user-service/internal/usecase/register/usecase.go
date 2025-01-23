@@ -5,28 +5,31 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/kingstonduy/go-core/errorx"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/user-service/internal/domain"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/sync/errgroup"
 )
 
 const (
 	DEFAULT_USER_IMAGE = "https://avatars.githubusercontent.com/u/77771338?v=4"
-	DEFAULT_FIRST_NAME = "John"
-	DEFAULT_LAST_NAME  = "Doe"
 )
 
 type handler struct {
-	repo domain.IUserRepo
+	locationRepo domain.ILocationRepo
+	repo         domain.IUserRepo
 }
 
 func NewRegisterHandler(
+	locationRepo domain.ILocationRepo,
 	repo domain.IUserRepo,
 ) domain.IRegisterHandler {
 	return &handler{
-		repo: repo,
+		locationRepo: locationRepo,
+		repo:         repo,
 	}
 }
 
@@ -44,23 +47,46 @@ func (h *handler) Handle(ctx context.Context, req *domain.RegisterRequest) (res 
 
 	now := time.Now()
 
+	var cityName string
+	var districtName string
+	var wardName string
+
+	g := new(errgroup.Group)
+	g.Go(func() error {
+		cityName, err = h.locationRepo.GetCity(ctx, req.CityCode)
+		return err
+	})
+	g.Go(func() error {
+		districtName, err = h.locationRepo.GetDistrict(ctx, req.CityCode)
+		return err
+	})
+	g.Go(func() error {
+		wardName, err = h.locationRepo.GetWard(ctx, req.CityCode)
+		return err
+	})
+
+	// wait for the subscription result, return error if present
+	if err := g.Wait(); err != nil {
+		return nil, errorx.FailedWithDetails(err.Error(), "")
+	}
+
 	entity := domain.UserEntity{
 		UserID:       uuid.New().String(),
 		UserName:     req.UserName,
 		UserPassword: HashPassword(req.Password),
 		UserImage:    DEFAULT_USER_IMAGE,
-		FirstName:    DEFAULT_FIRST_NAME,
-		LastName:     DEFAULT_LAST_NAME,
+		FirstName:    gofakeit.FirstName(),
+		LastName:     gofakeit.LastName(),
 		DateOfBirth:  req.DateOfBirth,
 		Gender:       req.Gender,
 		Email:        req.Email,
 		PhoneNumber:  req.PhoneNumber,
 		Street:       req.Street,
-		City:         req.City,
+		City:         cityName,
 		CityCode:     req.CityCode,
-		District:     req.District,
+		District:     districtName,
 		DistrictCode: req.DistrictCode,
-		Ward:         req.Ward,
+		Ward:         wardName,
 		WardCode:     req.WardCode,
 		CreatedAt:    now,
 		UpdatedAt:    now,
