@@ -12,6 +12,10 @@ import (
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
 	"github.com/kingstonduy/product-service/internal/domain"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/IBM/sarama"
+	"github.com/dnwe/otelsarama"
+	"go.opentelemetry.io/otel"
 )
 
 func (b *BrokerServer) GetSubscriptionOptions() []broker.SubscribeOption {
@@ -84,11 +88,17 @@ func (b *BrokerServer) EventHandler(topic string) error {
 	logger.Infof(context.TODO(), "consume from topic=%s", topic)
 	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
 		e.Ack() // auto ack
+
 		var event domain.Event[cmd_pipeline.Outbox]
 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
 			return nil
 		}
+
+		ctx = otel.GetTextMapPropagator().Extract(context.Background(), otelsarama.NewConsumerMessageCarrier(&sarama.ConsumerMessage{
+			Key:   []byte("traceparent"),
+			Value: []byte(event.Payload.Before.TraceParent),
+		}))
 
 		outbox := event.Payload.After.ToOutboxWithTrace()
 		ctx = trace.InjectTraceparent(ctx, outbox.TraceParent)
