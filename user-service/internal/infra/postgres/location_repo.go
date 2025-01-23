@@ -27,7 +27,9 @@ func (repo *locationRepo) GetCity(ctx context.Context, cityCode string) (s strin
 	sqlQuery := `
         select * from "CITY" where "CITY_CODE"=$1;
     `
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, entity); err != nil {
+	logger.Info(ctx, sqlQuery)
+
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, cityCode); err != nil {
 		return "", err
 	}
 
@@ -43,7 +45,9 @@ func (repo *locationRepo) GetDistrict(ctx context.Context, districtCode string) 
 	sqlQuery := `
         select * from "DISTRICT" where "DISTRICT_CODE"=$1;
     `
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, entity); err != nil {
+	logger.Info(ctx, sqlQuery)
+
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, districtCode); err != nil {
 		return "", err
 	}
 
@@ -59,7 +63,9 @@ func (repo *locationRepo) GetWard(ctx context.Context, wardCode string) (s strin
 	sqlQuery := `
         select * from "WARD" where "WARD_CODE"=$1;
     `
-	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, entity); err != nil {
+
+	logger.Info(ctx, sqlQuery)
+	if err = repo.db.DB.Get(ctx, &entity, sqlQuery, wardCode); err != nil {
 		return "", err
 	}
 

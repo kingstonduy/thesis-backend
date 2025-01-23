@@ -57,11 +57,11 @@ func (h *handler) Handle(ctx context.Context, req *domain.RegisterRequest) (res 
 		return err
 	})
 	g.Go(func() error {
-		districtName, err = h.locationRepo.GetDistrict(ctx, req.CityCode)
+		districtName, err = h.locationRepo.GetDistrict(ctx, req.DistrictCode)
 		return err
 	})
 	g.Go(func() error {
-		wardName, err = h.locationRepo.GetWard(ctx, req.CityCode)
+		wardName, err = h.locationRepo.GetWard(ctx, req.WardCode)
 		return err
 	})
 
