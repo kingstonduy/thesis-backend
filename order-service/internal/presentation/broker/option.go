@@ -4,12 +4,15 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/IBM/sarama"
+	"github.com/dnwe/otelsarama"
 	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport/broker"
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
 	"github.com/kingstonduy/order-service/internal/domain"
+	"go.opentelemetry.io/otel"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -54,6 +57,10 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
 			return nil
 		}
+		ctx = otel.GetTextMapPropagator().Extract(context.Background(), otelsarama.NewConsumerMessageCarrier(&sarama.ConsumerMessage{
+			Key:   []byte("traceparent"),
+			Value: []byte(event.Payload.Before.TraceParent),
+		}))
 
 		outbox := event.Payload.After.ToOutboxWithTrace()
 		ctx = trace.InjectTraceparent(ctx, outbox.TraceParent)
@@ -62,61 +69,6 @@ func (b *BrokerServer) EventHandler(topic string) error {
 			logger.Error(ctx, err)
 		}
 		return nil
-
-		// switch event.Payload.After.CommandType {
-		// case domain.CART_COMPLETED_TRANSACTION_COMMAND:
-		// 	cmd := domain.Command[transport.Request[domain.CartCompletedRequest]]{
-		// 		AggregateID: event.Payload.After.AggregateID,
-		// 		CommandID:   event.Payload.After.CommandID,
-		// 		CommandType: event.Payload.After.CommandType,
-		// 		ReplyTo:     event.Payload.After.ReplyTo,
-		// 	}
-		// 	err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 		return nil
-		// 	}
-		// 	_, err := pipeline.Send[*domain.Command[transport.Request[domain.CartCompletedRequest]], *domain.CartCompletedResponse](ctx, &cmd)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 	}
-		// case domain.CART_FAILED_TRANSACTION_COMMAND:
-		// 	cmd := domain.Command[transport.Request[domain.RevertTransactionRequest]]{
-		// 		AggregateID: event.Payload.After.AggregateID,
-		// 		CommandID:   event.Payload.After.CommandID,
-		// 		CommandType: event.Payload.After.CommandType,
-		// 		ReplyTo:     event.Payload.After.ReplyTo,
-		// 	}
-		// 	err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 		return nil
-		// 	}
-		// 	_, err := pipeline.Send[*domain.Command[transport.Request[domain.RevertTransactionRequest]], *domain.RevertTransactionResponse](ctx, &cmd)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 		return nil
-		// 	}
-		// case domain.PRODUCT_FAILED_TRANSACTION_COMMAND:
-		// 	cmd := domain.Command[transport.Request[domain.RevertTransactionRequest]]{
-		// 		AggregateID: event.Payload.After.AggregateID,
-		// 		CommandID:   event.Payload.After.CommandID,
-		// 		CommandType: event.Payload.After.CommandType,
-		// 		ReplyTo:     event.Payload.After.ReplyTo,
-		// 	}
-		// 	err = json.Unmarshal([]byte(event.Payload.After.Payload), &cmd.Payload)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 		return nil
-		// 	}
-		// 	_, err := pipeline.Send[*domain.Command[transport.Request[domain.RevertTransactionRequest]], *domain.RevertTransactionResponse](ctx, &cmd)
-		// 	if err != nil {
-		// 		logger.Error(ctx, err)
-		// 		return nil
-		// 	}
-		// default:
-		// 	logger.Errorf(ctx, "does not handle this event=%v", event)
-		// }
 	}, b.GetSubscriptionOptions()...)
 	if err != nil {
 		return err
