@@ -12,10 +12,22 @@ go-build:
 
 deploy:
 	GOOS=linux CGO_ENABLED=0 go build -o main ./cmd/main.go
-	-docker container stop user-service || true
-	-docker container rm user-service || true
+	# Stop and remove existing containers
+	docker container stop user-service-1 || true
+	docker container rm user-service-1 || true
+	docker container stop user-service-2 || true
+	docker container rm user-service-2 || true
+	docker container stop user-service-3 || true
+	docker container rm user-service-3 || true
+	# Build the Docker image
 	docker build -t user-service .
-	docker network connect kong-net product-service || true
-	docker run -d --network=kong-net -p 7001:7001 -v ./:/app --name user-service user-service
+	# Connect the service to the network
+	docker network connect kong-net user-service-1 || true
+	docker network connect kong-net user-service-2 || true
+	docker network connect kong-net user-service-3 || true
+	# Run the service on 3 ports with auto-restart enabled
+	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7022 -p 7022:7022 -v ./:/app --name user-service-1 user-service
+	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7023 -p 7023:7023 -v ./:/app --name user-service-2 user-service
+	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7024 -p 7024:7024 -v ./:/app --name user-service-3 user-service
 
 
