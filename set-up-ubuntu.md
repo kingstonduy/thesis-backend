@@ -1,5 +1,6 @@
 # Add dependencies
 sudo apt install make
+sudo snap install docker
 
 # Add Docker's official GPG key:
 
