@@ -5,13 +5,15 @@ go 1.22.4
 toolchain go1.22.10
 
 require (
+	github.com/IBM/sarama v1.43.0
+	github.com/dnwe/otelsarama v0.0.0-20240308230250-9388d9d40bc0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/gammazero/workerpool v1.1.3
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.1
-	github.com/kingstonduy/go-core v0.0.9
+	github.com/kingstonduy/go-core v0.0.10
 	github.com/moov-io/iso8583 v0.22.3
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pkg/errors v0.9.1
@@ -22,12 +24,12 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/swag v1.16.3
 	github.com/test-go/testify v1.1.4
+	go.opentelemetry.io/otel v1.24.0
 	go.uber.org/fx v1.23.0
 	golang.org/x/sync v0.9.0
 )
 
 require (
-	github.com/IBM/sarama v1.43.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
@@ -39,7 +41,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dnwe/otelsarama v0.0.0-20240308230250-9388d9d40bc0 // indirect
 	github.com/eapache/go-resiliency v1.6.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
@@ -123,7 +124,6 @@ require (
 	github.com/yerden/go-util v1.1.4 // indirect
 	go.opentelemetry.io/contrib v1.20.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect
-	go.opentelemetry.io/otel v1.24.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.24.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.24.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
