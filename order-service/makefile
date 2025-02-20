@@ -22,12 +22,12 @@ deploy:
 	# Build the Docker image
 	docker build -t order-service .
 	# Connect the service to the network
-	docker network connect kong-net order-service-1 || true
-	docker network connect kong-net order-service-2 || true
-	docker network connect kong-net order-service-3 || true
+	docker network connect thesis-network order-service-1 || true
+	docker network connect thesis-network order-service-2 || true
+	docker network connect thesis-network order-service-3 || true
 	# Run the service on 3 ports with auto-restart enabled
-	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7012 -p 7012:7012 -v ./:/app --name order-service-1 order-service
-	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7013 -p 7013:7013 -v ./:/app --name order-service-2 order-service
-	docker run -d --restart unless-stopped --network=kong-net -e SERVER_HTTP_PORT=7014 -p 7014:7014 -v ./:/app --name order-service-3 order-service
+	docker run -d --restart unless-stopped --network=thesis-network -e SERVER_HTTP_PORT=7012 -p 7012:7012 -v ./:/app --name order-service-1 order-service
+	docker run -d --restart unless-stopped --network=thesis-network -e SERVER_HTTP_PORT=7013 -p 7013:7013 -v ./:/app --name order-service-2 order-service
+	docker run -d --restart unless-stopped --network=thesis-network -e SERVER_HTTP_PORT=7014 -p 7014:7014 -v ./:/app --name order-service-3 order-service
 
 
