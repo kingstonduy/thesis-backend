@@ -31,9 +31,6 @@ func WithSubscriptions() BrokerServerStartOption {
 		g := new(errgroup.Group)
 
 		brokerCfg := b.cfg.BrokerConfig
-		g.Go(func() error {
-			return b.ProductCDCHandler(brokerCfg.ProductCDCTopic)
-		})
 
 		g.Go(func() error {
 			return b.EventHandler(brokerCfg.OrderOutboxTopic)
@@ -50,38 +47,6 @@ func WithSubscriptions() BrokerServerStartOption {
 
 		return nil
 	}
-}
-
-func (b *BrokerServer) ProductCDCHandler(topic string) error {
-	logger.Infof(context.TODO(), "consume from topic=%s", topic)
-	subscriber, err := b.Broker.Subscribe(topic, func(c context.Context, e broker.Event) (err error) {
-		e.Ack()
-
-		var event domain.Event[domain.ProductEntity]
-		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-			logger.Errorf(context.TODO(), "failed to unmarshal event: %v", err)
-			return err
-		}
-
-		logger.Infof(c, "consume message=%v", event)
-
-		if err := b.redisClient.Set(c, domain.REDIS_KEY_PRODUCT_ID+"-"+event.Payload.After.ProductID, event.Payload.After, 0); err != nil {
-			logger.Error(context.TODO(), "failed to set redis %v", err)
-			return err
-		}
-
-		logger.Infof(c, "received event: %v", event)
-
-		return nil
-	}, b.GetSubscriptionOptions()...)
-	if err != nil {
-		return err
-	}
-	go func() {
-		defer subscriber.Unsubscribe()
-		<-b.quit
-	}()
-	return nil
 }
 
 func (b *BrokerServer) EventHandler(topic string) error {

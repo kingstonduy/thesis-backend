@@ -50,6 +50,7 @@ type Configuration struct {
 	TraceConfig       TracerConfig      `config:",squash"`
 	HttpConfig        HttpConfig        `config:",squash"`
 	PostgresConfig    PostgresConfig    `config:",squash"`
+	MongoConfig       MongoConfig       `config:",squash"`
 }
 
 type PostgresConfig struct {
@@ -63,6 +64,14 @@ type PostgresConfig struct {
 	MaxLifeIdleConnection int    `config:"POSTGRES_IDLE_TIMEOUT"`  //seconds
 	MaxIdleTimeConnection int    `config:"POSTGRES_MAX_LIFE_TIME"` // seconds
 	SslMode               string `config:""`
+}
+
+type MongoConfig struct {
+	Host     string `config:"MONGO_HOST"`
+	Port     int    `config:"MONGO_PORT"`
+	Username string `config:"MONGO_USER"`
+	Password string `config:"MONGO_PASSWORD"`
+	Database string `config:"MONGO_DBNAME"`
 }
 
 type HttpConfig struct {

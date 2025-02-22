@@ -21,14 +21,14 @@ import (
 )
 
 type handler struct {
-	inventoryRepo domain.IInventoryRepo
+	inventoryRepo domain.IWriteInventoryRepo
 	outboxRepo    domain.IOutboxRepo
 	db            *configuration.PostgresCon
 	redisPubSub   redix.PubSubBroker
 }
 
 func NewExecuteTransactionHandler(
-	inventoryRepo domain.IInventoryRepo,
+	inventoryRepo domain.IWriteInventoryRepo,
 	outboxRepo domain.IOutboxRepo,
 	db *configuration.PostgresCon,
 	redisPubSub redix.PubSubBroker,
@@ -102,7 +102,7 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 				return err
 			}
 		}
-		var outboxEntity domain.OutboxEntity = domain.OutboxEntity{
+		var outboxEntity domain.WriteOutboxEntity = domain.WriteOutboxEntity{
 			AggregateID: outbox.AggregateID,
 			CommandID:   uuid.New().String(),
 			CommandType: domain.PRODUCT_COMPLETED_TRANSACTION_COMMAND,
@@ -125,7 +125,7 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 			err = err1
 		}
 
-		var outboxEntity domain.OutboxEntity = domain.OutboxEntity{
+		var outboxEntity domain.WriteOutboxEntity = domain.WriteOutboxEntity{
 			AggregateID: outbox.AggregateID,
 			CommandID:   uuid.New().String(),
 			CommandType: domain.PRODUCT_FAILED_TRANSACTION_COMMAND,

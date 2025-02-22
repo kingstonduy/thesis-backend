@@ -10,11 +10,11 @@ import (
 )
 
 type handler struct {
-	repo domain.IProductRepo
+	repo domain.IReadProductRepo
 }
 
 func NewGetProductsHandler(
-	repo domain.IProductRepo,
+	repo domain.IReadProductRepo,
 ) domain.IGetProductsHandler {
 	return &handler{
 		repo: repo,
@@ -43,14 +43,14 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductRequest) 
 	products := []domain.GetAllProductResponseDetail{}
 	for _, entity := range entities {
 		product := domain.GetAllProductResponseDetail{
-			ID             : entity.ProductID,
-			Name           : entity.ProductName,
-			Catergory      : entity.ProductCategory,
-			Price          : entity.ProductPrice,
-			Description    : entity.ProductDescription,
-			Image          : entity.ProductImage,
+			ID:              entity.ProductID,
+			Name:            entity.ProductName,
+			Catergory:       entity.ProductCategory,
+			Price:           entity.ProductPrice,
+			Description:     entity.ProductDescription,
+			Image:           entity.ProductImage,
 			ProductQuantity: entity.ProductQuantity,
-			Gender : entity.Gender,
+			Gender:          entity.Gender,
 		}
 		products = append(products, product)
 	}

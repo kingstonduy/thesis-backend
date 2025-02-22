@@ -6,6 +6,7 @@ import (
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
+	"github.com/kingstonduy/product-service/internal/infra/mongo"
 	"github.com/kingstonduy/product-service/internal/infra/postgres"
 	execute_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/execute-transaction"
 	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
@@ -28,6 +29,7 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetLogger),
 	fx.Provide(configuration.GetMapper),
 	fx.Provide(configuration.GetMetrics),
+	fx.Provide(configuration.NewMongoCon),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
 	fx.Provide(configuration.NewRedisClusterClient),
@@ -57,6 +59,7 @@ var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewProductRepoImpl),
 	fx.Provide(postgres.NewOutboxRepo),
 	fx.Provide(postgres.NewInventoryRepoImpl),
+	fx.Provide(mongo.NewMongoViewProductRepo),
 )
 
 func main() {

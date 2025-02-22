@@ -10,11 +10,11 @@ import (
 )
 
 type handler struct {
-	repo domain.IProductRepo
+	repo domain.IReadProductRepo
 }
 
 func NewGetProductDetailHandler(
-	repo domain.IProductRepo,
+	repo domain.IReadProductRepo,
 ) domain.IGetProductDetailHandler {
 	return &handler{
 		repo: repo,

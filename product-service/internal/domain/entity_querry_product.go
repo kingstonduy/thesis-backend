@@ -6,16 +6,16 @@ import (
 )
 
 type ReadProductEntity struct {
-	ProductID          string    `json:"PRODUCT_ID" db:"PRODUCT_ID"`
-	ProductName        string    `json:"PRODUCT_NAME" db:"PRODUCT_NAME"`
-	ProductDescription string    `json:"PRODUCT_DESCRIPTION" db:"PRODUCT_DESCRIPTION"`
-	ProductImage       string    `json:"PRODUCT_IMAGE" db:"PRODUCT_IMAGE"`
-	ProductPrice       string    `json:"PRODUCT_PRICE" db:"PRODUCT_PRICE"`
-	ProductQuantity    int       `json:"PRODUCT_QUANTITY" db:"PRODUCT_QUANTITY"`
-	ProductCategory    string    `json:"PRODUCT_CATEGORY" db:"PRODUCT_CATEGORY"`
-	Gender             string    `json:"GENDER" db:"GENDER"`
-	CreatedAt          time.Time `json:"CREATED_AT" db:"CREATED_AT"`
-	UpdatedAt          time.Time `json:"UPDATED_AT" db:"UPDATED_AT"`
+	ProductID          string    `bson:"PRODUCT_ID" json:"PRODUCT_ID"`
+	ProductName        string    `bson:"PRODUCT_NAME" json:"PRODUCT_NAME"`
+	ProductDescription string    `bson:"PRODUCT_DESCRIPTION" json:"PRODUCT_DESCRIPTION"`
+	ProductImage       string    `bson:"PRODUCT_IMAGE" json:"PRODUCT_IMAGE"`
+	ProductPrice       string    `bson:"PRODUCT_PRICE" json:"PRODUCT_PRICE"`
+	ProductQuantity    int       `bson:"INVENTORY_QUANTITY" json:"PRODUCT_QUANTITY"`
+	ProductCategory    string    `bson:"PRODUCT_CATEGORY" json:"PRODUCT_CATEGORY"`
+	Gender             string    `bson:"GENDER" json:"GENDER"`
+	CreatedAt          time.Time `bson:"_insertedTS" json:"CREATED_AT"`
+	UpdatedAt          time.Time `bson:"_modifiedTS" json:"UPDATED_AT"`
 }
 
 type IReadProductRepo interface {

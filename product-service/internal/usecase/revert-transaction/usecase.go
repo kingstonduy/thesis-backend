@@ -19,13 +19,13 @@ import (
 )
 
 type handler struct {
-	inventoryRepo domain.IInventoryRepo
+	inventoryRepo domain.IWriteInventoryRepo
 	outboxRepo    domain.IOutboxRepo
 	db            *configuration.PostgresCon
 }
 
 func NewRevertTransactionHandler(
-	inventoryRepo domain.IInventoryRepo,
+	inventoryRepo domain.IWriteInventoryRepo,
 	outboxRepo domain.IOutboxRepo,
 	db *configuration.PostgresCon,
 ) domain.IRevertTransactionHandler {
@@ -77,7 +77,7 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 		}
 
 		// if update all products successfully
-		var outbox domain.OutboxEntity = domain.OutboxEntity{
+		var outbox domain.WriteOutboxEntity = domain.WriteOutboxEntity{
 			AggregateID: outbox.AggregateID,
 			CommandID:   uuid.New().String(),
 			CommandType: domain.PRODUCT_COMPLETED_REVERT_COMMAND,
