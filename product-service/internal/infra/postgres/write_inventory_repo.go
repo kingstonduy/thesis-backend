@@ -17,14 +17,14 @@ type inventoryRepoImlp struct {
 
 func NewInventoryRepoImpl(
 	db *configuration.PostgresCon,
-) domain.IInventoryRepo {
+) domain.IWriteInventoryRepo {
 	return &inventoryRepoImlp{
 		db: db,
 	}
 }
 
 // SelectByID implements domain.IInventoryRepo.
-func (repo *inventoryRepoImlp) SelectByProductID(ctx context.Context, productID string) (entity domain.Inventory, err error) {
+func (repo *inventoryRepoImlp) SelectByProductID(ctx context.Context, productID string) (entity domain.WriteInventoryInventory, err error) {
 	logger.Info(ctx, "Select INVENTORY ByProductID start")
 	defer logger.Info(ctx, "Select INVENTORY ByProductID start")
 
@@ -39,7 +39,7 @@ func (repo *inventoryRepoImlp) SelectByProductID(ctx context.Context, productID 
 }
 
 // Insert implements domain.IInventoryRepo.
-func (repo *inventoryRepoImlp) Insert(ctx context.Context, entity domain.Inventory) error {
+func (repo *inventoryRepoImlp) Insert(ctx context.Context, entity interface{}) error {
 	logger.Info(ctx, "Insert INVENTORY starts")
 	defer logger.Info(ctx, "Insert INVENTORY ends")
 

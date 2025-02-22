@@ -2,7 +2,7 @@ package domain
 
 import "context"
 
-type OutboxEntity struct {
+type WriteOutboxEntity struct {
 	AggregateID string `json:"AGGREGATE_ID" db:"AGGREGATE_ID"`
 	CommandID   string `json:"COMMAND_ID" db:"COMMAND_ID"`
 	CommandType string `json:"COMMAND_TYPE" db:"COMMAND_TYPE"`
@@ -13,5 +13,5 @@ type OutboxEntity struct {
 }
 
 type IOutboxRepo interface {
-	Insert(ctx context.Context, outbox OutboxEntity) error
+	Insert(ctx context.Context, outbox WriteOutboxEntity) error
 }

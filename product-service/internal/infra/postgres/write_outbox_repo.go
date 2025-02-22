@@ -23,7 +23,7 @@ func NewOutboxRepo(db *configuration.PostgresCon) domain.IOutboxRepo {
 }
 
 // Insert implements domain.IOutboxRepo.
-func (repo *outboxRepoImpl) Insert(ctx context.Context, entity domain.OutboxEntity) error {
+func (repo *outboxRepoImpl) Insert(ctx context.Context, entity domain.WriteOutboxEntity) error {
 	logger.Info(ctx, "Insert OUTBOX starts")
 	defer logger.Info(ctx, "Insert OUTBOX ends")
 	entity.TraceParent = trace.ExtractTraceparent(ctx)
