@@ -11,6 +11,7 @@ import (
 func (s *HttpServer) WithRoutingOption() option {
 	return func(s *HttpServer) error {
 		s.App.Post("/get-products", s.ListProducts)
+		s.App.Post("/get-products-page", s.GetProductsPage)
 		s.App.Post("/get-product-detail", s.GetProductDetails)
 		s.App.Post("/execute-transaction", s.ExecuteTransaction)
 		s.App.Post("/get-products-by-category", s.GetProductByCategory)
@@ -30,6 +31,19 @@ func (s *HttpServer) WithRoutingOption() option {
 //		@Router			/is/v1/product-service/get-products [post]
 func (s *HttpServer) ListProducts(ctx *fiber.Ctx) error {
 	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductRequest, *domain.GetAllProductResponse](ctx, fiberx.WithAuthentication())
+}
+
+//	 	@Tags 			PRODUCT
+//		@Summary		GetProductPerPage
+//		@Description	list all the products in the inventory using pagination
+//		@ID				GetProductPerPage
+//		@Accept			json
+//		@Produce		json
+//		@Param			request	body		transport.Request[domain.GetAllProductPageRequest]			false	"Request"
+//		@Success		200		{object}	transport.Response[domain.GetAllProductPageResponse]			"ok"
+//		@Router			/is/v1/product-service/get-products-page [post]
+func (s *HttpServer) GetProductsPage(ctx *fiber.Ctx) error {
+	return fiberx.RequestHandlerWithDynamicTimeout[*domain.GetAllProductPageRequest, *domain.GetAllProductPageResponse](ctx, fiberx.WithAuthentication())
 }
 
 //	 	@Tags 			PRODUCT

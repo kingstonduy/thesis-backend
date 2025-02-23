@@ -42,15 +42,16 @@ func GetConfigurationInstance() *Configuration {
 }
 
 type Configuration struct {
-	BrokerConfig      KafkaBrokerConfig `config:",squash"`
-	RedisConfig       RedisConfig       `config:",squash"`
-	ServerConfig      ServerConfig      `config:",squash"`
-	HealthCheckConfig HealthCheckConfig `config:",squash"`
-	LoggerConfig      LoggerConfig      `config:",squash"`
-	TraceConfig       TracerConfig      `config:",squash"`
-	HttpConfig        HttpConfig        `config:",squash"`
-	PostgresConfig    PostgresConfig    `config:",squash"`
-	MongoConfig       MongoConfig       `config:",squash"`
+	BrokerConfig         KafkaBrokerConfig    `config:",squash"`
+	RedisConfig          RedisConfig          `config:",squash"`
+	ServerConfig         ServerConfig         `config:",squash"`
+	HealthCheckConfig    HealthCheckConfig    `config:",squash"`
+	LoggerConfig         LoggerConfig         `config:",squash"`
+	TraceConfig          TracerConfig         `config:",squash"`
+	HttpConfig           HttpConfig           `config:",squash"`
+	PostgresConfig       PostgresConfig       `config:",squash"`
+	MongoConfig          MongoConfig          `config:",squash"`
+	ProductServiceConfig ProductServiceConfig `config:",squash"`
 }
 
 type PostgresConfig struct {
@@ -119,4 +120,8 @@ type RedisConfig struct {
 	Addresses []string `config:"REDIS_ADDRESSES"`
 	Username  string   `config:"REDIS_USERNAME"`
 	Password  string   `config:"REDIS_PASSWORD"`
+}
+
+type ProductServiceConfig struct {
+	NumberProductPerPage int `config:"NUMBER_PRODUCT_PER_PAGE"`
 }

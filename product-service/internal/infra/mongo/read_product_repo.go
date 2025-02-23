@@ -3,21 +3,78 @@ package mongo
 import (
 	"context"
 
+	"github.com/kingstonduy/go-core/errorx"
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type mongoReadProductRepo struct {
-	db *configuration.MongoCon
+	cfg *configuration.Configuration
+	db  *configuration.MongoCon
 }
 
 // NewMongoViewProductRepo initializes a new instance of mongoReadProductRepo.
 // Note: It's important to pass in a valid MongoCon instance.
-func NewMongoViewProductRepo(con *configuration.MongoCon) domain.IReadProductRepo {
+func NewMongoViewProductRepo(
+	con *configuration.MongoCon,
+	cfg *configuration.Configuration,
+) domain.IReadProductRepo {
 	return &mongoReadProductRepo{
-		db: con,
+		db:  con,
+		cfg: cfg,
 	}
+}
+
+// GetAllProductPage implements domain.IReadProductRepo.
+func (repo *mongoReadProductRepo) GetAllProductPage(ctx context.Context, pageNum int) (totalPage int, entities []domain.ReadProductEntity, err error) {
+	pageSize := repo.cfg.ProductServiceConfig.NumberProductPerPage
+	skip := (pageNum - 1) * pageSize
+
+	pipeline := mongo.Pipeline{
+		bson.D{{Key: "$facet", Value: bson.D{
+			{Key: "products", Value: bson.A{
+				bson.D{{Key: "$sort", Value: bson.D{{Key: "_id", Value: 1}}}}, // Sort by _id
+				bson.D{{Key: "$skip", Value: skip}},                           // Skip documents
+				bson.D{{Key: "$limit", Value: pageSize}},                      // Limit documents
+			}},
+			{Key: "totalCount", Value: bson.A{
+				bson.D{{Key: "$count", Value: "count"}}, // Count total products
+			}},
+		}}},
+	}
+
+	cursor, err := repo.db.DB.Collection("product").Aggregate(ctx, pipeline)
+	if err != nil {
+		return 0, nil, err
+	}
+	defer cursor.Close(ctx)
+
+	// Define a struct to decode the aggregated response properly
+	var result struct {
+		Products   []domain.ReadProductEntity `bson:"products"`
+		TotalCount []struct {
+			Count int `bson:"count"`
+		} `bson:"totalCount"`
+	}
+
+	if cursor.Next(ctx) {
+		if err := cursor.Decode(&result); err != nil {
+			return 0, nil, err
+		}
+	}
+
+	// Extract total count safely
+	if len(result.TotalCount) > 0 {
+		totalPage = (result.TotalCount[0].Count + pageSize - 1) / pageSize
+	}
+
+	if len(result.Products) == 0 {
+		return 0, nil, errorx.NotFoundErrorWithDetails("No products found", "")
+	}
+
+	return totalPage, result.Products, nil
 }
 
 // GetAllProduct implements domain.IReadProductRepo.

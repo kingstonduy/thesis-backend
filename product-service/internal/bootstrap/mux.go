@@ -10,9 +10,11 @@ func ResgisterPipeline(
 	IGetProductDetailHandler domain.IGetProductDetailHandler,
 	IGetProductsByGenderHandler domain.IGetProductsByGenderHandler,
 	IGetProductsByCategoryHandler domain.IGetProductsByCategoryHandler,
+	IGetProductsPageHandler domain.IGetProductsPageHandler,
 ) {
 	pipeline.RegisterRequestHandler(IGetProductsHandler)
 	pipeline.RegisterRequestHandler(IGetProductDetailHandler)
 	pipeline.RegisterRequestHandler(IGetProductsByGenderHandler)
 	pipeline.RegisterRequestHandler(IGetProductsByCategoryHandler)
+	pipeline.RegisterRequestHandler(IGetProductsPageHandler)
 }
