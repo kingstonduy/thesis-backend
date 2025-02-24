@@ -20,9 +20,7 @@ type ReadProductEntity struct {
 
 type IReadProductRepo interface {
 	GetProductDetail(ctx context.Context, id string) (entity ReadProductEntity, err error)
-	GetAllProductPage(ctx context.Context, pageNum int) (totalNumber int, entities []ReadProductEntity, err error)
+	GetProductByFilter(ctx context.Context, pageNum int, filters map[string]string) (totalPage int, entities []ReadProductEntity, err error)
 	GetAllProduct(ctx context.Context) ([]ReadProductEntity, error)
-	GetProductByGender(ctx context.Context, gender string) ([]ReadProductEntity, error)
-	GetProductByCategory(ctx context.Context, category string) ([]ReadProductEntity, error)
 	GetProductByID(ctx context.Context, productID string) (ReadProductEntity, error)
 }

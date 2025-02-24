@@ -13,18 +13,18 @@ type handler struct {
 	repo domain.IReadProductRepo
 }
 
-func NewGetProductsByGenderHandler(
+func NewGetProductsPageHandler(
 	repo domain.IReadProductRepo,
-) domain.IGetProductsByGenderHandler {
+) domain.IGetProductsPageHandler {
 	return &handler{
 		repo: repo,
 	}
 }
 
-// Handle implements domain.IGetProductsByGenderHandler.
-func (h *handler) Handle(ctx context.Context, req *domain.GetProductsByGenderRequest) (res *domain.GetProductsByGenderResponse, err error) {
-	logger.Info(ctx, "GetProductsByGenderHandler start")
-	defer logger.Info(ctx, "GetProductsByGenderHandler end")
+// Handle implements domain.IGetProductsPageHandler.
+func (h *handler) Handle(ctx context.Context, req *domain.GetAllProductPageRequest) (res *domain.GetAllProductPageResponse, err error) {
+	logger.Info(ctx, "Get products handler start")
+	defer logger.Info(ctx, "Get products handler end")
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -33,16 +33,24 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsByGenderReq
 		}
 	}()
 
-	entities, err := h.repo.GetProductByGender(ctx, req.Gender)
+	filter := map[string]string{}
+	if req.Category != "" {
+		filter["CATEGORY"] = req.Category
+	}
+	if req.Gender != "" {
+		filter["GENDER"] = req.Gender
+	}
+
+	totalPage, entities, err := h.repo.GetProductByFilter(ctx, req.PageNumber, filter)
 	if err != nil {
 		errx := errorx.OutboundErrorWithDetails(err.Error(), "")
 		logger.Error(ctx, errx.Error())
 		return nil, errx
 	}
 
-	products := []domain.GetProductsByGenderResponseDetail{}
+	products := []domain.GetAllProductPageResponseDetail{}
 	for _, entity := range entities {
-		product := domain.GetProductsByGenderResponseDetail{
+		product := domain.GetAllProductPageResponseDetail{
 			ID:              entity.ProductID,
 			Name:            entity.ProductName,
 			Catergory:       entity.ProductCategory,
@@ -55,8 +63,9 @@ func (h *handler) Handle(ctx context.Context, req *domain.GetProductsByGenderReq
 		products = append(products, product)
 	}
 
-	res = &domain.GetProductsByGenderResponse{
-		Details: products,
+	res = &domain.GetAllProductPageResponse{
+		Details:   products,
+		TotalPage: totalPage,
 	}
 
 	return res, nil

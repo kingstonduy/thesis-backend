@@ -5,7 +5,9 @@ import (
 )
 
 type GetAllProductPageRequest struct {
-	PageNumber int `json:"pageNumber"`
+	PageNumber int    `json:"pageNumber"`
+	Category   string `json:"category"`
+	Gender     string `json:"gender"`
 }
 
 type GetAllProductPageResponse struct {

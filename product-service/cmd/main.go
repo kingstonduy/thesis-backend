@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
@@ -10,9 +11,7 @@ import (
 	"github.com/kingstonduy/product-service/internal/infra/postgres"
 	execute_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/execute-transaction"
 	get_products_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product"
-	get_products_page_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product-page"
-	get_product_by_category_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-by-category"
-	get_product_by_gender_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-by-gender"
+	get_product_filter_uc "github.com/kingstonduy/product-service/internal/usecase/get-all-product-page-filter"
 	get_product_detail_uc "github.com/kingstonduy/product-service/internal/usecase/get-product-detail"
 	revert_transaction_uc "github.com/kingstonduy/product-service/internal/usecase/revert-transaction"
 
@@ -44,12 +43,10 @@ var configModule = fx.Module("config",
 
 var usecaseModule = fx.Module("usecase",
 	fx.Provide(get_products_uc.NewGetProductsHandler),
-	fx.Provide(get_products_page_uc.NewGetProductsPageHandler),
+	fx.Provide(get_product_filter_uc.NewGetProductsPageHandler),
 	fx.Provide(get_product_detail_uc.NewGetProductDetailHandler),
 	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
 	fx.Provide(revert_transaction_uc.NewRevertTransactionHandler),
-	fx.Provide(get_product_by_gender_uc.NewGetProductsByGenderHandler),
-	fx.Provide(get_product_by_category_uc.NewGetProductsByCategoryHandler),
 )
 
 var serverModule = fx.Module("server",
@@ -94,6 +91,8 @@ func run(
 				server.WithServer("httpServer", HttpServer),
 				server.WithServer("brokerServer", brokerServer),
 			)
+
+			time.Sleep(time.Second * 5)
 
 			return serverWrapper.Start(gCtx)
 		},

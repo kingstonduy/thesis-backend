@@ -7,7 +7,7 @@ import (
 	configuration "github.com/kingstonduy/product-service/internal/bootstrap"
 	"github.com/kingstonduy/product-service/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type mongoReadProductRepo struct {
@@ -27,56 +27,6 @@ func NewMongoViewProductRepo(
 	}
 }
 
-// GetAllProductPage implements domain.IReadProductRepo.
-func (repo *mongoReadProductRepo) GetAllProductPage(ctx context.Context, pageNum int) (totalPage int, entities []domain.ReadProductEntity, err error) {
-	pageSize := repo.cfg.ProductServiceConfig.NumberProductPerPage
-	skip := (pageNum - 1) * pageSize
-
-	pipeline := mongo.Pipeline{
-		bson.D{{Key: "$facet", Value: bson.D{
-			{Key: "products", Value: bson.A{
-				bson.D{{Key: "$sort", Value: bson.D{{Key: "_id", Value: 1}}}}, // Sort by _id
-				bson.D{{Key: "$skip", Value: skip}},                           // Skip documents
-				bson.D{{Key: "$limit", Value: pageSize}},                      // Limit documents
-			}},
-			{Key: "totalCount", Value: bson.A{
-				bson.D{{Key: "$count", Value: "count"}}, // Count total products
-			}},
-		}}},
-	}
-
-	cursor, err := repo.db.DB.Collection("product").Aggregate(ctx, pipeline)
-	if err != nil {
-		return 0, nil, err
-	}
-	defer cursor.Close(ctx)
-
-	// Define a struct to decode the aggregated response properly
-	var result struct {
-		Products   []domain.ReadProductEntity `bson:"products"`
-		TotalCount []struct {
-			Count int `bson:"count"`
-		} `bson:"totalCount"`
-	}
-
-	if cursor.Next(ctx) {
-		if err := cursor.Decode(&result); err != nil {
-			return 0, nil, err
-		}
-	}
-
-	// Extract total count safely
-	if len(result.TotalCount) > 0 {
-		totalPage = (result.TotalCount[0].Count + pageSize - 1) / pageSize
-	}
-
-	if len(result.Products) == 0 {
-		return 0, nil, errorx.NotFoundErrorWithDetails("No products found", "")
-	}
-
-	return totalPage, result.Products, nil
-}
-
 // GetAllProduct implements domain.IReadProductRepo.
 func (repo *mongoReadProductRepo) GetAllProduct(ctx context.Context) (entities []domain.ReadProductEntity, err error) {
 	cursor, err := repo.db.DB.Collection("product").Find(ctx, bson.M{})
@@ -94,40 +44,52 @@ func (repo *mongoReadProductRepo) GetAllProduct(ctx context.Context) (entities [
 	return entities, nil
 }
 
-// GetProductByCategory implements domain.IReadProductRepo.
-func (repo *mongoReadProductRepo) GetProductByCategory(ctx context.Context, category string) ([]domain.ReadProductEntity, error) {
-	cursor, err := repo.db.DB.Collection("product").Find(ctx, bson.M{"PRODUCT_CATEGORY": category})
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(ctx)
-	var entities []domain.ReadProductEntity
-	for cursor.Next(ctx) {
-		var entity domain.ReadProductEntity
-		if err := cursor.Decode(&entity); err != nil {
-			return nil, err
-		}
-		entities = append(entities, entity)
-	}
-	return entities, nil
-}
+// GetProductByFilter implements domain.IReadProductRepo.
+func (repo *mongoReadProductRepo) GetProductByFilter(ctx context.Context, pageNum int, filters map[string]string) (totalPage int, entities []domain.ReadProductEntity, err error) {
+	pageSize := repo.cfg.ProductServiceConfig.NumberProductPerPage
+	skip := (pageNum - 1) * pageSize
 
-// GetProductByGender implements domain.IReadProductRepo.
-func (repo *mongoReadProductRepo) GetProductByGender(ctx context.Context, gender string) ([]domain.ReadProductEntity, error) {
-	cursor, err := repo.db.DB.Collection("product").Find(ctx, bson.M{"GENDER": gender})
+	// Build the query filter
+	query := bson.M{}
+	if category, ok := filters["CATEGORY"]; ok {
+		query["PRODUCT_CATEGORY"] = category
+	}
+	if gender, ok := filters["GENDER"]; ok {
+		query["GENDER"] = gender
+	}
+
+	// 1. Count total documents matching the filter
+	totalCount, err := repo.db.DB.Collection("product").CountDocuments(ctx, query)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
+	}
+
+	// Calculate total pages
+	totalPage = int((totalCount + int64(pageSize) - 1) / int64(pageSize))
+
+	// 2. Get paginated products
+	findOptions := options.Find().
+		SetSort(bson.D{{Key: "_id", Value: 1}}).
+		SetSkip(int64(skip)).
+		SetLimit(int64(pageSize))
+
+	cursor, err := repo.db.DB.Collection("product").Find(ctx, query, findOptions)
+	if err != nil {
+		return 0, nil, err
 	}
 	defer cursor.Close(ctx)
-	var entities []domain.ReadProductEntity
-	for cursor.Next(ctx) {
-		var entity domain.ReadProductEntity
-		if err := cursor.Decode(&entity); err != nil {
-			return nil, err
-		}
-		entities = append(entities, entity)
+
+	// Decode results
+	var products []domain.ReadProductEntity
+	if err = cursor.All(ctx, &products); err != nil {
+		return 0, nil, err
 	}
-	return entities, nil
+
+	if len(products) == 0 {
+		return 0, nil, errorx.NotFoundErrorWithDetails("No products found", "")
+	}
+
+	return totalPage, products, nil
 }
 
 // GetProductByID implements domain.IReadProductRepo.
