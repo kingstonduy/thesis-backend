@@ -4,10 +4,12 @@ import (
 	"context"
 
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
+	"github.com/kingstonduy/cart-service/internal/infra/mongo"
 	"github.com/kingstonduy/cart-service/internal/infra/postgres"
 	add_cart_handler_uc "github.com/kingstonduy/cart-service/internal/usecase/add-cart-item"
 	execute_transaction_uc "github.com/kingstonduy/cart-service/internal/usecase/execute-transaction"
 	get_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/get-cart"
+	cart_item_event_uc "github.com/kingstonduy/cart-service/internal/usecase/handle-cart-item-event"
 	update_cart_uc "github.com/kingstonduy/cart-service/internal/usecase/update-cart-item"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/server"
@@ -26,6 +28,7 @@ var configModule = fx.Module("config",
 	fx.Provide(configuration.GetLogger),
 	fx.Provide(configuration.GetMapper),
 	fx.Provide(configuration.GetMetrics),
+	fx.Provide(configuration.NewMongoCon),
 	fx.Invoke(configuration.ResgisterPipeline),
 	fx.Provide(configuration.NewYugabyteCon),
 	fx.Provide(configuration.NewRedisClusterClient),
@@ -42,6 +45,7 @@ var usecaseModule = fx.Module("usecase",
 	fx.Provide(get_cart_uc.NewGetCartHandler),
 	fx.Provide(update_cart_uc.NewUpdateCartHandler),
 	fx.Provide(execute_transaction_uc.NewExecuteTransactionHandler),
+	fx.Provide(cart_item_event_uc.NewCartItemEventHandler),
 )
 
 var serverModule = fx.Module("server",
@@ -53,6 +57,7 @@ var infraModule = fx.Module("infras",
 	fx.Provide(postgres.NewCartRepo),
 	fx.Provide(postgres.NewOutboxRepo),
 	fx.Provide(postgres.NewProductRepo),
+	fx.Provide(mongo.NewMongoReadCartItemRepo),
 )
 
 func main() {

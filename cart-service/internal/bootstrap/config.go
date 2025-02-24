@@ -50,6 +50,7 @@ type Configuration struct {
 	TraceConfig       TracerConfig      `config:",squash"`
 	HttpConfig        HttpConfig        `config:",squash"`
 	PostgresConfig    PostgresConfig    `config:",squash"`
+	MongoConfig       MongoConfig       `config:",squash"`
 }
 
 type PostgresConfig struct {
@@ -104,6 +105,7 @@ type KafkaBrokerConfig struct {
 	ProductCDCTopic    string `config:"PRODUCT_SERVICE_TOPIC"`
 	OrderOutboxTopic   string `config:"ORDER_SERVICE_OUTBOX_TOPIC"`
 	ProductOutboxTopic string `config:"PRODUCT_SERVICE_OUTBOX_TOPIC"`
+	CartItemTopic      string `config:"CART_ITEM_TOPIC"`
 	CartTopic          string `config:"CART_TOPIC"`
 }
 
@@ -111,4 +113,12 @@ type RedisConfig struct {
 	Addresses []string `config:"REDIS_ADDRESSES"`
 	Username  string   `config:"REDIS_USERNAME"`
 	Password  string   `config:"REDIS_PASSWORD"`
+}
+
+type MongoConfig struct {
+	Host     string `config:"MONGO_HOST"`
+	Port     int    `config:"MONGO_PORT"`
+	Username string `config:"MONGO_USER"`
+	Password string `config:"MONGO_PASSWORD"`
+	Database string `config:"MONGO_DBNAME"`
 }
