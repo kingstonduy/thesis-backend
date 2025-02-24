@@ -27,12 +27,8 @@ func WithSubscriptions() BrokerServerStartOption {
 		brokerCfg := b.cfg.BrokerConfig
 
 		g.Go(func() error {
-			return b.CartItemHandler(brokerCfg.ProductOutboxTopic)
+			return b.CartItemHandler(brokerCfg.CartItemTopic)
 		})
-
-		// g.Go(func() error {
-		// 	return b.EventHandler(brokerCfg.ProductOutboxTopic)
-		// })
 
 		// wait for the subscription result, return error if present
 		if err := g.Wait(); err != nil {
@@ -53,7 +49,7 @@ func (b *BrokerServer) CartItemHandler(topic string) error {
 			return nil
 		}
 
-		_, err = pipeline.Send[domain.Event[*domain.CartItemEvent], *domain.CartItemEventRes](ctx, event)
+		pipeline.Send[domain.Event[*domain.CartItemEvent], *domain.CartItemEventRes](ctx, event)
 
 		return nil
 	}, b.GetSubscriptionOptions()...)

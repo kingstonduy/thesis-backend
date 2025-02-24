@@ -18,8 +18,6 @@ type ICartRepo interface {
 	Insert(ctx context.Context, entity CartItem) error
 	Update(ctx context.Context, cols map[string]interface{}, conditions map[string]interface{}) error
 	DeleteById(ctx context.Context, id string) error
-	// VIEW
-	GetCart(ctx context.Context, params GetCartParamsIn) (GetCartParamsOut, error)
 }
 
 type GetCartParamsIn struct {

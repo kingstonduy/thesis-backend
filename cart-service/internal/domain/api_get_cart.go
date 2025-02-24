@@ -1,27 +1,23 @@
 package domain
 
-import (
-	"context"
-)
-
-// const (
-// 	tag = "GetCart"
-// )
+import "context"
 
 type GetCartRequest struct {
 	UserID string `json:"userId"`
 }
+
 type GetCartResponse struct {
 	CartItems []GetCartItemDetail `json:"cartItems"`
 }
+
 type GetCartItemDetail struct {
-	CartItemID       string `json:"cartItemId"`
-	ProductID        string `json:"productId"`
-	ProductName      string `json:"productName"`
-	ProductImage     string `json:"productImage"`
-	ProductCatergory string `json:"productCatergory"`
-	ProductPrice     string `json:"productPrice"`
-	CartItemQuantity int    `json:"cartItemQuantity"`
+	CartItemID       string `json:"cartItemId" bson:"CART_ITEM_ID"`
+	ProductID        string `json:"productId" bson:"PRODUCT_ID"`
+	ProductName      string `json:"productName" bson:"PRODUCT_NAME"`
+	ProductImage     string `json:"productImage" bson:"PRODUCT_IMAGE"`
+	ProductCatergory string `json:"productCategory" bson:"PRODUCT_CATEGORY"`
+	ProductPrice     string `json:"productPrice" bson:"PRODUCT_PRICE"`
+	CartItemQuantity int    `json:"cartItemQuantity" bson:"CART_ITEM_QUANTITY"`
 }
 
 type IGetCartHandler interface {
