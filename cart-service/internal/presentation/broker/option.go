@@ -4,11 +4,16 @@ import (
 	"context"
 	"encoding/json"
 
+	"github.com/IBM/sarama"
+	"github.com/dnwe/otelsarama"
 	"github.com/kingstonduy/cart-service/internal/domain"
+	cmd_pipeline "github.com/kingstonduy/go-core/comman-pipeline"
 	"github.com/kingstonduy/go-core/logger"
 	"github.com/kingstonduy/go-core/pipeline"
+	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport/broker"
 	"github.com/kingstonduy/go-core/transport/broker/kafka"
+	"go.opentelemetry.io/otel"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -28,6 +33,10 @@ func WithSubscriptions() BrokerServerStartOption {
 
 		g.Go(func() error {
 			return b.CartItemHandler(brokerCfg.CartItemTopic)
+		})
+
+		g.Go(func() error {
+			return b.EventHandler(brokerCfg.ProductOutboxTopic)
 		})
 
 		// wait for the subscription result, return error if present
@@ -63,34 +72,34 @@ func (b *BrokerServer) CartItemHandler(topic string) error {
 	return nil
 }
 
-// func (b *BrokerServer) EventHandler(topic string) error {
-// 	logger.Infof(context.Background(), "consume from topic=%s", topic)
-// 	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
-// 		e.Ack() // auto ack
-// 		var event domain.Event[cmd_pipeline.Outbox]
-// 		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
-// 			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
-// 			return nil
-// 		}
-// 		ctx = otel.GetTextMapPropagator().Extract(context.Background(), otelsarama.NewConsumerMessageCarrier(&sarama.ConsumerMessage{
-// 			Key:   []byte("traceparent"),
-// 			Value: []byte(event.Payload.Before.TraceParent),
-// 		}))
+func (b *BrokerServer) EventHandler(topic string) error {
+	logger.Infof(context.Background(), "consume from topic=%s", topic)
+	subscriber, err := b.Broker.Subscribe(topic, func(ctx context.Context, e broker.Event) (err error) {
+		e.Ack() // auto ack
+		var event domain.Event[cmd_pipeline.Outbox]
+		if err := json.Unmarshal(e.Message().Body, &event); err != nil {
+			logger.Errorf(ctx, "failed to unmarshal event: %v", err)
+			return nil
+		}
+		ctx = otel.GetTextMapPropagator().Extract(context.Background(), otelsarama.NewConsumerMessageCarrier(&sarama.ConsumerMessage{
+			Key:   []byte("traceparent"),
+			Value: []byte(event.Payload.TraceParent),
+		}))
 
-// 		outbox := event.Payload.After.ToOutboxWithTrace()
-// 		ctx = trace.InjectTraceparent(ctx, outbox.TraceParent)
-// 		err = b.dp.When(ctx, outbox)
-// 		if err != nil {
-// 			logger.Error(ctx, err)
-// 		}
-// 		return nil
-// 	}, b.GetSubscriptionOptions()...)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	go func() {
-// 		defer subscriber.Unsubscribe()
-// 		<-b.quit
-// 	}()
-// 	return nil
-// }
+		outbox := event.Payload.ToOutboxWithTrace()
+		ctx = trace.InjectTraceparent(ctx, outbox.TraceParent)
+		err = b.dp.When(ctx, outbox)
+		if err != nil {
+			logger.Error(ctx, err)
+		}
+		return nil
+	}, b.GetSubscriptionOptions()...)
+	if err != nil {
+		return err
+	}
+	go func() {
+		defer subscriber.Unsubscribe()
+		<-b.quit
+	}()
+	return nil
+}

@@ -62,10 +62,10 @@ func (b *BrokerServer) EventHandler(topic string) error {
 
 		ctx = otel.GetTextMapPropagator().Extract(context.Background(), otelsarama.NewConsumerMessageCarrier(&sarama.ConsumerMessage{
 			Key:   []byte("traceparent"),
-			Value: []byte(event.Payload.Before.TraceParent),
+			Value: []byte(event.Payload.TraceParent),
 		}))
 
-		outbox := event.Payload.After.ToOutboxWithTrace()
+		outbox := event.Payload.ToOutboxWithTrace()
 		ctx = trace.InjectTraceparent(ctx, outbox.TraceParent)
 		err = b.dp.When(ctx, outbox)
 		if err != nil {
