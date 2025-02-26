@@ -48,7 +48,7 @@ func NewExecuteTransactionHandler(
 }
 
 // Handle1 implements domain.IExecuteTransactionHandler.
-func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
+func (h *handler) Handle(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
 	logger.Info(ctx, "Get products handler start")
 	defer logger.Info(ctx, "Get products handler end")
 
@@ -142,92 +142,7 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 		logger.Error(ctx, errx)
 		return errx
 	}
+	debug := 1
+	_ = debug
 	return nil
-}
-
-// Handle implements domain.IExecuteTransactionHandler.
-func (h *handler) Handle(ctx context.Context, cmd *domain.Command[transport.Request[domain.ExecuteTransactionRequest]]) (res *domain.ExecuteTransactionResponse, err error) {
-	logger.Info(ctx, "Get products handler start")
-	defer logger.Info(ctx, "Get products handler end")
-
-	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("PANIC Get products handler %v", r)
-			logger.Errorf(ctx, err.Error())
-		}
-	}()
-	req := cmd.Payload.Data
-
-	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
-		for _, item := range req.Details {
-			if item.CartItemID == "TEST_CART_FAILED" {
-				err = fmt.Errorf("simulate cart failed")
-				return err
-			}
-
-			err = h.cartRepo.DeleteById(ctx, item.CartItemID)
-			if err != nil {
-				logger.Error(ctx, err)
-				return err
-			}
-		}
-
-		result := transport.Response[any]{
-			Result: transport.DefaultSuccessResponse.Result,
-			Trace:  utils_transport.GenRequestTrace(cmd.Payload.Trace, "", ""),
-		}
-		resultStr, _ := json.Marshal(result)
-		outbox := domain.OutboxEntity{
-			AggregateID: cmd.AggregateID,
-			CommandID:   uuid.New().String(),
-			CommandType: domain.CART_COMPLETED_TRANSACTION_COMMAND,
-			Payload:     string(resultStr),
-			ReplyTo:     cmd.ReplyTo,
-		}
-		err = h.outboxRepo.Insert(ctx, outbox)
-		if err != nil {
-			logger.Error(ctx, err)
-			return err
-		}
-
-		return nil
-	}, database.WithIsolationLevelOptions(sql.LevelReadUncommitted))
-
-	if err != nil || err1 != nil {
-		if err == nil {
-			err = err1
-		}
-		reqTypeStr, _ := json.Marshal(cmd.Payload)
-		outbox := domain.OutboxEntity{
-			AggregateID: cmd.AggregateID,
-			CommandID:   uuid.New().String(),
-			CommandType: domain.CART_FAILED_TRANSACTION_COMMAND,
-			Payload:     string(reqTypeStr),
-			ReplyTo:     "",
-		}
-
-		err1 = h.outboxRepo.Insert(ctx, outbox)
-		if err1 != nil {
-			errx := errorx.SuspendedErrorWithDetails(err1.Error(), "")
-			logger.Error(ctx, errx.Error())
-			return nil, errx
-		}
-
-		errx := errorx.FailedWithDetails(err.Error(), "")
-		logger.Error(ctx, errx.Error())
-		return nil, errx
-	}
-
-	err = h.redisPubSub.Publish(ctx, redix.NewMessage(
-		cmd.AggregateID,
-		transport.Response[any]{Result: transport.DefaultSuccessResponse.Result},
-		cmd.ReplyTo,
-	))
-	if err != nil {
-		errx := errorx.SuspendedErrorWithDetails(err.Error(), "cart-service")
-		logger.Error(ctx, errx)
-		return nil, errx
-	}
-
-	return res, nil
 }

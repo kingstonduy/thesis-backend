@@ -9,6 +9,6 @@ func NewDispatcher(
 	IExecuteTransactionHandler domain.IExecuteTransactionHandler,
 ) cmd_pipeline.DispatcherHandler {
 	dp := cmd_pipeline.NewDispatcherCommandHandler()
-	dp.RegisterHandler(domain.PRODUCT_COMPLETED_TRANSACTION_COMMAND, IExecuteTransactionHandler.Handle1)
+	dp.RegisterHandler(domain.PRODUCT_COMPLETED_TRANSACTION_COMMAND, IExecuteTransactionHandler.Handle)
 	return dp
 }
