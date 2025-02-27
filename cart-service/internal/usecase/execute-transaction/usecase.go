@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	configuration "github.com/kingstonduy/cart-service/internal/bootstrap"
@@ -18,6 +19,7 @@ import (
 	"github.com/kingstonduy/go-core/trace"
 	"github.com/kingstonduy/go-core/transport"
 	"github.com/kingstonduy/go-core/transport/broker"
+	"golang.org/x/exp/rand"
 )
 
 type handler struct {
@@ -46,6 +48,10 @@ func NewExecuteTransactionHandler(
 		kafka:       kafka,
 	}
 }
+
+const (
+	CART_FAILED_USER_ID = "5d43437c-2f0c-428f-a74b-baedcbb53ac4"
+)
 
 // Handle1 implements domain.IExecuteTransactionHandler.
 func (h *handler) Handle(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
@@ -76,10 +82,14 @@ func (h *handler) Handle(ctx context.Context, outbox cmd_pipeline.OutboxWithTrac
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
-			if item.CartItemID == "TEST_CART_FAILED" {
+
+			// =============================================SPECIAL CASES FOR DEMOS ==================================================
+			if req.UserID == CART_FAILED_USER_ID {
+				time.Sleep(time.Duration(rand.Intn(3)+4) * time.Second)
 				err = fmt.Errorf("simulate cart failed")
 				return err
 			}
+			// =============================================================================================================
 
 			err = h.cartRepo.DeleteById(ctx, item.CartItemID)
 			if err != nil {

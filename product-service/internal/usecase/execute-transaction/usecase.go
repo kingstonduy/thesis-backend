@@ -18,6 +18,7 @@ import (
 	"github.com/kingstonduy/product-service/internal/domain"
 	redix "github.com/kingstonduy/product-service/internal/pkg/redis_broker"
 	utils_transport "github.com/kingstonduy/product-service/internal/pkg/transport"
+	"golang.org/x/exp/rand"
 )
 
 type handler struct {
@@ -40,6 +41,12 @@ func NewExecuteTransactionHandler(
 		redisPubSub:   redisPubSub,
 	}
 }
+
+const (
+	FAILED_PRODUCT_USER_ID = "9f089ee4-acfa-4717-837e-169f7bedef88"
+	CONCURRENT_USER_1      = "724626ab-e7d2-4101-8616-fc34fed06939"
+	CONCURRENT_USER_2      = "d935795a-4ed9-4b06-8e68-fe281e81d671"
+)
 
 // Handle1 implements domain.IExecuteTransactionHandler.
 func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTrace) (err error) {
@@ -67,6 +74,12 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 
 	var req domain.ExecuteTransactionRequest
 	json.Unmarshal([]byte(outbox.Payload), &req)
+
+	// =============================================SPECIAL CASES FOR DEMOS ==================================================
+	if req.UserID == CONCURRENT_USER_1 || req.UserID == CONCURRENT_USER_2 {
+		// sleep random from 5-6 s
+		time.Sleep(time.Duration(rand.Intn(3)+4) * time.Second)
+	}
 
 	err1 := h.db.DB.WithinTransaction(ctx, func(ctx context.Context) error {
 		for _, item := range req.Details {
@@ -116,6 +129,10 @@ func (h *handler) Handle1(ctx context.Context, outbox cmd_pipeline.OutboxWithTra
 		if err != nil {
 			logger.Error(ctx, err)
 			return err
+		}
+		if req.UserID == FAILED_PRODUCT_USER_ID {
+			time.Sleep(time.Second * 15)
+			return fmt.Errorf("simulate error")
 		}
 
 		return nil
