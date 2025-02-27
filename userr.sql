@@ -21,23 +21,23 @@ CREATE TABLE public."CUSTOMER" (
 	CONSTRAINT "CUSTOMER_pkey" PRIMARY KEY ("USER_ID"),
 	CONSTRAINT "CUSTOMER_user_name_unique" UNIQUE ("USER_NAME")
 );
-
 INSERT INTO public."CUSTOMER" ("USER_ID","USER_NAME","USER_PASSWORD","USER_IMAGE","FIRST_NAME","LAST_NAME","DATE_OF_BIRTH","GENDER","EMAIL","PHONE_NUMBER","STREET","CITY","CITY_CODE","DISTRICT","DISTRICT_CODE","WARD","WARD_CODE","CREATED_AT","UPDATED_AT") VALUES
-	 ('823c779c-a9b5-4f21-ac81-aac666730a85','kingstonduy1','$2a$10$hBF3Vot0QZf2kJEXj/9q8O4wsKr87VtacqweZ/bOevUSctj5WtznC','https://avatars.githubusercontent.com/u/77771338?v=4','Vilma','Blick','21-01-2025','male','kingstonduy.duong@gmail.com','0834802007','Thong Nhat','Thành phố Hồ Chí Minh','79','Quận Bình Thạnh','765','Phường 25','26920','2025-01-23 08:36:18.906785','2025-01-23 08:36:18.906785'),
-	 ('e4f56512-65d7-4414-8442-4305129920ef','kingstonduy','$2a$10$dxzjtqOo0qmeAbS1mPdi1u9XpdB04K.nz/K1RqxnmkE/hOsdC7HVe','https://avatars.githubusercontent.com/u/77771338?v=4','Eryn','Okuneva','03-03-2002','male','kingstonduy.duong@gmail.com','0121101228','Bùi Công Trừng','Thành phố Hồ Chí Minh','79','Huyện Hóc Môn','784','Xã Nhị Bình','27565','2025-01-23 08:32:05.009854','2025-01-23 08:32:05.009854');
+	 ('e4f56512-65d7-4414-8442-4305129920ef','kingstonduy','$2a$10$dxzjtqOo0qmeAbS1mPdi1u9XpdB04K.nz/K1RqxnmkE/hOsdC7HVe','https://avatars.githubusercontent.com/u/77771338?v=4','Eryn','Okuneva','03-03-2002','male','kingstonduy.duong@gmail.com','0121101228','Bùi Công Trừng','Thành phố Hồ Chí Minh','79','Huyện Hóc Môn','784','Xã Nhị Bình','27565','2025-01-23 08:32:05.009854','2025-01-23 08:32:05.009854'),
+	 ('9f089ee4-acfa-4717-837e-169f7bedef88','fail_product','$2a$10$RzeVgcvdZfeUqOdpW3mvguhdfLByf7TCdVb4TOrTvkt5d/VYbWpaq','https://avatars.githubusercontent.com/u/77771338?v=4','Lauretta','Marvin','06-02-2025','male','kingstonduy.duong@gmail.com','0834802007','this user will demonstrate the scenario when product service can not process the order','Thành phố Hồ Chí Minh','79','Quận 1','760','Phường Tân Định','26734','2025-02-27 15:27:17.767356','2025-02-27 15:27:17.767356'),
+	 ('724626ab-e7d2-4101-8616-fc34fed06939','concurrent_user_1','$2a$10$yJITmF2gAQFEfu8otiYqduarPTv2xhvR2EoGPNVkTQn9rlZtXCwhS','https://avatars.githubusercontent.com/u/77771338?v=4','Aliya','Bednar','06-02-2025','male','kingstonduy.duong@gmail.com','0834802007','Scenario: 2 concurrent users: data race in real life','Tỉnh Hà Giang','02','Huyện Đồng Văn','026','Thị trấn Phó Bảng','00712','2025-02-27 16:20:10.221239','2025-02-27 16:20:10.221239'),
+	 ('d935795a-4ed9-4b06-8e68-fe281e81d671','concurrent_user_2','$2a$10$gULSwbSKJRFk/RjLpnUnHu8hcH0Ly3VTpG77x4R0H66f6DSuIrYqu','https://avatars.githubusercontent.com/u/77771338?v=4','Cecilia','Legros','06-02-2025','male','kingstonduy.duong@gmail.com','0834802007','Scenario: 2 concurrent users: data race in real life','Tỉnh Bắc Kạn','06','Huyện Ba Bể','061','Thị trấn Chợ Rã','01888','2025-02-27 16:20:12.333612','2025-02-27 16:20:12.333612'),
+	 ('5d43437c-2f0c-428f-a74b-baedcbb53ac4','cart_fail','$2a$10$NpUtxq3i3SkPqgsn7161W.nz1FDOcD9L.UqI2Ibu6eaN0REUrw4bm','https://avatars.githubusercontent.com/u/77771338?v=4','Mara','Hauck','02-02-2025','male','kingstonduy.duong@gmail.com','0834802007','inventory is successed but cart failed -> inventory roll back','Thành phố Hà Nội','01','Quận Ba Đình','001','Phường Phúc Xá','00001','2025-02-27 16:29:06.157813','2025-02-27 16:29:06.157813');
 
 CREATE TABLE public."CITY" (
 	"CITY_CODE" varchar(10) NOT NULL,
 	"CITY_NAME" varchar(50) NOT NULL,
 	CONSTRAINT "CITY_pkey" PRIMARY KEY ("CITY_CODE")
 );
-
 CREATE TABLE public."DISTRICT" (
 	"DISTRICT_CODE" varchar(10) NOT NULL,
 	"DISTRICT_NAME" varchar(50) NOT NULL,
 	CONSTRAINT "DISTRICT_pkey" PRIMARY KEY ("DISTRICT_CODE")
 );
-
 CREATE TABLE public."WARD" (
 	"WARD_CODE" varchar(10) NOT NULL,
 	"WARD_NAME" varchar(50) NOT NULL,
